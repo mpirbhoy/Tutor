@@ -1,0 +1,60 @@
+//
+   Created by franklai on 15-11-05.
+extends layout
+block extraHeader
+    link(rel= 'stylesheet', href='/stylesheets/dashboard.css')
+block content
+    include navbar
+    h1
+        center Welcome to Login Like a Boss
+    div.container
+        table.table.table-bordered
+            thead
+                tr
+                    th ADMIN ONLY
+                    th Email
+                    th Display name
+
+            tbody#view_users
+                - var flip = true
+
+                each oneUser in allUsers
+                    - var e = oneUser.email
+                    if flip
+                        tr(id=oneUser.email, class='success')
+                            if admin
+                                td.adminEditBT View Admin Options
+                            else
+                                td
+                            td.email=oneUser.email
+                            td.display_name=oneUser.display_name
+
+                        - var flip = false
+                    else
+                        tr(id=oneUser.email, class='info')
+                            if admin
+                                td.adminEditBT View Admin Options
+                            else
+                                td
+                            td.email=oneUser.email
+                            td.display_name=oneUser.display_name
+                        - var flip = true
+
+    script.
+        $(document).ready(function () {
+            // Handler for clicking into profile's view
+            $('tbody td.email').on('click', function (e) {
+                window.location.assign(window.location.origin + "/users/" + this.innerHTML);
+            })
+
+            // Handler for clicking into admin's only edit_view
+            $('tbody td.adminEditBT').on('click', function (e) {
+                window.location.assign(window.location.origin + "/edit_profile?email=" + $(this).siblings('td.email')[0].innerHTML +
+                   "&ticket=" + sessionStorage.ticket);
+            })
+        })
+
+
+
+
+

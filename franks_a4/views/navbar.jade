@@ -1,0 +1,43 @@
+//
+   Created by franklai on 15-11-05.
+nav.navbar.navbar-default( role="navigation" )
+    .navbar-header
+        a.navbar-brand(href='') LLAB
+        ul#nav_bar_buttons.nav.navbar-nav.navbar-right
+            li#logout_button
+                a(href='javascript: signOut()')
+                    span.glyphicon.glyphicon-log-out
+                    | Sign Out
+
+script.
+    document.getElementsByClassName("navbar-brand")[0].setAttribute("href", window.location.origin + "/dashboard?ticket=" + sessionStorage.ticket);
+
+    // Icons to that link to edit_profile view
+    var navBT = $("#nav_bar_buttons");
+    navBT.prepend("<li><a href='javascript: editProfile()'><img class= 'img-circle' width='25' height='25' src='!{pic_path}'></a></li>");
+    navBT.prepend("<li><a href='javascript: editProfile()'>!{email}</a></li>");
+
+
+    // Restricting the access to edit_profile view, when the logged in user is not the user in profile_view
+    var x = !{ticket} || null;
+    if (sessionStorage.ticket != x) {
+        var k = $('#nav_bar_buttons > li >a')
+        k.each(function (index, element) {
+            if ($(element).attr("href") == 'javascript: editProfile()') {
+                $(element).attr("href", "");
+            }
+        })
+    }
+
+    function editProfile() {
+        window.location.assign(window.location.origin + "/edit_profile?email=" + sessionStorage.email + "&ticket=" + sessionStorage.ticket);
+    };
+
+    function signOut(){
+        window.location.assign(window.location.origin);
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("ticket");
+
+    }
+
+

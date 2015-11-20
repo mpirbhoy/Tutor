@@ -1,0 +1,6 @@
+Please use "npm start" instead of npm server.js
+
+The reason is express-generator seems to bind the start script name to some of the default modules. It doesn't work when
+trying to rename start script to server.js and move outside of bin folder.
+
+Sorry for the inconveniences.

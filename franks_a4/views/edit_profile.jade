@@ -1,0 +1,162 @@
+//
+   Created by franklai on 15-11-07.
+
+extends layout
+block content
+    title = #{title}
+    include navbar
+    div#container
+        form#change_userInfo_form
+            label Email
+            div.well(style="display: inline") #{email}
+            label Display Name
+            input(name='display_name')
+            lablel Description
+            input(name='description')
+            input(type='submit', value='Update')
+        form#change_password_form
+            label Password
+            input#password(name='password', placeholder='def')
+            label Confirm Password
+            input#confirm_password(name='confirm_password', placeholder='')
+            input(type='submit', value='Change Password')
+        form#change_picture_form
+            img.img-circle(src='#{pic_path}', width=160, height=160)
+            input(name='newPicURL', placeholder="Only Gravatar URLs are accepted")
+            input(type='submit', value='Change Profile Picture')
+
+        //Showing the buttons for admin only features; only available to admins
+        if userLastLoginAgent
+            label #{email} last logged in with #{userLastLoginAgent}
+        else
+            label #{email} has yet logged in since sign up. Log in to see #{email}'s user agent tracking history
+
+        if userLastLoginGeoLocation
+            label(style="display:block") #{email} last logged in at location #{userLastLoginGeoLocation}
+        else
+            label(style="display:block") #{email} has yet logged in since sign up. Log in to see #{email}'s location tracking history
+
+        if admin
+            button#delete_user_BT Delete User
+        if superAdmin
+            if superAdminEmail != email
+                button#make_admin_BT Make Admin
+
+
+    script.
+        $(document).ready(function () {
+
+            // For serializing form information
+            $.fn.serializeObject = function () {
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function () {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+
+            // Handler for the form that updates user's info, such as display_name
+            $('#change_userInfo_form').on('submit', function (e) {
+                e.preventDefault();
+                var dataSerialized = $(this).serializeObject();
+                dataSerialized.ticket = !{ticket}
+                $.ajax({
+                    type: 'PUT',
+                    url: window.location.origin + "/users/!{email}",
+                    data: dataSerialized
+                }).done(function (resJson) {
+                    $('#change_userInfo_form').trigger('reset');
+                    if (resJson.status == 200) {
+                        alert('Info changed');
+                    } else {
+                        alert("Fields cannot be empty");
+                    }
+                });
+            });
+
+            // Handler for the form that updates user's password
+            $('#change_password_form').on('submit', function (e) {
+                e.preventDefault();
+                var dataSerialized = $(this).serializeObject();
+                dataSerialized.ticket = !{ticket}
+                $.ajax({
+                    type: 'PUT',
+                    url: window.location.origin + "/users/!{email}",
+                    data: dataSerialized
+                }).done(function (resJson) {
+                    $('#change_password_form').trigger('reset');
+                    if (resJson.status == 200) {
+                        alert("Passwords changed");
+                    } else {
+                        alert("Passwords do not match");
+                    }
+                });
+            });
+
+            // Handler for the form that updates user's profile icon
+            $('#change_picture_form').on('submit', function (e) {
+                e.preventDefault();
+                var dataSerialized = $(this).serializeObject();
+                dataSerialized.ticket = !{ticket}
+                $.ajax({
+                    type: 'PUT',
+                    url: window.location.origin + "/users/!{email}",
+                    data: dataSerialized
+                }).done(function (resJson) {
+                    $('#change_picture_form').trigger('reset');
+                    if (resJson.status == 200) {
+                        alert('Profile picture changed');
+                    } else {
+                        alert('Profile picture did not changed');
+                    }
+                });
+            });
+
+            // Handler for deleting the user. An admin-only feature
+            $("button#delete_user_BT").on('click', function(e){
+                e.preventDefault();
+                var data = {};
+
+                // For authenticating if this ticket holder is an admin
+                data.ticket = sessionStorage.ticket;
+                $.ajax({
+                    type: 'DELETE',
+                    url: window.location.origin + "/users/!{email}",
+                    data: data
+                }).done(function (resJson){
+                    if (!resJson.updated) {
+                        alert(resJson.msg);
+                    } else {
+                        alert(resJson.msg);
+                        window.location.assign(window.location.origin + "/dashboard?ticket=" + sessionStorage.ticket);
+                    }
+                });
+            });
+
+            // Handler for making a user admin. A super-admin only feature
+            $("button#make_admin_BT").on('click', function(e){
+                e.preventDefault();
+                var data = {};
+                data.access = "ADMIN"
+                $.ajax({
+                    type: 'PUT',
+                    url: window.location.origin + "/users/!{email}",
+                    data: data
+                }).done(function (resJson){
+                    if (!resJson.updated) {
+                        alert(resJson.msg);
+                    } else {
+                        alert(resJson.msg);
+                        window.location.assign(window.location.origin + "/dashboard?ticket=" + sessionStorage.ticket);
+                    }
+                });
+            });
+        })

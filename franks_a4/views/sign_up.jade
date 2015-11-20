@@ -1,0 +1,56 @@
+//
+   Created by franklai on 15-11-05.
+
+extends layout.jade
+block content
+    form#create_user_form
+        label Email
+        input#email(name='email', placeholder='abc')
+        label Password
+        input#password(name='password', placeholder='def')
+        label Confirm Password
+        input#confirm_password(name='confirm_password', placeholder='')
+        input(type='submit' value='Submit')
+
+    script.
+
+        // For serializing form data
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
+        $(document).ready(function () {
+
+            $('#create_user_form').submit(function (e) {
+                e.preventDefault();
+                var myForm = $(this);
+                var dataSerialized = myForm.serializeObject();
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.origin + "/users",
+                    data: dataSerialized
+                }).done(function (resJson) {
+                    if (resJson.status == 201) {
+                        console.log("status = " + resJson.status + " & msg = " + resJson.msg);
+                        myForm.trigger("reset");
+                        if (confirm("Navigating back to Home. Please use your email and password to login")){
+                            window.location.assign(window.location.origin);
+                        }
+                    } else{
+                        alert("Password do not match or empty, or email is blank");
+                    }
+                });
+            });
+        });
