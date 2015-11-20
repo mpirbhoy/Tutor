@@ -1,21 +1,67 @@
-<% include ../partials/head %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-<% include ../partials/nav %>
+    <!--Netbeans favicon-->
+    <link rel="shortcut icon" href="">
 
+    <!-- Boostrap compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+
+    <!--jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <!--scalable vector icons-->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Body font -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+
+    <!-- Add fancyBox -->
+    <link rel="stylesheet" href="css/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="js/jquery.fancybox.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".various").fancybox({
+                maxWidth	: 800,
+                maxHeight	: 600,
+                fitToView	: false,
+                width		: '70%',
+                height		: '70%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none'
+            });
+        });
+    </script>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type=text/css" href="css/style.css" />
+
+</head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="header">
+            <ul class="nav nav-pills navbar-right">
+                <li role="presentation"><a href="/login" class="btn btn-default btn-margin">Login</a></li>
+                <li role="presentation"><a href="/signup" class="btn btn-default btn-margin">Sign Up</a></li>
+            </ul>
+        </div>
+        <a class="navbar-brand" href="/"><span style="color:#c80909">Pro</span>files</a>
+    </div>
+</nav>
+
 <div id="home">
-    <div class="jumbotron">
+    <section class="video" id="about">
         <div class="container">
-            <h1 id="front-page-header"><span style="color:#c80909">Pro</span>files.</h1>
-            <div class="btn-group btn-group-justified" role="group" aria-label="">
-                <div class="btn-group" role="group">
-                    <a href="/login" class="btn btn-md btn-default">Sign up</a>
-                </div>
-                <div class="btn-group" role="group">
-                    <a href="/signup" class="btn btn-md btn-default">Sign up</a>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1><a href="http://www.youtube.com/embed/9No-FiEInLA?autoplay=1&wmode=opaque&fs=1" class="various fancybox.iframe"><i class="fa fa-play-circle-o"></i> Watch the Video</a></h1>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 </body>
+</html>
