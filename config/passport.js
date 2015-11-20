@@ -2,7 +2,6 @@ module.exports = function(passport) {
 
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../model/user');
-var UserActivity = require('../model/userActivity');
 
 //This is for logging in 
 passport.use('local-login', new LocalStrategy({
