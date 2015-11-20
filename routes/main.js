@@ -4,6 +4,8 @@ var fs = require('fs');
 var path = require("path");
 var User = require('../model/user');
 var flash = require('connect-flash');
+var express = require('express');
+
 
 module.exports = function(app, passport) {
 	//GET REQUESTS
