@@ -21,7 +21,8 @@ app.use(express.static('public'));
 //Configuring passport authentication here
 require('./config/passport.js')(passport);
 	
-
+  app.set('views', './views');
+  app.set('view engine', 'ejs');
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({
 	extended: true
