@@ -1,5 +1,3 @@
-console.log("Starting Social Nets Server!");
-
 var express = require('express');	
 var passport = require('passport');
 var expressSession = require('express-session');
@@ -42,3 +40,5 @@ require('./routes/main.js')(app, passport);
 												
 //Starts server at given port number
 app.listen(port);
+
+console.log("Starting Tutors 4 U Server at port" + port + "!");
