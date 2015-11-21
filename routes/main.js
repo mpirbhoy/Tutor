@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/login', isNotLoggedIn, function (req, res) {
-		res.render('./pages/login');
+		res.render('./pages/login', {'errorMsg' : req.flash('error')});
 	});
 
 	app.get('/signup', isNotLoggedIn, function (req, res) {
