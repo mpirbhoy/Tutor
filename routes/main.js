@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
 	//Request to go to homepage
 	app.get('/', isNotLoggedIn, function (req, res) {
 		res.render('./pages/home');
-	});
+	})
 
 	app.get('/login', isNotLoggedIn, function (req, res) {
 		res.render('./pages/login');
