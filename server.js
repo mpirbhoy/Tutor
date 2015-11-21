@@ -4,6 +4,7 @@ var expressSession = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash = require('connect-flash');
+var logger = require('morgan');
 var port = 3000;
 var dbPath = 'mongodb://localhost/tutor';
 
@@ -21,6 +22,7 @@ require('./config/passport.js')(passport);
 	
   app.set('views', './views');
   app.set('view engine', 'ejs');
+  app.use(logger('dev'));
   app.use(cookieParser());
   app.use(bodyParser.urlencoded({
 	extended: true
