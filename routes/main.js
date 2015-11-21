@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/signup', isNotLoggedIn, function (req, res) {
-		res.render('./pages/register');
+		res.render('./pages/signup');
 	});
 
 	app.get('/main', isLoggedIn, function(req, res) {
