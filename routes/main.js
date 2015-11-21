@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 	//GET REQUESTS
 	//
 	//Request to go to homepage
-	app.get('/', isLoggedIn, function (req, res) {
+	app.get('/', isNotLoggedIn, function (req, res) {
 		res.render('./pages/home');
 	});
 
@@ -66,7 +66,7 @@ function isNotLoggedIn(req, res, next) {
 		return next();
 
 	// if they are redirect them to the profile page
-	res.redirect('/');
+	res.redirect('/main');
 }
 
 //Middleware to Log User's Activity
