@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 	//GET REQUESTS
 	//
 	//Request to go to homepage
-	app.get('/', isNotLoggedIn, function (req, res) {
+	app.get('/', isLoggedIn, function (req, res) {
 		res.render('./pages/home');
 	});
 
@@ -21,6 +21,10 @@ module.exports = function(app, passport) {
 
 	app.get('/signup', isNotLoggedIn, function (req, res) {
 		res.render('./pages/register');
+	});
+
+	app.get('/profile', isLoggedIn, function(req, res) {
+		res.render('./pages/main');
 	});
 
 	//POST REQUESTS
@@ -51,7 +55,7 @@ function isLoggedIn(req, res, next) {
 		return next();
 
 	// if they aren't redirect them to the login page
-	res.redirect('/');
+	res.redirect('/login');
 }
 
 //Middleware for passing through if person is not logged in 
@@ -62,7 +66,7 @@ function isNotLoggedIn(req, res, next) {
 		return next();
 
 	// if they are redirect them to the profile page
-	res.redirect('/profileRed');
+	res.redirect('/');
 }
 
 //Middleware to Log User's Activity
