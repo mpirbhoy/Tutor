@@ -66,7 +66,7 @@ function isNotLoggedIn(req, res, next) {
 		return next();
 
 	// if they are redirect them to the profile page
-	res.redirect('/main');
+	res.redirect('/profile');
 }
 
 //Middleware to Log User's Activity
