@@ -23,7 +23,7 @@ module.exports = function(app, passport) {
 		res.render('./pages/register');
 	});
 
-	app.get('/profile', isLoggedIn, function(req, res) {
+	app.get('/main', isLoggedIn, function(req, res) {
 		res.render('./pages/main');
 	});
 
