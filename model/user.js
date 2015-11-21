@@ -7,6 +7,6 @@ module.exports = mongoose.model('User',{
 	auth : { type: String, default: 'user' },
 	imgPath : { type: String, default: 'def.jpg' },
 	descr: { type: String, default: '' },
-	pId: String
+	pId: {type:String, unique: true}
 	
 });
