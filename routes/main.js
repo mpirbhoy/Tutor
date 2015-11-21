@@ -23,7 +23,7 @@ module.exports = function(app, passport) {
 		res.render('./pages/register');
 	});
 
-	app.get('/profile', isLoggedIn, function(req, res) {
+	app.get('/main', isLoggedIn, function(req, res) {
 		res.render('./pages/main');
 	});
 
@@ -66,7 +66,7 @@ function isNotLoggedIn(req, res, next) {
 		return next();
 
 	// if they are redirect them to the profile page
-	res.redirect('/profile');
+	res.redirect('/main');
 }
 
 //Middleware to Log User's Activity
