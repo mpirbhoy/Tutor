@@ -11,7 +11,7 @@ module.exports = function(app, passport) {
 	//GET REQUESTS
 	//
 	//Request to go to homepage
-	app.get('/', isNotLoggedIn, function (req, res) {
+	app.get('/', isLoggedIn, function (req, res) {
 		res.render('./pages/home');
 	});
 
@@ -21,6 +21,28 @@ module.exports = function(app, passport) {
 
 	app.get('/signup', isNotLoggedIn, function (req, res) {
 		res.render('./pages/register');
+	});
+
+	app.get('/profile', isLoggedIn, function(req, res) {
+		res.render('./pages/main');
+	});
+
+	//POST REQUESTS
+	//
+	//Request to perform login
+	app.post('/login', passport.authenticate('local-login', { successRedirect: '/profile',
+														failureRedirect: '/login', failureFlash : true}));
+
+	//Request to perform signup
+	app.post('/signup', passport.authenticate('local-signup', {
+			successRedirect : '/profile', // redirect to the secure profile section
+			failureRedirect : '/signup'// redirect back to the signup page if there is an error
+	, failureFlash : true}));
+
+	//Request to perform logout
+	app.post('/logout', function (req, res) {
+		req.logout();
+		res.redirect('/');
 	});
 
 }
@@ -33,7 +55,7 @@ function isLoggedIn(req, res, next) {
 		return next();
 
 	// if they aren't redirect them to the login page
-	res.redirect('/');
+	res.redirect('/login');
 }
 
 //Middleware for passing through if person is not logged in 
@@ -44,7 +66,7 @@ function isNotLoggedIn(req, res, next) {
 		return next();
 
 	// if they are redirect them to the profile page
-	res.redirect('/profileRed');
+	res.redirect('/');
 }
 
 //Middleware to Log User's Activity
