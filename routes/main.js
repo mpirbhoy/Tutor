@@ -30,7 +30,7 @@ module.exports = function(app, passport) {
 	//POST REQUESTS
 	//
 	//Request to perform login
-	app.post('/login', passport.authenticate('local-login', { successRedirect: '/main',
+	app.post('/login', logger, passport.authenticate('local-login', { successRedirect: '/main',
 														failureRedirect: '/login', failureFlash : true}));
 
 	//Request to perform signup
@@ -55,7 +55,14 @@ function isLoggedIn(req, res, next) {
 		return next();
 
 	// if they aren't redirect them to the login page
-	res.redirect('/login');
+	res.redirect('/');
+}
+
+//debugging logs
+function logger(req, res, next) {
+	//console.log(req.body.username);
+	//console.log(req.body.password);
+	return next();
 }
 
 //Middleware for passing through if person is not logged in 
