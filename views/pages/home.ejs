@@ -1,45 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-
-    <!--Netbeans favicon-->
-    <link rel="shortcut icon" href="">
-
-    <!-- Boostrap compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-
-    <!--jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-    <!--scalable vector icons-->
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- Body font -->
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700,500' rel='stylesheet' type='text/css'>
-    <!-- Add fancyBox -->
-    <link rel="stylesheet" href="css/jquery.fancybox.css" type="text/css" media="screen" />
-    <script type="text/javascript" src="js/jquery.fancybox.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $(".video").fancybox({
-                maxWidth	: 800,
-                maxHeight	: 600,
-                fitToView	: false,
-                width		: '70%',
-                height		: '70%',
-                autoSize	: false,
-                closeClick	: false,
-                openEffect	: 'none',
-                closeEffect	: 'none'
-            });
-        });
-    </script>
-
-    <link href="css/animate.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" type=text/css" href="css/style.css" />
-
-</head>
+<% include ../partials/head %>
 <body>
 <% include ../partials/nav %>
 
@@ -51,7 +12,7 @@
                 <h1 class="animated fadeInDown" id="banner">Education Can Happen<br>Anywhere.</h1>
                 <a href="/signup" class="use-btn animated fadeInUp">SIGN UP</a>
                 <a href="/login" class="learn-btn animated fadeInUp">LOGIN</a><br>
-                <h1 class="animated fadeInLeft"><a href="http://www.youtube.com/embed/9No-FiEInLA?autoplay=1&wmode=opaque&fs=1" class="video fancybox.iframe"><i class="fa fa-play-circle-o"></i> Watch the Video</a></h1>
+                <h1 class="animated fadeInLeft"><a href="http://www.youtube.com/embed/9No-FiEInLA?autoplay=1&wmode=opaque&fs=1" class="video fancybox.iframe"><i class="glyphicon glyphicon-play-circle"></i> Watch the Video</a></h1>
             </div>
         </div>
     </div>

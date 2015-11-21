@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
 
   <!-- Styles -->
-  <link rel="stylesheet" href="style.css"> 
+  <link rel="stylesheet" href="css/style.css"> 
 
   <!--jQuery-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -19,9 +19,33 @@
   <!-- Bootstrap compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 
-  <!--AJAX Calls-->
-  <script type='text/javascript' src='ajax.js'></script>
-
   <!-- IP Address & Location -->
   <script language="JavaScript" src="http://www.geoplugin.net/javascript.gp" type="text/javascript"></script>
+
+  <!-- HOME HEAD -->
+  <!-- HOME fancyBox -->
+  <link rel="stylesheet" href="css/jquery.fancybox.css" type="text/css" media="screen" />
+  <script type="text/javascript" src="js/jquery.fancybox.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function() {
+          $(".video").fancybox({
+              maxWidth  : 800,
+              maxHeight : 600,
+              fitToView : false,
+              width   : '70%',
+              height    : '70%',
+              autoSize  : false,
+              closeClick  : false,
+              openEffect  : 'none',
+              closeEffect : 'none'
+          });
+      });
+  </script>
+
+  <!-- HOME font -->
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700,500' rel='stylesheet' type='text/css'>
+
+  <!-- HOME ANIMATION -->
+  <link href="css/animate.css" rel="stylesheet">
+
 </head>
