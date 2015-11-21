@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
 	});
 
 	app.get('/login', isNotLoggedIn, function (req, res) {
-		res.render('./pages/login');
+		res.render('./pages/login', {'errorMsg' : req.flash('error')});
 	});
 
 	app.get('/signup', isNotLoggedIn, function (req, res) {
@@ -30,12 +30,12 @@ module.exports = function(app, passport) {
 	//POST REQUESTS
 	//
 	//Request to perform login
-	app.post('/login', passport.authenticate('local-login', { successRedirect: '/profile',
+	app.post('/login', passport.authenticate('local-login', { successRedirect: '/main',
 														failureRedirect: '/login', failureFlash : true}));
 
 	//Request to perform signup
 	app.post('/signup', passport.authenticate('local-signup', {
-			successRedirect : '/profile', // redirect to the secure profile section
+			successRedirect : '/main', // redirect to the secure profile section
 			failureRedirect : '/signup'// redirect back to the signup page if there is an error
 	, failureFlash : true}));
 
