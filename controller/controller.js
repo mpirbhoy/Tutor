@@ -5,7 +5,8 @@
 
 module.exports = {
     postLogin: function(){
-
+    	passport.authenticate('local-login', { successRedirect: '/main',
+														failureRedirect: '/login', failureFlash : true});
     }
 
 };
