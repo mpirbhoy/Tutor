@@ -43,8 +43,7 @@ module.exports = function(app, passport) {
 	//POST REQUESTS
 	//
 	//Request to perform login
-	app.post('/login', logger, passport.authenticate('local-login', { successRedirect: '/main',
-														failureRedirect: '/login', failureFlash : true}));
+	app.post('/login', logger, );
 
 	//Request to perform signup
 	app.post('/signup', passport.authenticate('local-signup', {
