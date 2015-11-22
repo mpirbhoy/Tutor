@@ -4,26 +4,39 @@
 <% include ../partials/nav_logged_in %>
 <div class="container-fluid">
     <div class="row">
-        <!-- Search Menu and Classes -->
+        <!-- SEARCH MENU AND CLASSES -->
         <div class="col-sm-3 col-md-3 sidebar">
             <div class="input-group input-group-md">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                 <input type="text" class="form-control" placeholder="Search courses">
             </div>
 
-            <!-- Classes -->
+            <!-- List of Classes -->
             <div class="list-group" style="margin-top: 20px">
-              <button type="button" class="list-group-item">Cras justo odio</button>
-              <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-              <button type="button" class="list-group-item">Morbi leo risus</button>
-              <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-              <button type="button" class="list-group-item">Vestibulum at eros</button>
+                <button type="button" class="list-group-item">CSC309: Programming on the Web</button>
+                <button type="button" class="list-group-item">CSC263: Data Structures and Algorithms</button>
+                <button type="button" class="list-group-item">FUK100: i am ass</button>
+                <button type="button" class="list-group-item">FUK200: you are ass</button>
+                <button type="button" class="list-group-item">FUK300: sex no sex</button>
+
+                <!-- Active class added when clicked -->
+                <script>
+                    $('.list-group-item').click(function(e) {
+                      var $this = $(this);
+                      if (!$this.hasClass('active')) {
+                        // remove all other active buttons
+                        $(".list-group-item").each(function () {$(this).removeClass('active')});
+                        $this.addClass('active');
+                      } 
+                      e.preventDefault();
+                    });
+                </script>
             </div>
 
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main">
 
-
+            <!-- THREADS -->
             <h2 class="sub-header">USER LIST</h2>
 
             <!-- Table -->

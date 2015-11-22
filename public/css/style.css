@@ -150,8 +150,9 @@ MAIN - SEARCH SIDE BAR
         border-right: 1px solid #eee;
     }
 }
-
-
+.list-group-item {
+    margin-bottom: 10px;
+}
 
 /* ==========================================================================
 MAIN - THREADS
