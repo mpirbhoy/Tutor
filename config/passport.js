@@ -1,8 +1,11 @@
+var FACEBOOK_APP_ID = "104977756536702";
+var FACEBOOK_APP_SECRET = "af3e54581686fcf0a7885252bf23339d";
+
 module.exports = function(passport) {
 
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../model/user');
-/*var FacebookStrategy = require('passport-facebook').Strategy;*/
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 //This is for logging in 
 passport.use('local-login', new LocalStrategy({
@@ -98,25 +101,57 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-}
 
-/*passport.use(new FacebookStrategy({
+
+passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://www.example.com/auth/facebook/callback"
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate(..., function(err, user) {
-      if (err) { return done(err); }
-      done(null, user);
-    });
+  function(token, refreshToken, profile, done) {
+		process.nextTick(function() {
+
+		            // find the user in the database based on their facebook id
+		            User.findOne({email : profile.emails[0].value }, function(err, user) {
+
+		                // if there is an error, stop everything and return that
+		                // ie an error connecting to the database
+		                if (err)
+		                    return done(err);
+
+		                // if the user is found, then log them in
+		                if (user) {
+		                    return done(null, user); // user found, return that user
+		                } else {
+		                    // if there is no user found with that facebook id, create them
+		                    var newUser            = new User();
+
+		                    // set all of the facebook information in our user model
+		                    newUser.facebook.id     = profile.id; // set the users facebook id                   
+		                    newUser.email 		   = profile.emails[0].value;
+		                    newUser.facebook.token = token; // we will save the token that facebook provides to the user                    
+		                    newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+
+		                    // save our user to the database
+		                    newUser.save(function(err) {
+		                        if (err)
+		                            throw err;
+
+		                        // if successful, return the new user
+		                        return done(null, newUser);
+		                    });
+		                }
+
+		            });
+		        });
   }
 ));
-*/
+
 var crypto = require('crypto');
 
 //Helper function to hashEmail
 function hashEmail(email) {
 	var hash = crypto.createHash('md5').update(email).digest('hex');
 	return hash;
+}
 }
