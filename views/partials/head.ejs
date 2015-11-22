@@ -54,19 +54,73 @@
 
     <script>
         $(function(){
-            var data = [{ id: 0, text: 'CSC108H1: Intro to Comp Prog' }, { id: 1, text: 'CSC148H1: Intro to Comp Sci' }, { id: 2, text: 'CSC207H1: Software Design' }, { id: 3, text: 'CSC209H1: Soft Tools & Sys Prog' }, { id: 4, text: 'CSC258H1	: Computer Organizatn' }];
-
-            // turn the element to select2 select style
-            $('.select2').select2({
-                data: data
-            });
+//            var data = [{ id: 0, text: 'CSC108H1: Intro to Comp Prog' }, { id: 1, text: 'CSC148H1: Intro to Comp Sci' }, { id: 2, text: 'CSC207H1: Software Design' }, { id: 3, text: 'CSC209H1: Soft Tools & Sys Prog' }, { id: 4, text: 'CSC258H1	: Computer Organizatn' }];
+//
+//            // turn the element to select2 select style
+//            $('.select2').select2({
+//                data: data
+//            });
 
             $('.select2').select2({
                 placeholder: "Search courses",
                 allowClear: true
             });
 
+            $(".select2").select2({
+                ajax: {
+                    type: "GET",
+                    url: "https://api.github.com/search/repositories",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term // search term
+                        };
+                    },
+                    processResults: function (data, params) {
+                        // parse the results into the format expected by Select2
+                        // since we are using custom formatting functions we do not need to
+                        // alter the remote JSON data
+
+                        return {
+                            results: data.items
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+                minimumInputLength: 1,
+                templateResult: formatRepo,
+                templateSelection: formatRepoSelection
+            });
+
         });
+
+        function formatRepo (repo) {
+            if (repo.loading) return repo.text;
+
+            var markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
+                    "<div class='select2-result-repository__meta'>" +
+                    "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
+
+            if (repo.description) {
+                markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
+            }
+
+            markup += "<div class='select2-result-repository__statistics'>" +
+                    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> INSTR: " + repo.forks_count + "</div>" +
+                    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> PRE: " + repo.stargazers_count + "</div>" +
+                    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> EXC: " + repo.watchers_count + "</div>" +
+                    "</div>" +
+                    "</div></div>";
+
+            return markup;
+        }
+
+        function formatRepoSelection (repo) {
+            return repo.full_name || repo.text;
+        }
     </script>
     
 </head>
