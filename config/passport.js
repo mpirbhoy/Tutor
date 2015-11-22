@@ -13,26 +13,26 @@ passport.use('local-login', new LocalStrategy({
     passwordField: 'password'
   },
   function(username, password, done) {
-		User.findOne({'email': username}, function(err, user) {
-			if (err) { return done(err);}
-			
-			if (!user) {
-				return done(null, false, {message: 'Incorrect username!'});
-			}
-			
-			if (password != user.password) {
-				return done(null, false, {message: 'Incorrect password!'});
-			}
-			
-			return done(null, user);
-		});
-   }
-));
+			User.findOne({'email': username}, function(err, user) {
+				if (err) { return done(err);}
+				
+				if (!user) {
+					return done(null, false, {message: 'Incorrect username!'});
+				}
+				
+				if (password != user.password) {
+					return done(null, false, {message: 'Incorrect password!'});
+				}
+				
+				return done(null, user);
+			});
+	   }
+	));
 
-//Used for signing up
-passport.use('local-signup', new LocalStrategy({
-        
-        usernameField : 'email',
+	//Used for signing up
+	passport.use('local-signup', new LocalStrategy({
+	        
+	        usernameField : 'email',
         passwordField : 'password'
 	    ,passReqToCallback : true
 
@@ -54,7 +54,7 @@ passport.use('local-signup', new LocalStrategy({
             if (user) {
 				return done(null, false, {message: 'That email is already taken!'});
             } else {
-				
+					
 				User.findOne({}, function(error, superAdminUser) {
 					
 					//if there are any errors, return the error
@@ -106,7 +106,8 @@ passport.deserializeUser(function(id, done) {
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    profileFields: ['id', 'name', 'displayName', 'email']
   },
   function(token, refreshToken, profile, done) {
 		process.nextTick(function() {
