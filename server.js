@@ -38,7 +38,7 @@ require('./config/passport.js')(passport);
   app.use(passport.session());
   
 //Sets up the routes that the server accepts
-require('./routes/main.js')(app, passport);
+require('./routes.js')(app, passport);
 												
 //Starts server at given port number
 app.listen(port);

@@ -2,10 +2,10 @@
 var crypto = require('crypto');
 var fs = require('fs');
 var path = require("path");
-var User = require('../model/user');
+var User = require('./model/user');
 var flash = require('connect-flash');
 var express = require('express');
-
+var controller = require('./controller/controller');
 
 module.exports = function(app, passport) {
 	//GET REQUESTS
@@ -46,8 +46,7 @@ module.exports = function(app, passport) {
 	//app.post('/login', logger, );
 
 	//Request to perform login
-	app.post('/login', logger, passport.authenticate('local-login', { successRedirect: '/main',
-														failureRedirect: '/login', failureFlash : true}));
+	app.post('/login', logger, function(req, res, next) {controller.postLogin(req, res, next, passport)});
 
 	//Request to perform signup
 	app.post('/signup', passport.authenticate('local-signup', {

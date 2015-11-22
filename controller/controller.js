@@ -2,11 +2,8 @@
  *
  * Created by franklai on 15-11-20.
  */
-
-module.exports = {
-    postLogin: function(){
+exports.postLogin = function(req, res, next, passport){
     	passport.authenticate('local-login', { successRedirect: '/main',
 														failureRedirect: '/login', failureFlash : true});
-    }
 
 };
