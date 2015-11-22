@@ -7,6 +7,7 @@ var flash = require('connect-flash');
 var express = require('express');
 var controller = require('./controller/controller');
 
+
 module.exports = function(app, passport) {
 	//GET REQUESTS
 	//
@@ -46,7 +47,8 @@ module.exports = function(app, passport) {
 	//app.post('/login', logger, );
 
 	//Request to perform login
-	app.post('/login', logger, function(req, res, next) {controller.postLogin(req, res, next, passport)});
+	app.post('/login', passport.authenticate('local-login', { successRedirect: '/main',
+														failureRedirect: '/login', failureFlash : true}));
 
 	//Request to perform signup
 	app.post('/signup', passport.authenticate('local-signup', {
