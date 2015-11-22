@@ -61,23 +61,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.get('/view_user/:email', middleware.isLoggedIn, function (req, res){
-		//controller.getProfile(req, res)
-		var email = req.params.email;
-		if (email) {
-			User.where({email: email}).findOne(function (err, foundUser) {
-				if (foundUser) {
-					res.render('pages/view_user', {
-						title: "View User",
-						email: foundUser.email,
-						dispName: foundUser.dispName,
-						descr: foundUser.descr,
-						imgPath: foundUser.imgPath
-					})
-				}
-			})
-		}
-	});
+	app.get('/view_user/:email', middleware.isLoggedIn, function(req, res) {controller.getProfile(req, res)});
 
 }
 
