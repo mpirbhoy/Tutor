@@ -47,7 +47,7 @@ module.exports = function(app, passport) {
 
 	//Request to perform login
 	app.post('/login', logger, passport.authenticate('local-login', { successRedirect: '/main',
-														failureRedirect: '/login', failureFlash : true}););
+														failureRedirect: '/login', failureFlash : true}));
 
 	//Request to perform signup
 	app.post('/signup', passport.authenticate('local-signup', {
