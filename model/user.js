@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'); 
+var Schema = mongoose.Schema;
 
 module.exports = mongoose.model('User',{
     email: {type:String, unique: true},
@@ -8,5 +9,7 @@ module.exports = mongoose.model('User',{
 	imgPath : { type: String, default: 'def.jpg' },
 	descr: { type: String, default: '' },
 	pId: {type:String, unique: true},
-	facebook : mongoose.Schema.Types.Mixed
+	facebookId : String,
+	facebookName: String,
+	facebookToken: String
 });
