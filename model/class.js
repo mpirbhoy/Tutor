@@ -2,15 +2,16 @@
  * Created by franklai on 15-11-20.
  */
 var mongoose = require('mongoose');
-var Section = require('./section');
+var Thread = require('./thread');
+var User = require('./user');
 
 
 module.exports = mongoose.model('Class',{
     departmentCode: {type: String, required: true},
     courseCode:{type: String, required: true},
-    listOfSections: [String]
+    users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    threads: [{type: mongoose.Schema.Types.ObjectId, ref: 'Thread'}]
 });
-new Section
 
 User.where({access: "SUPERADMIN"}).findOne(function (err, firstUser) {
 

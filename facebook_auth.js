@@ -31,7 +31,7 @@ module.exports = function(passport) {
                     if (user) {
                         return done(null, user);
                     } else {
-                        // Populate database with user's Facebook info
+                        // Populate database with user's Facebook 's info
                         var user = new User();
 
                         user.set('email', profile.emails[0].value);
