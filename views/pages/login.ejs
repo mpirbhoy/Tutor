@@ -3,29 +3,39 @@
 <% include ../partials/nav %>
 
 <body>
-<div class="container">
-
-    <div class="panel panel-default form-signin">
+<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div class="panel panel-default" >
         <div class="panel-heading">
             <h2 class="form-signin-heading">LOGIN</h2>
         </div>
-        <br>
-        <div class="panel-body">
-            <form method="POST">
-                <div class="input-group input-group-lg">
+
+        <div style="padding-top:30px" class="panel-body" >
+
+            <form id="loginform" class="form-horizontal" role="form" method="POST">
+
+                <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                    <input id="login-username" type="email" class="form-control" name="email" placeholder="email" required autofocus>
+                    <input id="login-username" type="email" class="form-control" name="email" value="" placeholder="email" required>
                 </div>
-                <br>
-                <div class="input-group input-group-lg">
+
+                <div style="margin-bottom: 25px" class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <input id="login-password" type="password" class="form-control" name="password" placeholder="password" required>
                 </div>
-                <br>
 
 
-                <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+                <div style="margin-top:10px" class="form-group">
+                    <!-- ON SUBMIT -->
+                    <script>
+                        $('#loginform').on('submit',function(){
+                            login();
+                            return false;
+                        });
+                    </script>
+                    <!-- Button -->
+                    <div class="col-sm-12 controls">
+                        <button class="btn btn-success" type="submit">Login</button>
+                    </div>
                 </div>
 
 
@@ -40,7 +50,5 @@
         </div>
     </div>
 </div>
-
-
 </body>
 

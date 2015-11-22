@@ -153,7 +153,9 @@ III. Main
 
 /* Hide for mobile, show later */
 .sidebar {
-    display: none;
+    display: block;
+    background-color: #EEE;
+    padding: 20px;
 }
 @media (min-width: 768px) {
     .sidebar {
