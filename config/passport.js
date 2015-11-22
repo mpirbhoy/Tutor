@@ -128,10 +128,10 @@ passport.use(new FacebookStrategy({
 		                    var newUser            = new User();
 
 		                    // set all of the facebook information in our user model
-		                    newUser.facebook.id     = profile.id; // set the users facebook id                   
+		                    newUser.facebookId     = profile.id; // set the users facebook id                   
 		                    newUser.email 		   = profile.emails[0].value;
-		                    newUser.facebook.token = token; // we will save the token that facebook provides to the user                    
-		                    newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+		                    newUser.facebookToken = token; // we will save the token that facebook provides to the user                    
+		                    newUser.facebookName  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
 
 		                    // save our user to the database
 		                    newUser.save(function(err) {
