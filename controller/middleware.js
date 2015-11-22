@@ -10,7 +10,7 @@ module.exports.isLoggedIn = function isLoggedIn(req, res, next) {
 }
 
 //debugging logs
-module.exports = function logger(req, res, next) {
+module.exports.logger = function logger(req, res, next) {
 	//console.log(req.body.username);
 	//console.log(req.body.password);
 	return next();
