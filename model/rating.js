@@ -11,4 +11,3 @@ module.exports = mongoose.model('Section',{
     review: String,
     score: Number
 });
-

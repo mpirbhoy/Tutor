@@ -7,8 +7,10 @@ var Class = require('./class');
 
 
 module.exports = mongoose.model('Section',{
+    classId : String,
     classTimes: [String],
     sectionCode: String,
-    professors: [String]
+    professors: [String],
+    term: String
 });
 

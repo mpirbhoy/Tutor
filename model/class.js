@@ -8,7 +8,7 @@ var Section = require('./section');
 module.exports = mongoose.model('Class',{
     departmentCode: {type: String, required: true},
     courseCode:{type: String, required: true},
-    listOfSections: [Section]
+    listOfSections: [String]
 });
 new Section
 

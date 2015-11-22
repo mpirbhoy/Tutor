@@ -2,6 +2,7 @@ module.exports = function(passport) {
 
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../model/user');
+/*var FacebookStrategy = require('passport-facebook').Strategy;*/
 
 //This is for logging in 
 passport.use('local-login', new LocalStrategy({
@@ -99,6 +100,19 @@ passport.deserializeUser(function(id, done) {
 });
 }
 
+/*passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://www.example.com/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+    User.findOrCreate(..., function(err, user) {
+      if (err) { return done(err); }
+      done(null, user);
+    });
+  }
+));
+*/
 var crypto = require('crypto');
 
 //Helper function to hashEmail
