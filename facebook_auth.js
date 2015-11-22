@@ -3,7 +3,7 @@ var passport = require('passport'),
 var mongoose = require('mongoose'),
     User = mongoose.model('User');
 
-var FACEBOOK_APP_ID = "104977756536702"
+var FACEBOOK_APP_ID = "104977756536702";
 var FACEBOOK_APP_SECRET = "af3e54581686fcf0a7885252bf23339d";
 
 
@@ -31,6 +31,7 @@ module.exports = function(passport) {
                     if (user) {
                         return done(null, user);
                     } else {
+                        // Populate database with user's Facebook info
                         var user = new User();
 
                         user.set('email', profile.emails[0].value);
