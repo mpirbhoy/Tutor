@@ -11,6 +11,23 @@
                 <select class="select2 form-control" style="width: 100%">
                     <option value=""></option>
                 </select>
+                <script>
+                    $(document).on('change', 'select', function() {
+                        var $text = $('.select2-selection__rendered').text();
+                        $.ajax({
+                            type: "GET",
+                            url: "./" + $text,
+                            dataType: 'json',
+                            success: function(data) {
+                                var msg = '<button type="button" class="list-group-item">data.title</button>'
+
+                                $('.list-group').append(msg);
+                            },
+                            fail: function() {
+                            }
+                        });
+                    });
+                </script>
             </div>
 
             <!-- List of Classes -->
