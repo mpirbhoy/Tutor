@@ -9,7 +9,6 @@ var User = require('./user');
 module.exports = mongoose.model('Class',{
     departmentCode: {type: String, required: true},
     courseCode:{type: String, required: true},
-    users: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     threads: [{type: mongoose.Schema.Types.ObjectId, ref: 'Thread'}]
 });
 
