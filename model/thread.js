@@ -5,7 +5,7 @@
 var mongoose = require('mongoose');
 var User = require('./user');
 var Comment = require('./comment');
-module.exports = mongoose.model('Section',{
+module.exports = mongoose.model('Thread',{
     title: String,
     author: User,
     creationTime: Date,
