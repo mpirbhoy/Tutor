@@ -3,6 +3,8 @@
  * Created by franklai on 15-11-20.
  */
 var User = require('../model/user');
+var Class = require('../model/class');
+var sampleClasses = require("./classes.json");
 //exports.postLogin = function(req, res, passport){
 //    	passport.authenticate('local-login', { successRedirect: '/main',
 //														failureRedirect: '/login', failureFlash : true});
@@ -51,3 +53,29 @@ module.exports.getMain = function (req, res) {
         }
 
 };
+
+
+module.exports.getAllCourses = function (req, res) {
+    var allClasses = [];
+    var i = 0;
+    Class.find({}, function (err, classes) {
+        if (classes) {
+            classes.forEach(function(course) {
+                  var tempClass = {}
+                  tempClass.departmentCode = course.departmentCode;
+                  tempClass.courseCode= course.courseCode;
+                  tempClass.courseName = course.courseName;
+                  tempClass.prereqs = course.prereqs;
+                  tempClass.exclusions = course.exclusions;
+                  tempClass.instructors = course.instructors;
+                  allClasses[i] = tempClass;
+                  i++;
+            });
+            res.send(JSON.stringify(allClasses));
+        }
+    })
+};
+
+module.exports.loadClasses = function(req, res) {
+    
+}

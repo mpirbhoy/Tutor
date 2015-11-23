@@ -10,38 +10,14 @@ var middleware = require('./controller/middleware');
 
 
 module.exports = function(app, passport) {
-	//GET REQUESTS
-	//
-	//Request to go to homepage
-	app.get('/', middleware.isNotLoggedIn, function (req, res) {
-		res.render('./pages/home');
-	});
-
-	app.get('/login', middleware.isNotLoggedIn, function (req, res) {
-		res.render('./pages/login', {'errorMsg' : req.flash('error')});
-	});
-
-	app.get('/signup', middleware.isNotLoggedIn, function (req, res) {
-		res.render('./pages/signup');
-	});
-
-	app.get('/main', middleware.isLoggedIn, function(req, res) {controller.getMain(req, res)});
-
-	// Redirect the user to Facebook for authentication.  When complete,
-	// Facebook will redirect the user back to the application at
-	//     /auth/facebook/callback
+	
+	//Passport authentication routes
 	app.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }));
 
-	// Facebook will redirect the user to this URL after approval.  Finish the
-	// authentication process by attempting to obtain an access token.  If
-	// access was granted, the user will be logged in.  Otherwise,
-	// authentication has failed.
+	
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/',
 	                                      failureRedirect: '/login' }));
-
-	//POST REQUESTS
-
 	//Request to perform login
 	app.post('/login', passport.authenticate('local-login', { successRedirect: '/main',
 														failureRedirect: '/login', failureFlash : true}));
@@ -59,7 +35,25 @@ module.exports = function(app, passport) {
 	});
 
 
+	
+	app.get('/', middleware.isNotLoggedIn, function (req, res) {
+		res.render('./pages/home');
+	});
+
+	app.get('/login', middleware.isNotLoggedIn, function (req, res) {
+		res.render('./pages/login', {'errorMsg' : req.flash('error')});
+	});
+
+	app.get('/signup', middleware.isNotLoggedIn, function (req, res) {
+		res.render('./pages/signup');
+	});
+
+	//Routes going through controller.js
+	app.get('/main', middleware.isLoggedIn, function(req, res) {controller.getMain(req, res)});
 	app.get('/view_user/:email', middleware.isLoggedIn, function(req, res) {controller.getProfile(req, res)});
+	app.get('/course', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
+	app.post('/course/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
+	
 
 }
 
