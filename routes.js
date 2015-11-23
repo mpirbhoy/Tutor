@@ -25,9 +25,7 @@ module.exports = function(app, passport) {
 		res.render('./pages/signup');
 	});
 
-	app.get('/main', middleware.isLoggedIn, function(req, res) {
-		res.render('./pages/main');
-	});
+	app.get('/main', middleware.isLoggedIn, function(req, res) {controller.getMain(req, res)});
 
 	// Redirect the user to Facebook for authentication.  When complete,
 	// Facebook will redirect the user back to the application at
