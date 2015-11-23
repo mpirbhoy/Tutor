@@ -13,10 +13,29 @@ module.exports.getProfile = function (req, res) {
         if (email) {
             User.where({email: email}).findOne(function (err, foundUser) {
                 if (foundUser) {
-                    res.render('pages/view_user', {
+                    res.render('./pages/view_user', {
                         title: "View User",
                         email: foundUser.email,
-                        dispName: foundUser.dispName,
+                        name: foundUser.dispName,
+                        descr: foundUser.descr,
+                        imgPath: foundUser.imgPath
+                    })
+                }
+            })
+        }
+
+};
+
+module.exports.getMain = function (req, res) {
+        var _id = req.session.passport.user;
+        console.log(_id);
+        if (_id) {
+            User.where({_id: _id}).findOne(function (err, foundUser) {
+                if (foundUser) {
+                    res.render('./pages/main', {
+                        title: "Main Page",
+                        email: foundUser.email,
+                        name: foundUser.dispName,
                         descr: foundUser.descr,
                         imgPath: foundUser.imgPath
                     })

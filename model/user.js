@@ -11,6 +11,6 @@ module.exports = mongoose.model('User',{
 	pId: {type:String, unique: true},
 	facebookId : String,
 	classes:[{type: mongoose.Schema.Types.ObjectId, ref: 'Class' }],
-	facebookName: String,
+	facebookName: {type: String, defualt: ''},
 	facebookToken: String
 });
