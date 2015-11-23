@@ -78,7 +78,7 @@
 
 
             <!-- CREATE A NEW THREAD -->
-            <form class="form-horizontal">
+            <form class="form-horizontal" method="POST" action="/thread">
 
                 <!-- First Name & Last Name -->
                 <div class="form-group">
@@ -167,7 +167,8 @@
                 <!-- Submit -->
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">Submit Thread</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
                     </div>
                 </div>
             </form>
