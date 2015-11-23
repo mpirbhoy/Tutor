@@ -48,6 +48,26 @@
                             $(".list-group-item").each(function () {$(this).removeClass('active')});
                             $this.addClass('active');
                         }
+
+                        $.ajax({
+                            type: "GET",
+                            url: "/course",
+                            timeout: 2000,
+                            dataType: 'json',
+                            success: function(data) {
+                                var msg = '<h2>Courses</h2>';
+                                $.each(data, function(i, json) {
+                                    $.each($.parseJSON(json), function(key, val) {
+                                        msg += '<div class="' + key + '">' + key + ': ' + val + '</div>';
+                                    });
+                                });
+
+                                $('.main').html(msg);
+                            },
+                            fail: function() {
+                                $('.main').html("failed loading courses");
+                            }
+                        });
                     });
                 </script>
             </div>
