@@ -165,9 +165,9 @@
     <!-- JQUERY DATE & TIME PICKER -->
     
       <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/jquery.ui.timepicker.addon@1.4.5(jquery-ui-timepicker-addon.min.css+jquery-ui-timepicker-addon.css)">
       <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-      <script src="https://cdn.jsdelivr.net/g/jquery.ui.timepicker.addon@1.4.5(jquery-ui-timepicker-addon.min.js+jquery-ui-sliderAccess.js+jquery-ui-timepicker-addon.js)"></script>
+      <link rel="stylesheet" href="css/jquery-ui-timepicker-addon.css">
+      <script src="js/jquery-ui-timepicker-addon.js"></script>
 
       <!-- John's Code
       <link rel="stylesheet" href="css/jquery.timepicker.css">
@@ -180,21 +180,43 @@
 
     
     <script>
+
       $(function() {
         $( ".from" ).datetimepicker({
                 controlType: 'select',
                 oneLine: true,
-                timeFormat: 'hh:mm tt'
+                timeFormat: 'hh:mm tt',
+                minDate: 0,
+                onClose: function( selectedDate ) {
+                    $( ".to" ).datetimepicker( "option", "minDate", selectedDate )
+                  }
         });
         $( ".to" ).datetimepicker({
                 controlType: 'select',
                 oneLine: true,
-                timeFormat: 'hh:mm tt'
+                timeFormat: 'hh:mm tt',
+                onClose: function( selectedDate ) {
+        $( ".from" ).datetimepicker( "option", "maxDate", selectedDate );
+      }
+
         });
       });
 
-      var startDateTextBox = $(".from");
-      var endDateTextBox = $(".to");
+      /*
+        var startDateTextBox = $('#starting');
+        var endDateTextBox = $('#ending');
+
+        $.timepicker.datetimeRange(
+            startDateTextBox,
+            endDateTextBox,
+            {
+                minInterval: (1000*60*60), // 1hr
+                dateFormat: 'dd M yy', 
+                timeFormat: 'HH:mm',
+                start: {}, // start picker options
+                end: {} // end picker options                   
+            }
+        );*/
       
     // initialize input widgets first
     /*
