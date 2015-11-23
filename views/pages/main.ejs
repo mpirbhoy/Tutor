@@ -7,6 +7,7 @@
         <!-- SEARCH MENU AND CLASSES -->
         <div class="col-sm-3 col-md-3 sidebar">
             <div class="input-group input-group-md">
+
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                 <select class="select2 form-control" style="width: 100%">
                     <option value=""></option>
@@ -55,20 +56,80 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main">
 
-            <!-- THREADS -->
-            <h2 class="sub-header">USER LIST</h2>
+            <!-- CREATE A NEW THREAD -->
+            <form class="form-horizontal">
 
-            <!-- Table -->
-            <table class="table table-striped">
-                <thead>
-                <th>#</th>
-                <th>Display Picture</th>
-                <th>Display Name</th>
-                <th>Email</th>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <!-- First Name & Last Name -->
+              <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Name</label>
+                <div class="row">
+                  <div class="col-xs-2">
+                    <input type="text" class="form-control" placeholder="First Name">
+                  </div>
+                  <div class="col-xs-2">
+                    <input type="text" class="form-control" placeholder="Last Name">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Title</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="inputPassword3" placeholder="Looking for...">
+                </div>
+              </div>
+
+            <!-- Price -->
+          <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Price</label>
+            <div class="col-sm-5">
+                <input type="text"  class="form-control" placeholder="$">
+            </div>
+          </div>
+
+            <!-- Availability -->
+          <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Availability</label>
+            <div class="col-sm-5">
+                <input type="text"  class="form-control" id="datepicker">
+            </div>
+          </div>
+
+            <!-- Description -->
+              <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
+                <div class="col-sm-5">
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+
+              <!-- Tutor or Tutee-->
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                        I'm a tutor
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        I'm looking for a tutor
+                      </label>
+                    </div>
+                </div>
+              </div>
+
+            <!-- Submit -->
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-default">Submit Thread</button>
+                </div>
+              </div>
+            </form>
+            <!-- THREAD END -->
         </div>
     </div>
 </div>

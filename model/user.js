@@ -10,6 +10,6 @@ module.exports = mongoose.model('User',{
 	descr: { type: String, default: '' },
 	pId: {type:String, unique: true},
 	facebookId : String,
-	facebookName: String,
+	facebookName: {type: String, defualt: ''},
 	facebookToken: String
 });

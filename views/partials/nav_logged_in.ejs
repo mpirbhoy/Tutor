@@ -10,7 +10,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/" ><div id="nav-text"><span style="color:#c80909">Pro</span>files</div></a>
+            <a class="navbar-brand" href="/" ><div id="nav-text" class="glyphicon glyphicon-education">tutor4U</div></a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -19,8 +19,8 @@
         </ul>
         <!-- Nav right -->
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/profile" style="padding-bottom: 0; padding-top: 0;"><img id ="nav-img"src="http://1.gravatar.com/avatar/22bd03ace6f176bfe0c593650bcf45d8?s=50" style="cursor:pointer;"></a></a></li>
-          <li><a href="/profile" id="user-nav" style="cursor:pointer;">sexy beast</a></li>
+          <li><a href="/view_user/<%= email %>" style="padding-bottom: 0; padding-top: 0;"><img id ="nav-img"src="http://1.gravatar.com/avatar/22bd03ace6f176bfe0c593650bcf45d8?s=50" style="cursor:pointer;"></a></a></li>
+          <li><a href="/view_user/<%= email %>" id="user-nav" style="cursor:pointer;"><%= name %></a></li>
           <li id='logout-nav'><form action="/logout" method="post"><button class="btn btn-link glyphicon glyphicon-log-out" style="margin-top: 7px" aria-hidden="true"></button></form></li>
         </ul>
       </div><!-- /.navbar-collapse -->
