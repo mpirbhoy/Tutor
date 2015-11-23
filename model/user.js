@@ -12,5 +12,6 @@ module.exports = mongoose.model('User',{
 	facebookId : String,
 	classes:[{type: mongoose.Schema.Types.ObjectId, ref: 'Class' }],
 	facebookName: {type: String, defualt: ''},
-	facebookToken: String
+	facebookToken: String,
+	facebookProfilePicture: String
 });

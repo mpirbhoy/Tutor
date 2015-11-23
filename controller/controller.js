@@ -32,12 +32,19 @@ module.exports.getMain = function (req, res) {
         if (_id) {
             User.where({_id: _id}).findOne(function (err, foundUser) {
                 if (foundUser) {
+                    var defaultImagePath;
+                    if (foundUser.facebookProfilePicture) {
+                        defaultImagePath = foundUser.facebookProfilePicture;
+                    } else {
+                        defaultImagePath = foundUser.imgPath;
+                    }
+
                     res.render('./pages/main', {
                         title: "Main Page",
                         email: foundUser.email,
                         name: foundUser.dispName,
                         descr: foundUser.descr,
-                        imgPath: foundUser.imgPath
+                        imgPath: defaultImagePath
                     })
                 }
             })

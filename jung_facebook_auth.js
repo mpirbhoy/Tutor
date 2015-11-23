@@ -6,7 +6,6 @@ var mongoose = require('mongoose'),
 var FACEBOOK_APP_ID = "104977756536702";
 var FACEBOOK_APP_SECRET = "af3e54581686fcf0a7885252bf23339d";
 
-
 module.exports = function(passport) {
     passport.serializeUser(function (user, done) {
         done(null, user.id);
@@ -38,7 +37,7 @@ module.exports = function(passport) {
                         user.set('display_name', profile.displayName);
                         user.set('status', 'Member');
                         user.set('token', accessToken);
-                        console.log(profile.photos);
+                        user.set('photos', profile.photos);
 
                         user.save(function(err) {
                             if (err)
