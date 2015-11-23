@@ -4,6 +4,7 @@
  */
 var User = require('../model/user');
 var Class = require('../model/class');
+var sampleClasses = require("./classes.json");
 //exports.postLogin = function(req, res, passport){
 //    	passport.authenticate('local-login', { successRedirect: '/main',
 //														failureRedirect: '/login', failureFlash : true});
@@ -48,7 +49,7 @@ module.exports.getMain = function (req, res) {
 
 
 module.exports.getAllCourses = function (req, res) {
-    var allClasses = {};
+    var allClasses = [];
     var i = 0;
     Class.find({}, function (err, classes) {
         if (classes) {
@@ -68,3 +69,6 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
+module.exports.loadClasses = function(req, res) {
+    
+}
