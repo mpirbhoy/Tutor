@@ -52,14 +52,14 @@ module.exports.getAllCourses = function (req, res) {
     var i = 0;
     Class.find({}, function (err, classes) {
         if (classes) {
-            classes.forEach(function(class) {
+            classes.forEach(function(course) {
                   var tempClass = {}
-                  tempClass.departmentCode = class.departmentCode;
-                  tempClass.courseCode= class.courseCode;
-                  tempClass.courseName = class.courseName;
-                  tempClass.prereqs = class.prereqs;
-                  tempClass.exclusions = class.exclusions;
-                  tempClass.instructors = class.instructors;
+                  tempClass.departmentCode = course.departmentCode;
+                  tempClass.courseCode= course.courseCode;
+                  tempClass.courseName = course.courseName;
+                  tempClass.prereqs = course.prereqs;
+                  tempClass.exclusions = course.exclusions;
+                  tempClass.instructors = course.instructors;
                   allClasses[i] = tempClass;
                   i++;
             });
