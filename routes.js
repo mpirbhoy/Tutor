@@ -7,7 +7,8 @@ var flash = require('connect-flash');
 var express = require('express');
 var controller = require('./controller/controller');
 var middleware = require('./controller/middleware');
-
+var Thread = require('./model/thread');
+var Class = require('./model/class');
 
 module.exports = function(app, passport) {
 	
@@ -54,7 +55,27 @@ module.exports = function(app, passport) {
 	app.get('/course', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
 	app.post('/course/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
 	
+	app.post('/thread/:class', middleware.createThread, function(req, res){
+		var classToCreateIn = req.params.class;
+		var newThreadData = req.body;
 
+		new  Class.where({courseCode: classToCreateIn}).findOne(function(err, myClass){
+
+			if (err){
+				res.json({
+					status: 409,
+					msg: "Error occured with adding thread to class " + myClass.courseCode + "\n"
+				});
+			} else if (myClass){
+				new Thread({
+					//body.
+				}).save();
+
+				myClass.threads.push(newThread)
+			}
+		})
+
+	});
 }
 
 

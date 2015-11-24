@@ -1,3 +1,4 @@
+var Thread = require('../model/thread');
 //Middleware for passing through if person is logged in already
 module.exports.isLoggedIn = function isLoggedIn(req, res, next) {
 
@@ -25,4 +26,10 @@ module.exports.isNotLoggedIn = function isNotLoggedIn(req, res, next) {
 
 	// if they are redirect them to the profile page
 	res.redirect('/main');
+}
+
+//For creating new threads in database
+module.exports.createThread = function createThread(req, res, next){
+
+	new Thread
 }

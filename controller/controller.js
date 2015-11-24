@@ -3,13 +3,18 @@
  * Created by franklai on 15-11-20.
  */
 var User = require('../model/user');
-var Class = require('../model/class');
+//var Class = require('../model/class');
 //var sampleClasses = require("./classes.json");
-//exports.postLogin = function(req, res, passport){
-//    	passport.authenticate('local-login', { successRedirect: '/main',
-//														failureRedirect: '/login', failureFlash : true});
-//
+//module.exports.postLogin = function postLogin(passport) {
+//    console.log('In post login');
+//    return function (req, res, next) {
+//        passport.authenticate('local-login', {
+//            successRedirect: '/main',
+//            failureRedirect: '/login', failureFlash: true
+//        });
+//    }
 //};
+
 module.exports.getProfile = function (req, res) {
         var email = req.params.email;
         if (email) {
