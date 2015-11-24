@@ -35,9 +35,9 @@
             <!-- List of Classes -->
             <div class="list-group" style="margin-top: 20px">
                 <form method="POST">
-                    <a href="/course" type="submit" class="list-group-item">CSC309: Programming on the Web</a>
-                    <a href="/course" type="submit" class="list-group-item">CSC309: Programming on the Web</a>
-                    <a href="/course" type="submit" class="list-group-item">CSC309: Programming on the Web</a>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                 </form>
                 <!-- Active class added when clicked -->
                 <script>
@@ -73,12 +73,14 @@
                 </script>
             </div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main">
+
+        <!-- RIGHT SIDE OF THE PAGE -->
+        <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
             <button type="submit" id="create" class="btn btn-warning" style="margin: 15px 15px 30px 15px;">Create thread</button>
 
 
             <!-- CREATE A NEW THREAD -->
-            <form class="form-horizontal" method="POST" action="/thread">
+            <form class="form-horizontal" id="myForm">
 
                 <!-- First Name & Last Name -->
                 <div class="form-group">
@@ -159,7 +161,7 @@
                 <!-- Submit -->
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button id="submitReq" type="submit" class="btn btn-primary">Create</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                     </div>
                 </div>
@@ -213,7 +215,17 @@
                     </div><!-- /input-group -->
 
                     <!-- Comments!-->
-                    <div class="panel-footer">
+                    <div class="panel-footer" style="margin-top: 20px;">
+                        
+                        <p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p>
+                        
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+
+                        <button type="button" class="btn btn-danger">Delete</button>
+                        
+                    </div>
+
+                    <div class="panel-footer" style="margin-top: 20px;">
                         
                         <p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p>
                         
@@ -229,6 +241,7 @@
 
 <script>
     $(document).ready(function() {
+        /* Hide and Show Create Thread */
         var count = 0;
         if (count == 0) $(".form-group").hide();
         $("#create").click(function () {
@@ -236,6 +249,25 @@
             if (count % 2 == 0) $(".form-group").hide();
             else $(".form-group").show();
         });
+
+        /* Submit Form */
+        $('#submitReq').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/thread/csc309",
+                timeout: 2000,
+                dataType: 'json',
+                data: $('myForm').serialize(),
+                success: function(data) {
+                    $('.main').html($.parseJSON(data));
+                },
+                fail: function() {
+                    $('.main').html("failed loading data");
+                }
+            });
+        });
+
     });
 </script>
 </body>
