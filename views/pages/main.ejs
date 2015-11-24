@@ -35,9 +35,9 @@
             <!-- List of Classes -->
             <div class="list-group" style="margin-top: 20px">
                 <form method="POST">
-                    <a href="/course" type="submit" class="list-group-item">CSC309: Programming on the Web</a>
-                    <a href="/course" type="submit" class="list-group-item">CSC309: Programming on the Web</a>
-                    <a href="/course" type="submit" class="list-group-item">CSC309: Programming on the Web</a>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                 </form>
                 <!-- Active class added when clicked -->
                 <script>
@@ -80,7 +80,7 @@
 
 
             <!-- CREATE A NEW THREAD -->
-            <form class="form-horizontal" method="POST" action="/thread">
+            <form class="form-horizontal" id="myForm">
 
                 <!-- First Name & Last Name -->
                 <div class="form-group">
@@ -161,7 +161,7 @@
                 <!-- Submit -->
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button id="submitReq" type="submit" class="btn btn-primary">Create</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                     </div>
                 </div>
@@ -240,8 +240,8 @@
 </div>
 
 <script>
-    /* Hide and Show Create Thread */
     $(document).ready(function() {
+        /* Hide and Show Create Thread */
         var count = 0;
         if (count == 0) $(".form-group").hide();
         $("#create").click(function () {
@@ -249,6 +249,25 @@
             if (count % 2 == 0) $(".form-group").hide();
             else $(".form-group").show();
         });
+
+        /* Submit Form */
+        $('#submitReq').click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/thread/csc309",
+                timeout: 2000,
+                dataType: 'json',
+                data: $('myForm').serialize(),
+                success: function(data) {
+                    $('.main').html($.parseJSON(data));
+                },
+                fail: function() {
+                    $('.main').html("failed loading data");
+                }
+            });
+        });
+
     });
 </script>
 </body>
