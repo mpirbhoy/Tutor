@@ -4,6 +4,7 @@
  */
 var User = require('../model/user');
 var Class = require('../model/class');
+//var sampleClasses = require("./classes.json");
 //exports.postLogin = function(req, res, passport){
 //    	passport.authenticate('local-login', { successRedirect: '/main',
 //														failureRedirect: '/login', failureFlash : true});
@@ -33,12 +34,19 @@ module.exports.getMain = function (req, res) {
         if (_id) {
             User.where({_id: _id}).findOne(function (err, foundUser) {
                 if (foundUser) {
+                    var defaultImagePath;
+                    if (foundUser.facebookProfilePicture) {
+                        defaultImagePath = foundUser.facebookProfilePicture;
+                    } else {
+                        defaultImagePath = foundUser.imgPath;
+                    }
+
                     res.render('./pages/main', {
                         title: "Main Page",
                         email: foundUser.email,
                         name: foundUser.dispName,
                         descr: foundUser.descr,
-                        imgPath: foundUser.imgPath
+                        imgPath: defaultImagePath
                     })
                 }
             })
@@ -48,7 +56,7 @@ module.exports.getMain = function (req, res) {
 
 
 module.exports.getAllCourses = function (req, res) {
-    var allClasses = {};
+    var allClasses = [];
     var i = 0;
     Class.find({}, function (err, classes) {
         if (classes) {
@@ -68,3 +76,6 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
+//module.exports.loadClasses = function(req, res) {
+
+//}
