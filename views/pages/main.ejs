@@ -258,7 +258,7 @@
                 url: "/thread/csc309",
                 timeout: 2000,
                 dataType: 'json',
-                data: $('myForm').serialize(),
+                data: $('#myForm').serialize(),
                 success: function(data) {
                     $('.main').html($.parseJSON(data));
                 },

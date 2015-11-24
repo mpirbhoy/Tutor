@@ -57,6 +57,7 @@ module.exports = function(app, passport) {
 	
 	app.post('/thread/:class', function(req, res){
 		new Class({courseCode: 'csc309_frank'}).save();
+		new Class({courseCode: 'csc309'}).save();
 		var classToCreateIn = req.params.class;
 		var newThreadData = req.body;
 
