@@ -2,6 +2,7 @@
 
 <body>
 <% include ../partials/nav_logged_in %>
+
 <div class="container-fluid">
     <div class="row">
         <!-- SEARCH MENU AND CLASSES -->
@@ -73,11 +74,11 @@
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main">
-            <button type="submit" class="button btn btn-warning" style="margin: 15px 15px 30px 15px;">Create thread</button>
+            <button type="submit" id="create" class="btn btn-warning" style="margin: 15px 15px 30px 15px;">Create thread</button>
 
 
             <!-- CREATE A NEW THREAD -->
-            <form class="form-horizontal">
+            <form class="form-horizontal" method="POST" action="/thread">
 
                 <!-- First Name & Last Name -->
                 <div class="form-group">
@@ -166,11 +167,56 @@
                 <!-- Submit -->
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default">Submit Thread</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
                     </div>
                 </div>
             </form>
-            <!-- THREAD END -->
+            <!-- CREATE THREAD END -->
+
+
+            <div class="panel panel-default ">
+
+                <div class="panel-heading">
+                    &nbsp
+                <div style="float:left;">
+                    <h3 class="panel-title">Looking for (tutor / tuttee)</h3>
+                </div>
+
+
+                <div style="float:right;">
+                    <h3 class="panel-title">Time Created:</h3>
+                </div>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="col-lg-4">
+                        <h6>Example name (example email)</h6>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <h6>Price:</h6>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <h6>Availability:</h6>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <p>
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Type in your response...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Respond!</button>
+                        </span>
+                    </div><!-- /input-group -->
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -179,7 +225,7 @@
     $(document).ready(function() {
         var count = 0;
         if (count == 0) $(".form-group").hide();
-        $(".button").click(function () {
+        $("#create").click(function () {
             count++;
             if (count % 2 == 0) $(".form-group").hide();
             else $(".form-group").show();
