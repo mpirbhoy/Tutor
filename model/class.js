@@ -7,7 +7,7 @@ var User = require('./user');
 
 
 module.exports = mongoose.model('Class',{
-    courseCode:{type: String, required: true},
+    courseCode:{type: String, required: true, unique: true},
     courseName: String,
     prereqs: [String],
     exclusions: [String],

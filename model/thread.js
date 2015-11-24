@@ -9,12 +9,13 @@ module.exports = mongoose.model('Thread',{
     title: String,
     author: User,
     creationTime: Date,
-    threadID: {type: Number, unique: true},
     comments: [Comment],
     modificationTime: Date,
     price: Number,
     tutor: User,
     tutee: User,
-    availability: String
+    starTime: String,
+    endTime: String,
+    description: String
 });
 

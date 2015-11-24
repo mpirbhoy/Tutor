@@ -55,11 +55,12 @@ module.exports = function(app, passport) {
 	app.get('/course', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
 	app.post('/course/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
 	
-	app.post('/thread/:class', middleware.createThread, function(req, res){
+	app.post('/thread/:class', function(req, res){
+		new Class({courseCode: 'csc309_frank'}).save();
 		var classToCreateIn = req.params.class;
 		var newThreadData = req.body;
 
-		new  Class.where({courseCode: classToCreateIn}).findOne(function(err, myClass){
+		Class.where({courseCode: classToCreateIn}).findOne(function(err, myClass){
 
 			if (err){
 				res.json({
@@ -67,11 +68,26 @@ module.exports = function(app, passport) {
 					msg: "Error occured with adding thread to class " + myClass.courseCode + "\n"
 				});
 			} else if (myClass){
-				new Thread({
-					//body.
-				}).save();
+				var newThread = new Thread({
+					title: req.body.title,
+					author: req.body.author_first_name + req.body.author_last_name,
+					price: req.body.price,
+					description: req.body.description,
+					tutor: User,
+					tutee: User,
+					startTime: req.body.start_time,
+					endTime: req.body.end_time
 
+				});
+
+				// For populating tutor or tutee field
+				if (req.body.tutor) newThread.tutor = newThread.author;
+				else newThread.tutee = newThread.author;
+
+
+				newThread.save();
 				myClass.threads.push(newThread)
+				myClass.save();
 			}
 		})
 

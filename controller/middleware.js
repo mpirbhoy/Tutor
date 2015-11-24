@@ -28,8 +28,3 @@ module.exports.isNotLoggedIn = function isNotLoggedIn(req, res, next) {
 	res.redirect('/main');
 }
 
-//For creating new threads in database
-module.exports.createThread = function createThread(req, res, next){
-
-	new Thread
-}
