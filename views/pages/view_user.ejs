@@ -40,11 +40,12 @@
 	<div class="row">
 	  <div class="col-sm-6 col-md-4">
 	    <div class="thumbnail">
-		<img id="profile-img" src="<%=imgPath%>" alt="avatar"> 
+		<img id="profile-img" src="/img/<%=imgPath%>" alt="avatar"> 
 	      <div class="caption">
-	        <h3 id="profile-name"></h3>
+	        <h3 id="profile-name"><%= dispName %></h3>
 	        <p id="profile-email"><%= email %></p>
-	        <p id="profile-description"></p>
+	        <p id="profile-description"><%= descr %></p>
+	       	<p id="profile-classes"><%= classes %></p>
 	        
 	        <!-- Admin & Super admin privelages-->
 	        <p id="profile-height"></p>
