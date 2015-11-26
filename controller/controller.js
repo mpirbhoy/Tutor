@@ -83,5 +83,3 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
-
-//}
