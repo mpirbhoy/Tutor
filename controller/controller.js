@@ -45,7 +45,7 @@ module.exports.getMain = function (req, res) {
                     if (foundUser.facebookProfilePicture) {
                         defaultImagePath = foundUser.facebookProfilePicture;
                     } else {
-                        defaultImagePath = "img/" + foundUser.imgPath;
+                        defaultImagePath = foundUser.imgPath;
                     }
 
                     res.render('./pages/main', {
