@@ -25,7 +25,9 @@ module.exports.getProfile = function (req, res) {
                         email: foundUser.email,
                         name: foundUser.dispName,
                         descr: foundUser.descr,
-                        imgPath: foundUser.imgPath
+                        imgPath: foundUser.imgPath,
+                        dispName: foundUser.dispName,
+                        classes: foundUser.classes
                     })
                 }
             })
@@ -81,6 +83,5 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
-//module.exports.loadClasses = function(req, res) {
 
 //}
