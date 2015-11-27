@@ -4,16 +4,7 @@
  */
 var User = require('../model/user');
 var Course = require('../model/course');
-//module.exports.postLogin = function postLogin(passport) {
-//    console.log('In post login');
-//    return function (req, res, next) {
-//        passport.authenticate('local-login', {
-//            successRedirect: '/main',
-//            failureRedirect: '/login', failureFlash: true
-//        });
-//    }
-//};
-
+var Thread = require('../model/thread');
 module.exports.getProfile = function (req, res) {
     var email = req.params.email;
     if (email) {
@@ -63,28 +54,33 @@ module.exports.getMain = function (req, res) {
 
 module.exports.getAllCourses = function (req, res) {
 
-    new Course({courseCode: 'CSC309H1',
+    new Course({
+        courseCode: 'CSC309H1',
         courseName: 'Programming on the Web',
         prereqs: 'CSC209H1',
         instructors: 'A. Mashiyat'
     }).save();
-    new Course({courseCode: 'CSC343H1',
+    new Course({
+        courseCode: 'CSC343H1',
         courseName: 'Introduction to Databases',
         prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
         instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
     }).save();
-    new Course({courseCode: 'CSC108H1',
+    new Course({
+        courseCode: 'CSC108H1',
         courseName: 'Introduction to Computer Programming',
         exclusions: 'CSC120H1, CSC148H1',
         instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
     }).save();
-    new Course({courseCode: 'CSC148H1',
+    new Course({
+        courseCode: 'CSC148H1',
         courseName: ' Introduction to Computer Science',
         prereqs: ' CSC108H1',
         exclusions: 'CSC150H1',
         instructors: 'D. Liu, D. Heap'
     }).save();
-    new Course({courseCode: 'CSC207H1',
+    new Course({
+        courseCode: 'CSC207H1',
         courseName: 'Software Design',
         prereqs: 'CSC148H1',
         instructors: 'J. Campbell'
@@ -95,9 +91,9 @@ module.exports.getAllCourses = function (req, res) {
     var i = 0;
     Course.find({}, function (err, courses) {
         if (courses) {
-            courses.forEach(function(course) {
+            courses.forEach(function (course) {
                 var tempCourse = {}
-                tempCourse.courseCode= course.courseCode;
+                tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
                 tempCourse.exclusions = course.exclusions;
@@ -110,4 +106,58 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
+module.exports.makeNewThread = function (req, res) {
+    new Course({courseCode: 'csc309_frank'}).save();
+    new Course({courseCode: 'csc309'}).save();
+    var courseToCreateIn = req.params.course;
+    var newThreadData = req.body;
 
+    Course.where({courseCode: courseToCreateIn}).findOne(function (err, myCourse) {
+
+        if (err) {
+            res.json({
+                status: 409,
+                msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
+            });
+        } else if (myCourse) {
+            var newThread = new Thread({
+                title: req.body.title,
+                author: req.body.author_first_name + req.body.author_last_name,
+                price: req.body.price,
+                description: req.body.description,
+                tutor: User,
+                tutee: User,
+                startTime: req.body.start_time,
+                endTime: req.body.end_time
+
+            });
+
+            // For populating tutor or tutee field
+            if (req.body.tutor) newThread.tutor = newThread.author;
+            else newThread.tutee = newThread.author;
+
+
+            newThread.save();
+            myCourse.threads.push(newThread);
+            myCourse.save();
+        }
+    })
+
+};
+
+module.exports.getAllThreads = function(req, res){
+
+    // Get threads specific to a class
+    var getThreadsFrom = req.params.course;
+    Course.where({courseCode: getThreadsFrom}).findOne(function(err, myCourse) {
+        if (err){
+            res.status(409).json({
+                msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
+            });
+        } else if (myCourse){
+            res.status(301).json({
+                allThreadsInCourse: myCourse.threads
+            });
+        }
+    })
+};
