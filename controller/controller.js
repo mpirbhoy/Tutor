@@ -92,20 +92,19 @@ module.exports.getAllCourses = function (req, res) {
 
 
     var allCourses = [];
-    var i = 0;
-    Course.find({}, function (err, courses) {
+    Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
-            courses.forEach(function(course) {
+            courses.forEach(function (course) {
                 var tempCourse = {}
-                tempCourse.courseCode= course.courseCode;
+                tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
                 tempCourse.exclusions = course.exclusions;
                 tempCourse.instructors = course.instructors;
-                allCourses.push(JSON.stringify(tempCourse));
-                i++;
+                allCourses.push(tempCourse);
             });
-            res.send(JSON.stringify(allCourses));
+            res.send(allCourses);
         }
     })
+
 };
