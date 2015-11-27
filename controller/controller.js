@@ -51,8 +51,6 @@ module.exports.getProfile = function (req, res) {
 };
 
 module.exports.getMain = function (req, res) {
-    new Course({courseCode: 'csc309_frank'}).save();
-    new Course({courseCode: 'csc309'}).save();
     var _id = req.session.passport.user;
     console.log(_id);
     if (_id) {
@@ -144,7 +142,8 @@ module.exports.getAllCourses = function (req, res) {
 };
 
 module.exports.makeNewThread = function (req, res) { //TODO: Untested
-    
+    new Course({courseCode: 'csc309_frank'}).save();
+    new Course({courseCode: 'csc309'}).save();
     var courseToCreateIn = req.params.course;
     var newThreadData = req.body;
     if (courseToCreateIn) {
