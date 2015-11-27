@@ -37,10 +37,17 @@
             <div class="list-group" style="margin-top: 20px">
                 <form>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
-                    <button type="submit" class="list-group-item" value="CSC301">CSC309: Programming on the Web</button>
-                    <button type="submit" class="list-group-item" value="CSC302">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
 
-                    <% for(var i=0; i < courses.length; i++) { %>
+
+                    <script> 
+                        console.log(<%= courses %>);
+                        var courses = JSON.parse(<%= courses %>);
+                        console.log(courses);
+                    </script>
+
+                    <% for(var i=0; i <%= courses.length %>; i++) { %>
                         <button id="class_button" type="submit" class="list-group-item" value=<%= courses[i].courseCode %>><%= courses[i].courseCode %> + " " + <%= courses[i].courseName %> </button>
                     <% } %>
 
@@ -58,11 +65,15 @@
                             console.log($(this).attr('value'));
                             $.ajax({
                                 type: "GET",
-                                url: "/thread/" + $(this).attr('value'),
+                                url: "/thread/csc309",
                                 timeout: 2000,
                                 dataType: 'json',
                                 success: function(data) {
-                                    console.log(data)
+                                    console.log(data);
+                                    threads = data.allThreadsFromCourse
+                                    for (i = 0; i < threads.length; i++) {
+                                        threads[i]
+                                    }
                                 },
                                 fail: function() {
                                     $('.main').html("failed loading courses");
@@ -152,7 +163,7 @@
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="tutee" id="optionsRadios2" value="option2">
+                                <input type="radio" name="tutor" id="optionsRadios2" value="option2">
                                 I'm looking for a tutor
                             </label>
                         </div>
@@ -201,6 +212,11 @@
                         <h6><!--Availability:--></h6>
                     </div>
 
+                    <!-- Title -->
+                    <div class="col-lg-12">
+                        <h6><!-- Title --></h6>
+                    </div>
+
                     <!-- Description -->
                     <div class="col-lg-12">
                         <p><!-- Description goes here --></p>
@@ -244,15 +260,14 @@
         $('#submitReq').click(function(e) {
             e.preventDefault();
 
-            new_thread_info = $('#myForm').serialize();
 
-            new_thread = "<div class='panel panel-default' id='" + "ID" +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'> Looking for " + "STATUS" + "</h3></div><div style='float:right;'><h3 class='panel-title'>" + "THREAD TITLE" + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>" + "NAME(EMAIL)" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD PRICE" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD AVAILABILITY" +"</h6></div><div class='col-lg-12'><p>" + "THREAD DESCRIPTION" + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
+            // new_thread = "<div class='panel panel-default' id='" + "ID" +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'> Looking for " + "STATUS" + "</h3></div><div style='float:right;'><h3 class='panel-title'>" + "THREAD TITLE" + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>" + "NAME(EMAIL)" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD PRICE" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD AVAILABILITY" +"</h6></div><div class='col-lg-12'><p>" + "THREAD DESCRIPTION" + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
 
-            $('.main').append(new_thread);
+            // $('.main').append(new_thread);
 
             //$( "#thread-example" ).hide();
 
-            /*
+            
             $.ajax({
                 type: "POST",
                 url: "/thread/csc309", // Injection required 
@@ -260,13 +275,15 @@
                 dataType: 'json',
                 data: $('#myForm').serialize(),
                 success: function(data) {
-                    $('.main').append($('#thread-example'));
+                    // new_thread = "<div class='panel panel-default' id='" + "ID" +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'> Looking for " + "STATUS" + "</h3></div><div style='float:right;'><h3 class='panel-title'>" + "TIME CREATED" + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>" + "NAME(EMAIL)" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD PRICE" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD AVAILABILITY" +"</h6></div><div class='col-lg-12'><h4>" + "THREAD TITLE" + "</h4></div><div class='col-lg-12'><p>" + "THREAD DESCRIPTION" + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
+
+                    // $('.main').append(new_thread)
                 },
                 fail: function() {
-                    $('.main').html("failed loading data");
+                    // $('.main').html("failed loading data");
                 }
             }); 
-            */
+            
         });
         
         /* Comment button that populated a thread with a comment */
