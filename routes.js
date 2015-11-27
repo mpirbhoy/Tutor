@@ -51,50 +51,17 @@ module.exports = function(app, passport) {
 
 	//Routes going through controller.js
 	app.get('/main', middleware.isLoggedIn, controller.getMain);
-	app.get('/view_user/:email', middleware.isLoggedIn, controller.getProfile);
+	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	app.get('/course', middleware.isLoggedIn, controller.getAllCourses);
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
-	//app.get('/thread/:course', function(req, res ));
-	app.post('/thread/:course', function(req, res){
-		new Course({courseCode: 'csc309_frank'}).save();
-		new Course({courseCode: 'csc309'}).save();
-		var courseToCreateIn = req.params.class;
-		var newThreadData = req.body;
+	// Route for making thread for a particular course
+	app.post('/thread/:course', controller.makeNewThread);
 
-		Course.where({courseCode: courseToCreateIn}).findOne(function(err, myCourse){
-
-			if (err){
-				res.json({
-					status: 409,
-					msg: "Error occured with adding thread to course " + myCourse.courseCode + "\n"
-				});
-			} else if (myCourse){
-				var newThread = new Thread({
-					title: req.body.title,
-					author: req.body.author_first_name + req.body.author_last_name,
-					price: req.body.price,
-					description: req.body.description,
-					tutor: User,
-					tutee: User,
-					startTime: req.body.start_time,
-					endTime: req.body.end_time
-
-				});
-
-				// For populating tutor or tutee field
-				if (req.body.tutor) newThread.tutor = newThread.author;
-				else newThread.tutee = newThread.author;
+	// Route for getting threads for a particular course
+	app.get('/thread/:course', controller.getAllThreads);
 
 
-				newThread.save();
-				myCourse.threads.push(newThread)
-				myCourse.save();
-			}
-		})
-
-	});
-	
 	// POST request when enrolling in a course from search bar. The users class variable is UPDATED so PUT will be used
 	/*app.post('/:email/:courses',function(req, res){
 
@@ -109,6 +76,7 @@ module.exports = function(app, passport) {
             })
         }
 	});*/
+
 }
 
 
