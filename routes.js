@@ -51,14 +51,15 @@ module.exports = function(app, passport) {
 
 	//Routes going through controller.js
 	app.get('/main', middleware.isLoggedIn, controller.getMain);
-	app.get('/view_user/:email', middleware.isLoggedIn, controller.getProfile);
+	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	app.get('/course', middleware.isLoggedIn, controller.getAllCourses);
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
 	// Route for making thread for a particular course
 	app.post('/thread/:course', controller.makeNewThread);
-	app.get('/thread/:course', controller.getAllThreads);
+
 	// Route for getting threads for a particular course
+	app.get('/thread/:course', controller.getAllThreads);
 
 
 	// POST request when enrolling in a course from search bar. The users class variable is UPDATED so PUT will be used
