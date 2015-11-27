@@ -15,7 +15,6 @@ module.exports = function(app, passport) {
 	//Passport authentication routes
 	app.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }));
 
-	
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/',
 	                                      failureRedirect: '/login' }));
@@ -62,20 +61,8 @@ module.exports = function(app, passport) {
 	app.get('/thread/:course', controller.getAllThreads);
 
 
-	// POST request when enrolling in a course from search bar. The users class variable is UPDATED so PUT will be used
-	//app.post('/:email/:courses',function(req, res){
-    //
-	//	var email = req.params.email;
-	//	var course = req.params.courses;
-     //   if (email) {
-     //       User.where({email: email}).findOne(function (err, foundUser) {
-     //           if (foundUser) {
-     //           	foundUser.classes.append()
-    //
-     //           }
-     //       })
-     //   }
-	//});
+	// PUT request when enrolling in a course from search bar.
+	app.put('/user/:email', controller.updateUserCourses);
 }
 
 

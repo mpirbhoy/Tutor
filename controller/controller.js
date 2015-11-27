@@ -161,3 +161,34 @@ module.exports.getAllThreads = function(req, res){
         }
     })
 };
+module.exports.updateUserCourses = function(req, res){
+
+		var email = req.params.email;
+		var courseCode = req.body.courseCode; //TODO: Need to get the correct identifier for course data
+        if (email) {
+
+            // Find the user to add course for
+            User.where({email: email}).findOne(function (findUserErr, foundUser) {
+
+                if (findUserErr){
+                    res.status(409).json({
+                        msg: "Errors when trying to find the user for enrollment"
+                    })
+                }
+
+                else if (foundUser) {
+
+                    // Find the course for enrolment
+                    Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
+                       if(findCourseErr){
+                           res.status(409).json({
+                               msg: "Errors when trying to find the course for enrollment"
+                           })
+                       } else if (myCourse){
+                           foundUser.courses.push(myCourse);
+                       }
+                    });
+                }
+            });
+        }
+};
