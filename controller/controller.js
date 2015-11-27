@@ -47,7 +47,7 @@ module.exports.getMain = function (req, res) {
     var _id = req.session.passport.user;
     console.log(_id);
     if (_id) {
-        User.where({_id: _id}).findOne().populate('courses').exec(function (err, foundUser) {
+        User.where({_id: _id}).c().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
                 var defaultImagePath;
                 var fbPic = false;
@@ -83,39 +83,6 @@ module.exports.getMain = function (req, res) {
 
 
 module.exports.getAllCourses = function (req, res) {
-
-    new Course({
-        courseCode: 'CSC309H1',
-        courseName: 'Programming on the Web',
-        prereqs: 'CSC209H1',
-        instructors: 'A. Mashiyat'
-    }).save();
-    new Course({
-        courseCode: 'CSC343H1',
-        courseName: 'Introduction to Databases',
-        prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
-        instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
-    }).save();
-    new Course({
-        courseCode: 'CSC108H1',
-        courseName: 'Introduction to Computer Programming',
-        exclusions: 'CSC120H1, CSC148H1',
-        instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
-    }).save();
-    new Course({
-        courseCode: 'CSC148H1',
-        courseName: ' Introduction to Computer Science',
-        prereqs: ' CSC108H1',
-        exclusions: 'CSC150H1',
-        instructors: 'D. Liu, D. Heap'
-    }).save();
-    new Course({
-        courseCode: 'CSC207H1',
-        courseName: 'Software Design',
-        prereqs: 'CSC148H1',
-        instructors: 'J. Campbell'
-    }).save();
-
 
     var allCourses = [];
     Course.find({courseCode: req.query.term}, function (err, courses) {
@@ -260,3 +227,143 @@ module.exports.updateUserCourses = function(req, res){
 //module.exports.deleteAThread = function(req, res){
 //    var
 //};
+
+//function createTestCourses() {
+
+
+    //new Course({
+    //    courseCode: 'CSC343H1',
+    //    courseName: 'Introduction to Databases',
+    //    prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
+    //    instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
+    //}).save();
+    //new Course({
+    //    courseCode: 'CSC108H1',
+    //    courseName: 'Introduction to Computer Programming',
+    //    exclusions: 'CSC120H1, CSC148H1',
+    //    instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
+    //}).save();
+    //new Course({
+    //    courseCode: 'CSC148H1',
+    //    courseName: ' Introduction to Computer Science',
+    //    prereqs: ' CSC108H1',
+    //    exclusions: 'CSC150H1',
+    //    instructors: 'D. Liu, D. Heap'
+    //}).save();
+    //new Course({
+    //    courseCode: 'CSC207H1',
+    //    courseName: 'Software Design',
+    //    prereqs: 'CSC148H1',
+    //    instructors: 'J. Campbell'
+    //}).save();
+    //new User ({
+    //    email: 'abc@abc.abc',
+    //    password: 'abc',
+    //    dispName : 'abc',
+    //    auth : 'user',
+    //    imgPath : 'def.jpg',
+    //    descr: '',
+    //    pId: '1',
+    //    facebookId : '',
+    //    courses:[],
+    //    facebookName: '',
+    //    facebookToken: '',
+    //    facebookProfilePicture: '',
+    //    admin: true
+    //}).save();
+
+    //var id = '';
+    //
+    //Course.find({courseCode: 'CSC309H1'}, function (err, found) {
+    //    id = found.id;
+    //})
+
+
+    //User.findOne({email: 'abc@abc.abc'}, function (err, found) {
+    //    found.courses.push(c1);
+    //    found.save();
+    //
+    //})
+
+
+    //{
+    //    courseCode: 'CSC309H1',
+    //        courseName: 'Programming on the Web',
+    //    prereqs: 'CSC209H1',
+    //    instructors: 'A. Mashiyat',
+    //    threads: [{ title: 'thread1',
+    //    author: 'abc@abc.abc',
+    //    creationTime: 'Tue Jan 14 2020 16:23:12',
+    //    comments: [''],
+    //    modificationTime: 'Tue Jan 14 2020 16:23:12',
+    //    price: 60,
+    //    tutor: new User({email: 'tutor@tutor.tutor',
+    //        password: 'tutor'}),
+    //    tutee: new User({email: 'tutee@tutee.tutee',
+    //        password: 'tutee'}),
+    //    starTime: 'Tue Jan 14 2020 16:23:12',
+    //    endTime: 'Tue Jan 14 2020 16:23:12',
+    //    description: 'Test1'},
+    //    { title: 'thread2',
+    //        author: 'def@def.def',
+    //        creationTime: 'Tue Jan 15 2020 16:23:12',
+    //        comments: [''],
+    //        modificationTime: 'Tue Jan 15 2020 16:23:12',
+    //        price: 60,
+    //        tutor: new User({email: 'tutor@tutor.tutor',
+    //            password: 'tutor'}),
+    //        tutee: new User({email: 'tutee@tutee.tutee',
+    //            password: 'tutee'}),
+    //        starTime: 'Tue Jan 15 2020 16:23:12',
+    //        endTime: 'Tue Jan 15 2020 16:23:12',
+    //        description: 'Test2'},
+    //    { title: 'thread3',
+    //        author: 'hij@hij.hij',
+    //        creationTime: 'Tue Jan 18 2020 16:23:12',
+    //        comments: [''],
+    //        modificationTime: 'Tue Jan 18 2020 16:23:12',
+    //        price: 60,
+    //        tutor: new User({email: 'tutor@tutor.tutor',
+    //            password: 'tutor'}),
+    //        tutee: new User({email: 'tutee@tutee.tutee',
+    //            password: 'tutee'}),
+    //        starTime: 'Tue Jan 18 2020 16:23:12',
+    //        endTime: 'Tue Jan 18 2020 16:23:12',
+    //        description: 'Test3'},
+    //    { title: 'thread1',
+    //        author: 'xyz@xyz.xyz',
+    //        creationTime: 'Tue Jan 20 2020 16:23:12',
+    //        comments: [''],
+    //        modificationTime: 'Tue Jan 20 2020 16:23:12',
+    //        price: 60,
+    //        tutor: new User({email: 'tutor@tutor.tutor',
+    //            password: 'tutor'}),
+    //        tutee: new User({email: 'tutee@tutee.tutee',
+    //            password: 'tutee'}),
+    //        starTime: 'Tue Jan 20 2020 16:23:12',
+    //        endTime: 'Tue Jan 20 2020 16:23:12',
+    //        description: 'Test4'}]
+    //}, {
+    //    courseCode: 'CSC343H1',
+    //        courseName: 'Introduction to Databases',
+    //        prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
+    //        instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
+    //},{
+    //    courseCode: 'CSC108H1',
+    //        courseName: 'Introduction to Computer Programming',
+    //        exclusions: 'CSC120H1, CSC148H1',
+    //        instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
+    //}, {
+    //    courseCode: 'CSC148H1',
+    //        courseName: ' Introduction to Computer Science',
+    //        prereqs: ' CSC108H1',
+    //        exclusions: 'CSC150H1',
+    //        instructors: 'D. Liu, D. Heap'
+    //},{
+    //    courseCode: 'CSC207H1',
+    //        courseName: 'Software Design',
+    //        prereqs: 'CSC148H1',
+    //        instructors: 'J. Campbell'
+    //}
+
+//}
