@@ -55,7 +55,6 @@ module.exports = function(app, passport) {
 	app.get('/course', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
 	app.post('/course/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
 
-	//app.get('/thread/:class', function(req, res ));
 	app.post('/thread/:class', function(req, res){
 		new Class({courseCode: 'csc309_frank'}).save();
 		new Class({courseCode: 'csc309'}).save();
