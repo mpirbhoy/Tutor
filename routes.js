@@ -96,10 +96,10 @@ module.exports = function(app, passport) {
 	});
 	
 	// POST request when enrolling in a course from search bar. The users class variable is UPDATED so PUT will be used
-	/*app.post('/:email/:classes',function(req, res){
+	app.post('/:email/:courses',function(req, res){
 
 		var email = req.params.email;
-		var class = req.parapms.class
+		var course = req.params.courses
         if (email) {
             User.where({email: email}).findOne(function (err, foundUser) {
                 if (foundUser) {
@@ -108,7 +108,7 @@ module.exports = function(app, passport) {
                 }
             })
         }
-	});*/
+	});
 }
 
 
