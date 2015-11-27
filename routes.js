@@ -63,6 +63,21 @@ module.exports = function(app, passport) {
 
 	// PUT request when enrolling in a course from search bar.
 	app.put('/user/:email', controller.updateUserCourses);
+	// POST request when enrolling in a course from search bar. The users class variable is UPDATED so PUT will be used
+	/*app.post('/:email/:courses',function(req, res){
+
+		var email = req.params.email;
+		var course = req.params.courses
+        if (email) {
+            User.where({email: email}).findOne(function (err, foundUser) {
+                if (foundUser) {
+                	foundUser.courses.append(course)
+
+                }
+            })
+        }
+	});*/
+
 }
 
 
