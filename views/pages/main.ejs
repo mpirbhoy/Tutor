@@ -33,45 +33,12 @@
             </div>
 
             <!-- List of Classes -->
+
             <div class="list-group" style="margin-top: 20px">
                 <form method="POST">
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
-                </form>
-                <!-- Active class added when clicked -->
-                <script>
-                    $('.list-group-item').click(function(e) {
-                        e.preventDefault();
-                        var $this = $(this);
-                        if (!$this.hasClass('active')) {
-                            // remove all other active buttons
-                            $(".list-group-item").each(function () {$(this).removeClass('active')});
-                            $this.addClass('active');
-                        }
-
-                        $.ajax({
-                            type: "GET",
-                            url: "/course",
-                            timeout: 2000,
-                            dataType: 'json',
-                            success: function(data) {
-                                var msg = '<h2>Courses</h2>';
-                                $.each(data, function(i, json) {
-                                    $.each($.parseJSON(json), function(key, val) {
-                                        msg += '<div class="' + key + '">' + key + ': ' + val + '</div>';
-                                    });
-                                    msg+='<br>'
-                                });
-
-                                $('.main').html(msg);
-                            },
-                            fail: function() {
-                                $('.main').html("failed loading courses");
-                            }
-                        });
-                    });
-                </script>
             </div>
         </div>
 
@@ -168,20 +135,19 @@
                 </div>
             </form>
             <!-- CREATE THREAD END -->
-
             <!-- A THREAD -->
             <div class="panel panel-default" id="thread-example">
 
                 <div class="panel-heading">
-                    &nbsp
-                <div style="float:left;">
-                    <h3 class="panel-title">Looking for (tutor / tuttee)</h3>
-                </div>
+                        &nbsp
+                    <div style="float:left;">
+                        <h3 class="panel-title"><!--Looking for (tutor / tuttee)--></h3>
+                    </div>
 
 
-                <div style="float:right;">
-                    <h3 class="panel-title">Time Created:</h3>
-                </div>
+                    <div style="float:right;">
+                        <h3 class="panel-title"><!--Time Created:--></h3>
+                    </div>
                 </div>
 
                 <div class="panel-body">
@@ -189,23 +155,22 @@
 
                     <!-- Name and email -->
                     <div class="col-lg-4">
-                        <h6>Example name (example email)</h6>
+                        <h6><!-- Name (Email)--></h6>
                     </div>
 
                     <!-- Price -->
                     <div class="col-lg-4">
-                        <h6>Price:</h6>
+                        <h6><!--Price:--></h6>
                     </div>
 
                     <!-- Availability -->
                     <div class="col-lg-4">
-                        <h6>Availability:</h6>
+                        <h6><!--Availability:--></h6>
                     </div>
 
                     <!-- Description -->
                     <div class="col-lg-12">
-                        <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        <p><!-- Description goes here --></p>
                     </div>
 
                     <!-- Respond to thread-->
@@ -214,8 +179,10 @@
                         <span class="input-group-btn">
                             <button class="btn btn-default glyphicon glyphicon-comment" type="button"></button>
                         </span>
-                    </div><!-- /input-group -->
-
+                    </div>
+                    <script>
+                        $( "#thread-example" ).hide();
+                    </script>
                     <!-- Comments!-->
 
                 </div>
@@ -240,8 +207,13 @@
         $('#submitReq').click(function(e) {
             e.preventDefault();
 
-            $('.main').append($('#thread-example').clone().prop('id', 'NEW ID INJECTION HERE!!!!!!!===='));
+            new_thread_info = $('#myForm').serialize();
 
+            new_thread = "<div class='panel panel-default' id='" + "ID" +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'> Looking for " + "STATUS" + "</h3></div><div style='float:right;'><h3 class='panel-title'>" + "THREAD TITLE" + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>" + "NAME(EMAIL)" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD PRICE" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD AVAILABILITY" +"</h6></div><div class='col-lg-12'><p>" + "THREAD DESCRIPTION" + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
+
+            $('.main').append(new_thread);
+
+            //$( "#thread-example" ).hide();
 
             /*
             $.ajax({
