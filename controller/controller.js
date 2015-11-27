@@ -1,19 +1,8 @@
-/**
- *
- * Created by franklai on 15-11-20.
- */
 var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
 
-//// For packaging array of js objs into
-//var packMgooseObjToJSON = function(arrOfJSON){
-//   var bigObj = {};
-//   arrOfJSON.forEach(function(innerObj){
-//       bigObj.push(sdf)
-//   })
-//}
-
+// For getting profile for a particular user
 module.exports.getProfile = function (req, res) {
     var email = req.params.email;
     if (email) {
@@ -48,8 +37,9 @@ module.exports.getProfile = function (req, res) {
         })
     }
 
-}; // Git ghost ...
+};
 
+// For getting all courses that are belong to a particular user and necessary info about user for navbar
 module.exports.getMain = function (req, res) {
     var _id = req.session.passport.user;
     console.log(_id);
@@ -88,7 +78,7 @@ module.exports.getMain = function (req, res) {
 
 };
 
-
+// Hardcode all courses and send all courses as JSON
 module.exports.getAllCourses = function (req, res) {
 
     new Course({
@@ -141,11 +131,9 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
+// For creating a new thread for a particular course. It also inserts into the course's thread collections
 module.exports.makeNewThread = function (req, res) { //TODO: Untested
-    new Course({courseCode: 'csc309_frank'}).save();
-    new Course({courseCode: 'csc309'}).save();
     var courseToCreateIn = req.params.course;
-    var newThreadData = req.body;
     if (courseToCreateIn) {
 
         Course.where({courseCode: courseToCreateIn}).findOne(function (err, myCourse) {
@@ -177,19 +165,19 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                 myCourse.threads.push(newThread);
                 myCourse.save();
                 res.json({status: 301, msg : "New thread created", data: newThread});
-                //res.send(newThread);
             }
         })
     }
 };
 
-module.exports.getAllThreads = function(req, res){
+// Get all threads for a particular course
+module.exports.getAllThreads = function(req, res) {
 
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
-        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function(err, myCourse){
-            if (myCourse){
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
+            if (myCourse) {
                 res.json({status: 301, allThreadsFromCourse: myCourse['threads']})
             }
             else {
@@ -197,35 +185,10 @@ module.exports.getAllThreads = function(req, res){
             }
 
         });
-        //Course.where({courseCode: getThreadsFrom}).findOne(function (err, myCourse) {
-        //    if (err) {
-        //        res.json({
-        //            status: 409,
-        //            msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
-        //        });
-        //    } else if (myCourse) {
-        //
-        //        //var allCourses = [];
-        //        //var i = 0;
-        //        //Course.find({}, function (err, courses) {
-        //        //    if (courses) {
-        //        //        courses.forEach(function (course) {
-        //        //            allCourses.push((course));
-        //        //        });
-        //        //        res.send((allCourses));
-        //        //    }
-        //        //})
-        //        //res.json({
-        //        //    status: 301,
-        //        //    allThreadsInCourse: JSON.stringify(myCourse.threads)
-        //        //});
-        //        myCourse.populate('threads').exec(function(err, x){
-        //           res.send(x);
-        //        });
-        //    }
-        //})
     }
 };
+
+// Add a new course to a particular user's course collection
 module.exports.updateUserCourses = function(req, res){
 
     var email = req.params.email;
@@ -264,6 +227,3 @@ module.exports.updateUserCourses = function(req, res){
         });
     }
 };
-//module.exports.deleteAThread = function(req, res){
-//    var
-//};
