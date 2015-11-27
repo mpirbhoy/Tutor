@@ -47,10 +47,17 @@ module.exports.getMain = function (req, res) {
                     defaultImagePath = foundUser.imgPath;
                 }
 
+                var dispName;
+                if (foundUser.dispName == "") {
+                    dispName = foundUser.facebookName;
+                } else {
+                    dispName = foundUser.dispName;
+                }
+
                 res.render('./pages/main', {
                     title: "Main Page",
                     email: foundUser.email,
-                    name: foundUser.dispName,
+                    name: dispName,
                     descr: foundUser.descr,
                     imgPath: defaultImagePath,
                     courses: foundUser.courses
