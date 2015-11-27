@@ -26,7 +26,7 @@ module.exports.getProfile = function (req, res) {
                     descr: foundUser.descr,
                     imgPath: foundUser.imgPath,
                     dispName: foundUser.dispName,
-                    classes: foundUser.classes
+                    courses: foundUser.courses
                 })
             }
         })
