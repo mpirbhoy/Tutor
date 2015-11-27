@@ -71,7 +71,7 @@ module.exports = function (passport) {
                             newUser.email = username;
                             newUser.password = password;
                             newUser.pId = hashEmail(username);
-                            newUser.dispName = req.body.fname + " " + req.body.lname;
+                            newUser.dispName = req.body.fname + " " + req.body.lname;//changes
 
                             //If no user exists in database, then this should be superAdmin
                             if (superAdminUser == null) {
