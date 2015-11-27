@@ -47,7 +47,7 @@ module.exports = function(app, passport) {
 	});
 
 
-	
+
 
 
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
@@ -63,7 +63,8 @@ module.exports = function(app, passport) {
 	app.post('/thread/:course', controller.makeNewThread);
 	// Route for getting threads for a particular course
 	app.get('/thread/:course', controller.getAllThreads);
-
+	// Route for deleting a particular thread for a particular course
+	//app.delete('thread/:course', controller.deleteAThread);
 
 }
 

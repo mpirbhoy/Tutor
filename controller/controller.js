@@ -150,7 +150,8 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                 newThread.save();
                 myCourse.threads.push(newThread);
                 myCourse.save();
-                res.status(301).json({ msg : "New thread created"});
+                res.json({status: 301, msg : "New thread created", data: newThread});
+                //res.send(newThread);
             }
         })
     }
@@ -237,3 +238,6 @@ module.exports.updateUserCourses = function(req, res){
             });
         }
 };
+//module.exports.deleteAThread = function(req, res){
+//    var
+//};
