@@ -26,7 +26,8 @@ module.exports.getProfile = function (req, res) {
                     descr: foundUser.descr,
                     imgPath: foundUser.imgPath,
                     dispName: foundUser.dispName,
-                    courses: foundUser.courses
+                    courses: foundUser.courses,
+                    localImg : !fbPic
                 })
             }
         })
@@ -41,8 +42,10 @@ module.exports.getMain = function (req, res) {
         User.where({_id: _id}).findOne().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
                 var defaultImagePath;
+                var fbPic = false;
                 if (foundUser.facebookProfilePicture) {
                     defaultImagePath = foundUser.facebookProfilePicture;
+                    fbPic = true;
                 } else {
                     defaultImagePath = foundUser.imgPath;
                 }
@@ -60,7 +63,9 @@ module.exports.getMain = function (req, res) {
                     name: dispName,
                     descr: foundUser.descr,
                     imgPath: defaultImagePath,
-                    courses: foundUser.courses
+                    courses: foundUser.courses,
+                    localImg : !fbPic
+
                 })
             }
         })
@@ -108,7 +113,7 @@ module.exports.getAllCourses = function (req, res) {
     Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
-                var tempCourse = {}
+                var tempCourse = {};
                 tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
