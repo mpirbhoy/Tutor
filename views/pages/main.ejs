@@ -11,7 +11,7 @@
 
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                 <select class="select2 form-control" style="width: 100%">
-                    <option value="3620194" selected="selected">Search courses (e.g. CSC108)</option>
+                    <option value=""></option>
                 </select>
                 <script>
                     $(document).on('change', 'select', function() {
@@ -35,15 +35,48 @@
             <!-- List of Classes -->
 
             <div class="list-group" style="margin-top: 20px">
-                <form method="POST">
+                <form>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
-                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
-                    <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC301">CSC309: Programming on the Web</button>
+                    <button type="submit" class="list-group-item" value="CSC302">CSC309: Programming on the Web</button>
+
+                    <% for(var i=0; i < courses.length; i++) { %>
+                        <button id="class_button" type="submit" class="list-group-item" value=<%= courses[i].courseCode %>><%= courses[i].courseCode %> + " " + <%= courses[i].courseName %> </button>
+                    <% } %>
+
+                    <!-- Active class added when clicked -->
+                    <script>
+                        $('.list-group-item').click(function(e) {
+                            e.preventDefault();
+                            var $this = $(this);
+                            if (!$this.hasClass('active')) {
+                                // remove all other active buttons
+                                $(".list-group-item").each(function () {$(this).removeClass('active')});
+                                $this.addClass('active');
+                            }
+
+                            console.log($(this).attr('value'));
+                            $.ajax({
+                                type: "GET",
+                                url: "/thread/" + $(this).attr('value'),
+                                timeout: 2000,
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log(data)
+                                },
+                                fail: function() {
+                                    $('.main').html("failed loading courses");
+                                }
+                            });
+                        });
+                    </script>
+                </form>
             </div>
         </div>
 
         <!-- RIGHT SIDE OF THE PAGE -->
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
+
             <button type="submit" id="create" class="btn btn-warning" style="margin: 15px 15px 30px 15px;">Create thread</button>
 
 
@@ -202,6 +235,10 @@
             if (count % 2 == 0) $(".form-group").hide();
             else $(".form-group").show();
         });
+
+        /* View threads in a class */
+        $()
+
 
         /* Submit Thread */
         $('#submitReq').click(function(e) {
