@@ -52,8 +52,10 @@ module.exports = function(app, passport) {
 	//Routes going through controller.js
 	app.get('/main', middleware.isLoggedIn, function(req, res) {controller.getMain(req, res)});
 	app.get('/view_user/:email', middleware.isLoggedIn, function(req, res) {controller.getProfile(req, res)});
-	app.get('/course', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
-	app.post('/course/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
+	app.get('/class', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
+
+	// --------- EDIT!!!: IT SHOULD BE app.post('/:courseId'
+	app.post('/class/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
 
 	//app.get('/thread/:class', function(req, res ));
 	app.post('/thread/:class', function(req, res){
@@ -93,6 +95,21 @@ module.exports = function(app, passport) {
 			}
 		})
 
+	});
+	
+	// POST request when enrolling in a course from search bar. The users class variable is UPDATED so PUT will be used
+	app.post('/:email/:classes',function(req, res){
+
+		var email = req.params.email;
+		var class = req.parapms.class
+        if (email) {
+            User.where({email: email}).findOne(function (err, foundUser) {
+                if (foundUser) {
+                	foundUser.classes.append()
+
+                }
+            })
+        }
 	});
 }
 
