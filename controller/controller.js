@@ -19,23 +19,30 @@ module.exports.getProfile = function (req, res) {
     if (email) {
         User.where({email: email}).findOne(function (err, foundUser) {
             if (foundUser) {
-                var defaultImagePath;
-                var fbPic = false;
+                var correctImagePath;
+                var localImg = 1;
                 if (foundUser.facebookProfilePicture) {
-                    defaultImagePath = foundUser.facebookProfilePicture;
-                    fbPic = true;
+                    correctImagePath = foundUser.facebookProfilePicture;
+                    localImg = 0;
                 } else {
-                    defaultImagePath = foundUser.imgPath;
+                    correctImagePath = foundUser.imgPath;
+                }
+
+                var dispName;
+                if (foundUser.dispName == "") {
+                    dispName = foundUser.facebookName;
+                } else {
+                    dispName = foundUser.dispName;
                 }
                 res.render('./pages/view_user', {
                     title: "View User",
                     email: foundUser.email,
-                    name: foundUser.dispName,
+                    name: dispName,
                     descr: foundUser.descr,
-                    imgPath: foundUser.imgPath,
+                    imgPath: correctImagePath,
                     dispName: foundUser.dispName,
                     courses: foundUser.courses,
-                    localImg : !fbPic
+                    localImg : localImg
                 })
             }
         })
@@ -44,18 +51,20 @@ module.exports.getProfile = function (req, res) {
 };
 
 module.exports.getMain = function (req, res) {
+    new Course({courseCode: 'csc309_frank'}).save();
+    new Course({courseCode: 'csc309'}).save();
     var _id = req.session.passport.user;
     console.log(_id);
     if (_id) {
         User.where({_id: _id}).c().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
-                var defaultImagePath;
-                var fbPic = false;
+                var correctImagePath;
+                var localImg = 1;
                 if (foundUser.facebookProfilePicture) {
-                    defaultImagePath = foundUser.facebookProfilePicture;
-                    fbPic = true;
+                    correctImagePath = foundUser.facebookProfilePicture;
+                    localImg = 0;
                 } else {
-                    defaultImagePath = foundUser.imgPath;
+                    correctImagePath = foundUser.imgPath;
                 }
 
                 var dispName;
@@ -70,9 +79,9 @@ module.exports.getMain = function (req, res) {
                     email: foundUser.email,
                     name: dispName,
                     descr: foundUser.descr,
-                    imgPath: defaultImagePath,
+                    imgPath: correctImagePath,
                     courses: JSON.stringify(foundUser.courses),
-                    localImg : !fbPic
+                    localImg : localImg
 
                 })
             }
@@ -102,8 +111,7 @@ module.exports.getAllCourses = function (req, res) {
 };
 
 module.exports.makeNewThread = function (req, res) { //TODO: Untested
-    new Course({courseCode: 'csc309_frank'}).save();
-    new Course({courseCode: 'csc309'}).save();
+    
     var courseToCreateIn = req.params.course;
     var newThreadData = req.body;
     if (courseToCreateIn) {
