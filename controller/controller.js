@@ -97,8 +97,7 @@ module.exports.getAllCourses = function (req, res) {
 
 
     var allCourses = [];
-    var i = 0;
-    Course.find({}, function (err, courses) {
+    Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
                 var tempCourse = {}
@@ -107,10 +106,9 @@ module.exports.getAllCourses = function (req, res) {
                 tempCourse.prereqs = course.prereqs;
                 tempCourse.exclusions = course.exclusions;
                 tempCourse.instructors = course.instructors;
-                allCourses.push(JSON.stringify(tempCourse));
-                i++;
+                allCourses.push(tempCourse);
             });
-            res.send(JSON.stringify(allCourses));
+            res.send(allCourses);
         }
     })
 };
@@ -202,41 +200,41 @@ module.exports.getAllThreads = function(req, res){
 };
 module.exports.updateUserCourses = function(req, res){
 
-		var email = req.params.email;
-		var courseCode = req.body.courseCode; //TODO: Need to get the correct identifier for course data
-        if (email) {
+    var email = req.params.email;
+    var courseCode = req.body.courseCode; //TODO: Need to get the correct identifier for course data
+    if (email) {
 
-            // Find the user to add course for
-            User.where({email: email}).findOne(function (findUserErr, foundUser) {
+        // Find the user to add course for
+        User.where({email: email}).findOne(function (findUserErr, foundUser) {
 
-                if (findUserErr){
-                    res.json({
-                        status: 409,
-                        msg: "Errors when trying to find the user for enrollment"
-                    })
-                }
+            if (findUserErr){
+                res.json({
+                    status: 409,
+                    msg: "Errors when trying to find the user for enrollment"
+                })
+            }
 
-                else if (foundUser) {
+            else if (foundUser) {
 
-                    // Find the course for enrolment
-                    Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
-                       if(findCourseErr){
-                           res.json({
-                               status: 409,
-                               msg: "Errors when trying to find the course for enrollment"
-                           })
-                       } else if (myCourse){
-                           foundUser.courses.push(myCourse);
-                           foundUser.save();
-                           res.json({
-                               status: 301,
-                               msg: "Course added"
-                           });
-                       }
-                    });
-                }
-            });
-        }
+                // Find the course for enrolment
+                Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
+                    if(findCourseErr){
+                        res.json({
+                            status: 409,
+                            msg: "Errors when trying to find the course for enrollment"
+                        })
+                    } else if (myCourse){
+                        foundUser.courses.push(myCourse);
+                        foundUser.save();
+                        res.json({
+                            status: 301,
+                            msg: "Course added"
+                        });
+                    }
+                });
+            }
+        });
+    }
 };
 //module.exports.deleteAThread = function(req, res){
 //    var

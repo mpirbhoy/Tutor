@@ -51,77 +51,68 @@
     <link href="/css/animate.css" rel="stylesheet">
 
     <!-- JQUERY SELECT2 -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1-rc.1/css/select2.min.css" rel="stylesheet" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1-rc.1/js/select2.min.js"></script>
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1-rc.1/css/select2.min.css" rel="stylesheet" />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1-rc.1/js/select2.min.js"></script>
 
     <script>
         $(function(){
-//            var data = [{ id: 0, text: 'CSC108H1: Intro to Comp Prog' }, { id: 1, text: 'CSC148H1: Intro to Comp Sci' }, { id: 2, text: 'CSC207H1: Software Design' }, { id: 3, text: 'CSC209H1: Soft Tools & Sys Prog' }, { id: 4, text: 'CSC258H1	: Computer Organizatn' }];
-//
-//            // turn the element to select2 select style
-//            $('.select2').select2({
-//                data: data
-//            });
-
-//            $('.select2').select2({
-//                placeholder: "Search courses",
-//                allowClear: true
-//            });
-
             $(".select2").select2({
                 ajax: {
-                    type: "GET",
                     url: "/course",
                     dataType: 'json',
                     delay: 250,
+                    id: function(course){return course.courseCode;},
                     data: function (params) {
                         return {
-                            q: params.term // search term
+                            term: params.term // search term
                         };
                     },
                     processResults: function (data, params) {
                         // parse the results into the format expected by Select2
                         // since we are using custom formatting functions we do not need to
                         // alter the remote JSON data
+                        // http://stackoverflow.com/questions/31353259/select2-4-0-0-cant-select-results
 
                         return {
-                            results: data.items
+                            results: data
                         };
                     },
                     cache: true
                 },
-                escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-                minimumInputLength: 1,
-                templateResult: formatRepo,
-                templateSelection: formatRepoSelection
+                escapeMarkup: function (markup) { return markup; }, // let the custom formatter work
+                minimumInputLength: 3,
+                templateResult: formatCourse,
+                templateSelection: formatCourseSelection
             });
 
         });
 
-        function formatRepo (repo) {
-            if (repo.loading) return repo.text;
+        function formatCourse (course) {
+            if (course.loading) return course.text;
+
+//            var parsedCourse = JSON.parse(course);
 
             var markup = "<div class='select2-result-repository clearfix'>" +
-                    "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
-                    "<div class='select2-result-repository__meta'>" +
-                    "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
+//                    "<div class='select2-result-repository__avatar'><img src='" + course.courseCode + "' /></div>" +
+//                    "<div class='select2-result-repository__meta'>" +
+                    "<div class='select2-result-repository__title'>" + course.courseCode + " " + course.courseName + "</div>";
 
-            if (repo.description) {
-                markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
-            }
+//            if (course.description) {
+//                markup += "<div class='select2-result-repository__description'>" + course.description + "</div>";
+//            }
 
             markup += "<div class='select2-result-repository__statistics'>" +
-                    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> INSTR: " + repo.forks_count + "</div>" +
-                    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> PRE: " + repo.stargazers_count + "</div>" +
-                    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> EXC: " + repo.watchers_count + "</div>" +
+                    "<div class='select2-result-repository__forks'> INSTR: " + course.instructors + "</div>" +
+                    "<div class='select2-result-repository__stargazers'> PRE: " + course.prereqs + "</div>" +
+                    "<div class='select2-result-repository__watchers'> EXC: " + course.exclusions + "</div>" +
                     "</div>" +
-                    "</div></div>";
+                    "</div>";
 
             return markup;
         }
 
-        function formatRepoSelection (repo) {
-            return repo.full_name || repo.text;
+        function formatCourseSelection (course) {
+            return course.courseCode || course.text;
         }
 
 
