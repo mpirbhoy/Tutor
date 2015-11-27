@@ -19,6 +19,14 @@ module.exports.getProfile = function (req, res) {
     if (email) {
         User.where({email: email}).findOne(function (err, foundUser) {
             if (foundUser) {
+                var defaultImagePath;
+                var fbPic = false;
+                if (foundUser.facebookProfilePicture) {
+                    defaultImagePath = foundUser.facebookProfilePicture;
+                    fbPic = true;
+                } else {
+                    defaultImagePath = foundUser.imgPath;
+                }
                 res.render('./pages/view_user', {
                     title: "View User",
                     email: foundUser.email,
@@ -26,7 +34,8 @@ module.exports.getProfile = function (req, res) {
                     descr: foundUser.descr,
                     imgPath: foundUser.imgPath,
                     dispName: foundUser.dispName,
-                    courses: foundUser.courses
+                    courses: foundUser.courses,
+                    localImg : !fbPic
                 })
             }
         })
@@ -38,21 +47,33 @@ module.exports.getMain = function (req, res) {
     var _id = req.session.passport.user;
     console.log(_id);
     if (_id) {
-        User.where({_id: _id}).findOne(function (err, foundUser) {
+        User.where({_id: _id}).findOne().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
                 var defaultImagePath;
+                var fbPic = false;
                 if (foundUser.facebookProfilePicture) {
                     defaultImagePath = foundUser.facebookProfilePicture;
+                    fbPic = true;
                 } else {
                     defaultImagePath = foundUser.imgPath;
+                }
+
+                var dispName;
+                if (foundUser.dispName == "") {
+                    dispName = foundUser.facebookName;
+                } else {
+                    dispName = foundUser.dispName;
                 }
 
                 res.render('./pages/main', {
                     title: "Main Page",
                     email: foundUser.email,
-                    name: foundUser.dispName,
+                    name: dispName,
                     descr: foundUser.descr,
-                    imgPath: defaultImagePath
+                    imgPath: defaultImagePath,
+                    courses: JSON.stringify(foundUser.courses),
+                    localImg : !fbPic
+
                 })
             }
         })
@@ -100,7 +121,7 @@ module.exports.getAllCourses = function (req, res) {
     Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
-                var tempCourse = {}
+                var tempCourse = {};
                 tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
@@ -148,7 +169,8 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                 newThread.save();
                 myCourse.threads.push(newThread);
                 myCourse.save();
-                res.status(301).json({ msg : "New thread created"});
+                res.json({status: 301, msg : "New thread created", data: newThread});
+                //res.send(newThread);
             }
         })
     }
@@ -235,3 +257,6 @@ module.exports.updateUserCourses = function(req, res){
         });
     }
 };
+//module.exports.deleteAThread = function(req, res){
+//    var
+//};
