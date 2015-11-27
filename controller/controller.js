@@ -48,7 +48,7 @@ module.exports.getProfile = function (req, res) {
         })
     }
 
-};
+}; // Git ghost ...
 
 module.exports.getMain = function (req, res) {
     new Course({courseCode: 'csc309_frank'}).save();
