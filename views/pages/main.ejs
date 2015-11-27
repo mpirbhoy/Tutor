@@ -61,6 +61,7 @@
                                     $.each($.parseJSON(json), function(key, val) {
                                         msg += '<div class="' + key + '">' + key + ': ' + val + '</div>';
                                     });
+                                    msg+='<br>'
                                 });
 
                                 $('.main').html(msg);
