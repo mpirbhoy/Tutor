@@ -3,7 +3,7 @@
  * Created by franklai on 15-11-20.
  */
 var mongoose = require('mongoose');
-var Class = require('./class');
+var Class = require('./course');
 
 
 module.exports = mongoose.model('Section',{

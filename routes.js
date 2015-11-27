@@ -8,7 +8,7 @@ var express = require('express');
 var controller = require('./controller/controller');
 var middleware = require('./controller/middleware');
 var Thread = require('./model/thread');
-var Class = require('./model/class');
+var Course = require('./model/course');
 
 module.exports = function(app, passport) {
 	
@@ -50,26 +50,26 @@ module.exports = function(app, passport) {
 	});
 
 	//Routes going through controller.js
-	app.get('/main', middleware.isLoggedIn, function(req, res) {controller.getMain(req, res)});
-	app.get('/view_user/:email', middleware.isLoggedIn, function(req, res) {controller.getProfile(req, res)});
-	app.get('/course', middleware.isLoggedIn, function(req, res) {controller.getAllCourses(req, res)});
-	app.post('/course/:selection', middleware.isLoggedIn, function(req, res) {controller.getOneCourse(req, res)});
+	app.get('/main', middleware.isLoggedIn, controller.getMain);
+	app.get('/view_user/:email', middleware.isLoggedIn, controller.getProfile);
+	app.get('/course', middleware.isLoggedIn, controller.getAllCourses);
+	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
-	//app.get('/thread/:class', function(req, res ));
-	app.post('/thread/:class', function(req, res){
-		new Class({courseCode: 'csc309_frank'}).save();
-		new Class({courseCode: 'csc309'}).save();
-		var classToCreateIn = req.params.class;
+	//app.get('/thread/:course', function(req, res ));
+	app.post('/thread/:course', function(req, res){
+		new Course({courseCode: 'csc309_frank'}).save();
+		new Course({courseCode: 'csc309'}).save();
+		var courseToCreateIn = req.params.class;
 		var newThreadData = req.body;
 
-		Class.where({courseCode: classToCreateIn}).findOne(function(err, myClass){
+		Course.where({courseCode: courseToCreateIn}).findOne(function(err, myCourse){
 
 			if (err){
 				res.json({
 					status: 409,
-					msg: "Error occured with adding thread to class " + myClass.courseCode + "\n"
+					msg: "Error occured with adding thread to course " + myCourse.courseCode + "\n"
 				});
-			} else if (myClass){
+			} else if (myCourse){
 				var newThread = new Thread({
 					title: req.body.title,
 					author: req.body.author_first_name + req.body.author_last_name,
@@ -88,8 +88,8 @@ module.exports = function(app, passport) {
 
 
 				newThread.save();
-				myClass.threads.push(newThread)
-				myClass.save();
+				myCourse.threads.push(newThread)
+				myCourse.save();
 			}
 		})
 
