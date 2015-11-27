@@ -38,7 +38,7 @@ module.exports.getMain = function (req, res) {
     var _id = req.session.passport.user;
     console.log(_id);
     if (_id) {
-        User.where({_id: _id}).findOne(function (err, foundUser) {
+        User.where({_id: _id}).findOne().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
                 var defaultImagePath;
                 if (foundUser.facebookProfilePicture) {
@@ -52,7 +52,8 @@ module.exports.getMain = function (req, res) {
                     email: foundUser.email,
                     name: foundUser.dispName,
                     descr: foundUser.descr,
-                    imgPath: defaultImagePath
+                    imgPath: defaultImagePath,
+                    courses: foundUser.courses
                 })
             }
         })
