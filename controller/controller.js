@@ -19,6 +19,14 @@ module.exports.getProfile = function (req, res) {
     if (email) {
         User.where({email: email}).findOne(function (err, foundUser) {
             if (foundUser) {
+                var defaultImagePath;
+                var fbPic = false;
+                if (foundUser.facebookProfilePicture) {
+                    defaultImagePath = foundUser.facebookProfilePicture;
+                    fbPic = true;
+                } else {
+                    defaultImagePath = foundUser.imgPath;
+                }
                 res.render('./pages/view_user', {
                     title: "View User",
                     email: foundUser.email,
@@ -63,7 +71,7 @@ module.exports.getMain = function (req, res) {
                     name: dispName,
                     descr: foundUser.descr,
                     imgPath: defaultImagePath,
-                    courses: foundUser.courses,
+                    courses: JSON.stringify(foundUser.courses),
                     localImg : !fbPic
 
                 })
