@@ -108,7 +108,7 @@ module.exports.getAllCourses = function (req, res) {
     Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
-                var tempCourse = {}
+                var tempCourse = {};
                 tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
