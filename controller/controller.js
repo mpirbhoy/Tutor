@@ -5,6 +5,15 @@
 var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
+
+//// For packaging array of js objs into
+//var packMgooseObjToJSON = function(arrOfJSON){
+//   var bigObj = {};
+//   arrOfJSON.forEach(function(innerObj){
+//       bigObj.push(sdf)
+//   })
+//}
+
 module.exports.getProfile = function (req, res) {
     var email = req.params.email;
     if (email) {
@@ -106,60 +115,89 @@ module.exports.getAllCourses = function (req, res) {
     })
 };
 
-module.exports.makeNewThread = function (req, res) {
+module.exports.makeNewThread = function (req, res) { //TODO: Untested
     new Course({courseCode: 'csc309_frank'}).save();
     new Course({courseCode: 'csc309'}).save();
     var courseToCreateIn = req.params.course;
     var newThreadData = req.body;
+    if (courseToCreateIn) {
 
-    Course.where({courseCode: courseToCreateIn}).findOne(function (err, myCourse) {
+        Course.where({courseCode: courseToCreateIn}).findOne(function (err, myCourse) {
 
-        if (err) {
-            res.json({
-                status: 409,
-                msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
-            });
-        } else if (myCourse) {
-            var newThread = new Thread({
-                title: req.body.title,
-                author: req.body.author_first_name + req.body.author_last_name,
-                price: req.body.price,
-                description: req.body.description,
-                tutor: User,
-                tutee: User,
-                startTime: req.body.start_time,
-                endTime: req.body.end_time
+            if (err) {
+                res.json({
+                    status: 409,
+                    msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
+                });
+            } else if (myCourse) {
+                var newThread = new Thread({
+                    title: req.body.title,
+                    author: req.body.author_first_name + req.body.author_last_name,
+                    price: req.body.price,
+                    description: req.body.description,
+                    tutor: User,
+                    tutee: User,
+                    startTime: req.body.start_time,
+                    endTime: req.body.end_time
 
-            });
+                });
 
-            // For populating tutor or tutee field
-            if (req.body.tutor) newThread.tutor = newThread.author;
-            else newThread.tutee = newThread.author;
+                // For populating tutor or tutee field
+                if (req.body.tutor) newThread.tutor = newThread.author;
+                else newThread.tutee = newThread.author;
 
 
-            newThread.save();
-            myCourse.threads.push(newThread);
-            myCourse.save();
-        }
-    })
-
+                newThread.save();
+                myCourse.threads.push(newThread);
+                myCourse.save();
+                res.status(301).json({ msg : "New thread created"});
+            }
+        })
+    }
 };
 
 module.exports.getAllThreads = function(req, res){
 
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
-    Course.where({courseCode: getThreadsFrom}).findOne(function(err, myCourse) {
-        if (err){
-            res.status(409).json({
-                msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
-            });
-        } else if (myCourse){
-            res.status(301).json({
-                allThreadsInCourse: myCourse.threads
-            });
-        }
-    })
+    if (getThreadsFrom) {
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function(err, myCourse){
+            if (myCourse){
+                res.json({status: 301, allThreadsFromCourse: myCourse['threads']})
+            }
+            else {
+                res.json({status: 409, msg: "Can't find anything"});
+            }
+
+        });
+        //Course.where({courseCode: getThreadsFrom}).findOne(function (err, myCourse) {
+        //    if (err) {
+        //        res.json({
+        //            status: 409,
+        //            msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
+        //        });
+        //    } else if (myCourse) {
+        //
+        //        //var allCourses = [];
+        //        //var i = 0;
+        //        //Course.find({}, function (err, courses) {
+        //        //    if (courses) {
+        //        //        courses.forEach(function (course) {
+        //        //            allCourses.push((course));
+        //        //        });
+        //        //        res.send((allCourses));
+        //        //    }
+        //        //})
+        //        //res.json({
+        //        //    status: 301,
+        //        //    allThreadsInCourse: JSON.stringify(myCourse.threads)
+        //        //});
+        //        myCourse.populate('threads').exec(function(err, x){
+        //           res.send(x);
+        //        });
+        //    }
+        //})
+    }
 };
 module.exports.updateUserCourses = function(req, res){
 
@@ -171,7 +209,8 @@ module.exports.updateUserCourses = function(req, res){
             User.where({email: email}).findOne(function (findUserErr, foundUser) {
 
                 if (findUserErr){
-                    res.status(409).json({
+                    res.json({
+                        status: 409,
                         msg: "Errors when trying to find the user for enrollment"
                     })
                 }
@@ -181,11 +220,17 @@ module.exports.updateUserCourses = function(req, res){
                     // Find the course for enrolment
                     Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
                        if(findCourseErr){
-                           res.status(409).json({
+                           res.json({
+                               status: 409,
                                msg: "Errors when trying to find the course for enrollment"
                            })
                        } else if (myCourse){
                            foundUser.courses.push(myCourse);
+                           foundUser.save();
+                           res.json({
+                               status: 301,
+                               msg: "Course added"
+                           });
                        }
                     });
                 }
