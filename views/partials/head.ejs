@@ -57,11 +57,12 @@
     <script>
         $(function(){
             $(".select2").select2({
+                placeholder: "Search courses (e.g. CSC108)",
+                allowClear: true,
                 ajax: {
                     url: "/course",
                     dataType: 'json',
                     delay: 250,
-                    id: function(course){return course.courseCode;},
                     data: function (params) {
                         return {
                             term: params.term // search term
@@ -72,6 +73,15 @@
                         // since we are using custom formatting functions we do not need to
                         // alter the remote JSON data
                         // http://stackoverflow.com/questions/31353259/select2-4-0-0-cant-select-results
+
+                        for(var i = 0; i < data.length; i++){
+                            data[i] = {id:i,
+                                courseCode: data[i].courseCode,
+                            courseName: data[i].courseName,
+                            prereqs: data[i].prereqs,
+                            exclusions: data[i].exclusions,
+                            instructors: data[i].instructors}
+                        }
 
                         return {
                             results: data
@@ -112,6 +122,7 @@
         }
 
         function formatCourseSelection (course) {
+            console.log(course);
             return course.courseCode || course.text;
         }
 
