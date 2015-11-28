@@ -146,11 +146,16 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
             } else if (myCourse) {
                 var newThread = new Thread({
                     title: req.body.title,
-                    author: req.body.author_first_name + req.body.author_last_name,
+                    User.findById(req.session.passport.user, function(err, user) {
+                        if (err) {
+                          console.log(err);
+                          return;
+                        } else{
+                            
+                    author: req.
                     price: req.body.price,
                     description: req.body.description,
-                    tutor: User,
-                    tutee: User,
+                    status: req.body.status,
                     startTime: req.body.start_time,
                     endTime: req.body.end_time
 

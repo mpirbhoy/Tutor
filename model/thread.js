@@ -12,8 +12,7 @@ module.exports = mongoose.model('Thread',{
     comments: [Comment],
     modificationTime: Date,
     price: Number,
-    tutor: User,
-    tutee: User,
+    status: String,
     starTime: String,
     endTime: String,
     description: String
