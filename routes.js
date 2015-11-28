@@ -50,7 +50,7 @@ module.exports = function(app, passport) {
 	// PUT request when enrolling in a course from search bar.
 	app.put('/user/:email', controller.updateUserCourses);
 
-	app.get('/course', middleware.isLoggedIn, controller.getAllCourses);
+	app.get('/injectcourses', middleware.isLoggedIn, controller.getAllCourses);
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
 

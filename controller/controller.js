@@ -68,7 +68,7 @@ module.exports.getMain = function (req, res) {
                     name: dispName,
                     descr: foundUser.descr,
                     imgPath: correctImagePath,
-                    courses: JSON.stringify(foundUser.courses),
+                    courses: foundUser.courses,
                     localImg : localImg
 
                 })
@@ -188,7 +188,7 @@ module.exports.getAllThreads = function(req, res) {
     }
 };
 
-// Add a new course to a particular user's course collection
+// Add a new course to a particular user's course collection|| Now, insert all courses into given user
 module.exports.updateUserCourses = function(req, res){
 
     var email = req.params.email;
@@ -196,7 +196,7 @@ module.exports.updateUserCourses = function(req, res){
     if (email) {
 
         // Find the user to add course for
-        User.where({email: email}).findOne(function (findUserErr, foundUser) {
+        User.where({}).findOne(function (findUserErr, foundUser) {
 
             if (findUserErr){
                 res.json({
@@ -208,14 +208,16 @@ module.exports.updateUserCourses = function(req, res){
             else if (foundUser) {
 
                 // Find the course for enrolment
-                Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
+                Course.where({}).find(function(findCourseErr, myCourse){
                     if(findCourseErr){
                         res.json({
                             status: 409,
                             msg: "Errors when trying to find the course for enrollment"
                         })
                     } else if (myCourse){
-                        foundUser.courses.push(myCourse);
+                        myCourse.forEach(function(course){
+                            foundUser.courses.push(course);
+                        });
                         foundUser.save();
                         res.json({
                             status: 301,
