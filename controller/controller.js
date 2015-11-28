@@ -144,34 +144,44 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                     msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
                 });
             } else if (myCourse) {
-                var newThread = new Thread({
-                    title: req.body.title,
-                    User.findById(req.session.passport.user, function(err, user) {
-                        if (err) {
-                          console.log(err);
-                          return;
-                        } else{
-                            
-                    author: req.
-                    price: req.body.price,
-                    description: req.body.description,
-                    status: req.body.status,
-                    startTime: req.body.start_time,
-                    endTime: req.body.end_time
+                User.findById(req.session.passport.user, function(err, user) {
+                    if (err) {
+                      console.log(err);
+                      return;
+                    } else{
+                        if (user) {
+                                var newThread = new Thread({
+                                    title: req.body.title,
+                                    author: user,
+                                    price: req.body.price,
+                                    description: req.body.description,
+                                    status: req.body.status,
+                                    startTime: req.body.start_time,
+                                    endTime: req.body.end_time
+                                });
+                              
+                                newThread.save();
+                                myCourse.threads.push(newThread);
+                                myCourse.save();
 
+                                var returnThread = {
+                                    title: req.body.title,
+                                    author: user,
+                                    price: req.body.price,
+                                    description: req.body.description,
+                                    status: req.body.status,
+                                    startTime: req.body.start_time,
+                                    endTime: req.body.end_time
+                                }
+                                res.json({status: 301, msg : "New thread created", data: returnThread});
+                    
+                        } else {
+                            res.json({status: 401, msg : "Login required", data: {}});                    
+                        }
+                    }
                 });
-
-                // For populating tutor or tutee field
-                if (req.body.tutor) newThread.tutor = newThread.author;
-                else newThread.tutee = newThread.author;
-
-
-                newThread.save();
-                myCourse.threads.push(newThread);
-                myCourse.save();
-                res.json({status: 301, msg : "New thread created", data: newThread});
-            }
-        })
+            }    
+        });
     }
 };
 
