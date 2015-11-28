@@ -14,21 +14,23 @@
                     <option></option>
                 </select>
                 <script>
-                    $(document).on('change', 'select', function() {
-                        var $text = $('.select2-selection__rendered').text();
-                        $.ajax({
-                            type: "GET",
-                            url: "./" + $text,
-                            dataType: 'json',
-                            success: function(data) {
-                                var msg = '<button type="button" class="list-group-item">data.title</button>'
-
-                                $('.list-group').append(msg);
-                            },
-                            fail: function() {
-                            }
-                        });
-                    });
+//                    $(document).on('change', 'select', function() {
+//                        var $text = $('.select2-selection__rendered').text();
+//                        var $email = $('#user-nav').attr('href');
+//
+//                        $.ajax({
+//                            type: "PUT",
+//                            url: $email,
+//                            dataType: 'json',
+//                            data: {courseCode: $text},
+//                            success: function(data) {
+//                                var msg = '<button type="button" class="list-group-item">' + data.status + '</button>'
+//                                $('#courses').append(msg);
+//                            },
+//                            fail: function() {
+//                            }
+//                        });
+//                    });
                 </script>
             </div>
 
@@ -40,13 +42,11 @@
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
 
-
                     <script> 
                         courses = <%- courses %>;
-                        for (i = 0; i < courses.length; i++) {
-                            $('#courses').prepend("<button type='submit' class='list-group-item' value=" + courses[i].courseCode + ">" + courses[i].courseCode + " " + courses[i].courseName + "</button>");
+                        for (var i = 0; i < courses.length; i++) {
+                            $('#courses').append("<button type='submit' class='list-group-item' value=" + courses[i].courseCode + ">" + courses[i].courseCode + ": " + courses[i].courseName + "</button>");
                         }
-
                     </script>
 
                     <!-- Active class added when clicked -->
@@ -63,7 +63,7 @@
                             console.log($(this).attr('value'));
                             $.ajax({
                                 type: "GET",
-                                url: "/thread/csc309",
+                                url: "/thread/" + $(this).val(),
                                 timeout: 2000,
                                 dataType: 'json',
                                 success: function(data) {
@@ -161,13 +161,13 @@
                     <div class="col-sm-offset-2 col-sm-10">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="tutor" id="optionsRadios1" value="option1" checked>
+                                <input type="radio" name="status" id="optionsRadios1" value="tutor" checked>
                                 I'm a tutor
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="tutor" id="optionsRadios2" value="option2">
+                                <input type="radio" name="status" id="optionsRadios2" value="tuttee">
                                 I'm looking for a tutor
                             </label>
                         </div>
@@ -276,15 +276,15 @@
             
             $.ajax({
                 type: "POST",
-                url: "/thread/CSC309H1", // Injection required
+                url: "/thread/" + $(".active").val(),
                 timeout: 2000,
                 dataType: 'json',
                 data: $('#myForm').serialize(),
                 success: function(data) {
                     console.log(data);
-                    // new_thread = "<div class='panel panel-default' id='" + "ID" +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'> Looking for " + "STATUS" + "</h3></div><div style='float:right;'><h3 class='panel-title'>" + "TIME CREATED" + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>" + "NAME(EMAIL)" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD PRICE" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD AVAILABILITY" +"</h6></div><div class='col-lg-12'><h4>" + "THREAD TITLE" + "</h4></div><div class='col-lg-12'><p>" + "THREAD DESCRIPTION" + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
+                    new_thread = "<div class='panel panel-default' id='" + "ID" + "'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'> Looking for " + "STATUS" + "</h3></div><div style='float:right;'><h3 class='panel-title'>" + "TIME CREATED" + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>" + "NAME(EMAIL)" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD PRICE" + "</h6></div><div class='col-lg-4'><h6>"+ "THREAD AVAILABILITY" +"</h6></div><div class='col-lg-12'><h4>" + "THREAD TITLE" + "</h4></div><div class='col-lg-12'><p>" + "THREAD DESCRIPTION" + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
 
-                    // $('.main').append(new_thread)
+                    $('#all_threads').prepend(new_thread);
                 },
                 fail: function() {
                     // $('.main').html("failed loading data");
