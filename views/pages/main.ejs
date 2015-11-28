@@ -35,16 +35,18 @@
             <!-- List of Classes -->
 
             <div class="list-group" style="margin-top: 20px">
-                <form>
+                <form id="courses">
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
 
 
                     <script> 
-                        console.log(<%= courses %>);
-                        var courses = JSON.parse(<%= courses %>);
-                        console.log(courses);
+                        courses = <%- courses %>;
+                        for (i = 0; i < courses.length; i++) {
+                            $('#courses').prepend("<button type='submit' class='list-group-item' value=" + courses[i].courseCode + ">" + courses[i].courseCode + " " + courses[i].courseName + "</button>");
+                        }
+
                     </script>
 
                     <!-- Active class added when clicked -->
