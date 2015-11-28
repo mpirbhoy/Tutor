@@ -157,7 +157,7 @@ module.exports.getAllCourses = function (req, res) {
 module.exports.makeNewThread = function (req, res) { //TODO: Untested
     var courseToCreateIn = req.params.course;
     if (courseToCreateIn) {
-
+        console.log(req.params.course);
         Course.where({courseCode: courseToCreateIn}).findOne(function (err, myCourse) {
 
             if (err) {
