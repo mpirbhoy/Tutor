@@ -50,7 +50,7 @@ module.exports = function(app, passport) {
 	// PUT request when enrolling in a course from search bar.
 	app.put('/user/:email', controller.updateUserCourses);
 
-	app.get('/course', middleware.isLoggedIn, controller.getAllCourses);
+	app.get('/injectcourses', middleware.isLoggedIn, controller.getAllCourses);
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
 
@@ -60,7 +60,7 @@ module.exports = function(app, passport) {
 	app.get('/thread/:course', controller.getAllThreads);
 	// Route for deleting a particular thread for a particular course
 	//app.delete('thread/:course', controller.deleteAThread);
-
+	app.post('/user/:email', controller.injectAllCoursesToUser);
 }
 
 
