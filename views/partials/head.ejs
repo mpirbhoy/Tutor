@@ -59,7 +59,7 @@
             $(".select2").select2({
                 placeholder: "Select a state",
                 ajax: {
-                    url: "/course",
+                    url: "/injectcourses",
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
@@ -113,7 +113,7 @@
 
         function formatCourseSelection (status) {
             if (status.courseCode != undefined) {
-                var $text = $('.select2-selection__rendered').text();
+                var $text = $('#select2-7xhi-container').text();
                 var $email = $('#user-nav').attr('href');
                 $.ajax({
                     type: "PUT",

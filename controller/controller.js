@@ -82,12 +82,14 @@ module.exports.getMain = function (req, res) {
 module.exports.getAllCourses = function (req, res) {
 
     new Course({
+
         courseCode: 'CSC309H1',
         courseName: 'Programming on the Web',
         prereqs: 'CSC209H1',
         instructors: 'A. Mashiyat'
     }).save();
     new Course({
+
         courseCode: 'CSC343H1',
         courseName: 'Introduction to Databases',
         prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
@@ -114,11 +116,31 @@ module.exports.getAllCourses = function (req, res) {
     }).save();
 
 
+
+    new User ({
+        email: 'abc@abc.abc',
+        password: 'abc',
+        dispName : 'abc',
+        auth : 'user',
+        imgPath : 'def.jpg',
+        descr: '',
+        pId: '1',
+        facebookId : '',
+        courses:[],
+        facebookName: '',
+        facebookToken: '',
+        facebookProfilePicture: '',
+        admin: true
+    }).save();
+
+
     var allCourses = [];
     Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
                 var tempCourse = {};
+
+                tempCourse.id = i;
                 tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
