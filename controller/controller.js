@@ -181,7 +181,7 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                                     startTime: req.body.start_time,
                                     endTime: req.body.end_time
                                 });
-                              
+
                                 newThread.save();
                                 myCourse.threads.push(newThread);
                                 myCourse.save();
@@ -196,13 +196,13 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                                     endTime: req.body.end_time
                                 }
                                 res.json({status: 301, msg : "New thread created", data: returnThread});
-                    
+
                         } else {
-                            res.json({status: 401, msg : "Login required", data: {}});                    
+                            res.json({status: 401, msg : "Login required", data: {}});
                         }
                     }
                 });
-            }    
+            }
         });
     }
 };
@@ -265,4 +265,35 @@ module.exports.updateUserCourses = function(req, res){
             }
         });
     }
+};
+module.exports.injectAllCoursesToUser = function (req, res) {
+    var email = req.params.email;
+    User.where({email: email}).findOne(function (foundUserErr, user) {
+
+        Course.where({}).find(function (findUserErr, courses) {
+            if (findUserErr) {
+                res.status(409).json({
+                    msg: "Errors when trying to find the user for enrollment"
+                })
+            }
+
+            else if (courses) {
+                courses.forEach(function (course) {
+                    user.courses.push(course);
+                });
+                user.save();
+                res.status(301).json({
+                    msg: "All course in DB added"
+                });
+            }
+            else {
+                res.status(409).json({
+                    msg: "Cannot any course to add"
+                })
+            }
+
+        });
+
+    });
+
 };
