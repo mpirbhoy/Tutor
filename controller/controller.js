@@ -68,7 +68,7 @@ module.exports.getMain = function (req, res) {
                     name: dispName,
                     descr: foundUser.descr,
                     imgPath: correctImagePath,
-                    courses: foundUser.courses,
+                    courses: JSON.stringify(foundUser.courses),
                     localImg : localImg
 
                 })
