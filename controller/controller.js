@@ -76,13 +76,54 @@ module.exports.getMain = function (req, res) {
 // Hardcode all courses and send all courses as JSON
 module.exports.getAllCourses = function (req, res) {
 
+    new Course({
+        courseCode: 'CSC343H1',
+        courseName: 'Introduction to Databases',
+        prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
+        instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
+    }).save();
+    new Course({
+        courseCode: 'CSC108H1',
+        courseName: 'Introduction to Computer Programming',
+        exclusions: 'CSC120H1, CSC148H1',
+        instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
+    }).save();
+    new Course({
+        courseCode: 'CSC148H1',
+        courseName: ' Introduction to Computer Science',
+        prereqs: ' CSC108H1',
+        exclusions: 'CSC150H1',
+        instructors: 'D. Liu, D. Heap'
+    }).save();
+    new Course({
+        courseCode: 'CSC207H1',
+        courseName: 'Software Design',
+        prereqs: 'CSC148H1',
+        instructors: 'J. Campbell'
+    }).save();
+    new User ({
+        email: 'abc@abc.abc',
+        password: 'abc',
+        dispName : 'abc',
+        auth : 'user',
+        imgPath : 'def.jpg',
+        descr: '',
+        pId: '1',
+        facebookId : '',
+        courses:[],
+        facebookName: '',
+        facebookToken: '',
+        facebookProfilePicture: '',
+        admin: true
+    }).save();
+
     var allCourses = [];
     var i = 1;
     Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
                 var tempCourse = {};
-                tempCourse.id = i
+                tempCourse.id = i;
                 tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
                 tempCourse.prereqs = course.prereqs;
