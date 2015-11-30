@@ -135,6 +135,7 @@ module.exports.getAllCourses = function (req, res) {
 
 
     var allCourses = [];
+    var i = 1;
     Course.find({courseCode: req.query.term}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
@@ -233,7 +234,7 @@ module.exports.updateUserCourses = function(req, res){
     if (email) {
 
         // Find the user to add course for
-        User.where({}).findOne(function (findUserErr, foundUser) {
+        User.where({email: email}).findOne(function (findUserErr, foundUser) {
 
             if (findUserErr){
                 res.json({
@@ -245,16 +246,16 @@ module.exports.updateUserCourses = function(req, res){
             else if (foundUser) {
 
                 // Find the course for enrolment
-                Course.where({}).find(function(findCourseErr, myCourse){
+                Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
                     if(findCourseErr){
                         res.json({
                             status: 409,
                             msg: "Errors when trying to find the course for enrollment"
                         })
                     } else if (myCourse){
-                        myCourse.forEach(function(course){
-                            foundUser.courses.push(course);
-                        });
+
+                        foundUser.courses.push(myCourse);
+
                         foundUser.save();
                         res.json({
                             status: 301,

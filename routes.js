@@ -60,7 +60,7 @@ module.exports = function(app, passport) {
 	app.get('/thread/:course', controller.getAllThreads);
 	// Route for deleting a particular thread for a particular course
 	//app.delete('thread/:course', controller.deleteAThread);
-	//app.post('/user/:email', controller.injectAllCoursesToUser);
+	app.post('/user/:email', controller.injectAllCoursesToUser);
 }
 
 
