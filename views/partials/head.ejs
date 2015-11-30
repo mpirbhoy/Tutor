@@ -97,16 +97,19 @@
 //                    "<div class='select2-result-repository__meta'>" +
                     "<div class='select2-result-repository__title'>" + course.courseCode + " " + course.courseName + "</div>";
 
-//            if (course.description) {
-//                markup += "<div class='select2-result-repository__description'>" + course.description + "</div>";
-//            }
+
 
             markup += "<div class='select2-result-repository__statistics'>" +
-                    "<div class='select2-result-repository__forks'> INSTR: " + course.instructors + "</div>" +
-                    "<div class='select2-result-repository__stargazers'> PRE: " + course.prereqs + "</div>" +
-                    "<div class='select2-result-repository__watchers'> EXC: " + course.exclusions + "</div>" +
-                    "</div>" +
-                    "</div>";
+                    "<div class='select2-result-repository__forks'> INSTR: " + course.instructors + "</div>";
+
+            if (course.prereqs) {
+                markup += "<div class='select2-result-repository__stargazers'> PRE: " + course.prereqs + "</div>";
+            }
+            if (course.exclusions) {
+                markup += "<div class='select2-result-repository__watchers'> EXC: " + course.exclusions + "</div>";
+            }
+
+            markup += "</div></div>";
 
             return markup;
         }
@@ -118,77 +121,77 @@
 
     <!-- JQUERY DATE & TIME PICKER -->
 
-      <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-      <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-      <link rel="stylesheet" href="/css/jquery-ui-timepicker-addon.css">
-      <script src="/js/jquery-ui-timepicker-addon.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/css/jquery-ui-timepicker-addon.css">
+    <script src="/js/jquery-ui-timepicker-addon.js"></script>
 
-      <!-- John's Code
-      <link rel="stylesheet" href="css/jquery.timepicker.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.min.css">
+    <!-- John's Code
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.min.css">
 
-      <script src="js/jquery.timepicker.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="js/jquery.timepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script>
 
-      <script type="text/javascript" src="js/datepair.js"></script>-->
+    <script type="text/javascript" src="js/datepair.js"></script>-->
 
 
     <script>
 
-      $(function() {
-        $( ".from" ).datetimepicker({
+        $(function() {
+            $( ".from" ).datetimepicker({
                 controlType: 'select',
                 oneLine: true,
                 timeFormat: 'hh:mm tt',
                 minDate: 0,
                 onClose: function( selectedDate ) {
                     $( ".to" ).datetimepicker( "option", "minDate", selectedDate )
-                  }
-        });
-        $( ".to" ).datetimepicker({
+                }
+            });
+            $( ".to" ).datetimepicker({
                 controlType: 'select',
                 oneLine: true,
                 timeFormat: 'hh:mm tt',
                 minDate: 0,
                 onClose: function( selectedDate ) {
-        $( ".from" ).datetimepicker( "option", "maxDate", selectedDate );
-      }
+                    $( ".from" ).datetimepicker( "option", "maxDate", selectedDate );
+                }
 
+            });
         });
-      });
 
-      /*
-        var startDateTextBox = $('#starting');
-        var endDateTextBox = $('#ending');
+        /*
+         var startDateTextBox = $('#starting');
+         var endDateTextBox = $('#ending');
 
-        $.timepicker.datetimeRange(
-            startDateTextBox,
-            endDateTextBox,
-            {
-                minInterval: (1000*60*60), // 1hr
-                dateFormat: 'dd M yy',
-                timeFormat: 'HH:mm',
-                start: {}, // start picker options
-                end: {} // end picker options
-            }
-        );*/
+         $.timepicker.datetimeRange(
+         startDateTextBox,
+         endDateTextBox,
+         {
+         minInterval: (1000*60*60), // 1hr
+         dateFormat: 'dd M yy',
+         timeFormat: 'HH:mm',
+         start: {}, // start picker options
+         end: {} // end picker options
+         }
+         );*/
 
-    // initialize input widgets first
-    /*
-    $('#basicExample .time').timepicker({
-        'showDuration': true,
-        'timeFormat': 'g:ia'
-    });
+        // initialize input widgets first
+        /*
+         $('#basicExample .time').timepicker({
+         'showDuration': true,
+         'timeFormat': 'g:ia'
+         });
 
-    $('#basicExample .date').datepicker({
-        'format': 'm/d/yyyy',
-        'autoclose': true
-    });
+         $('#basicExample .date').datepicker({
+         'format': 'm/d/yyyy',
+         'autoclose': true
+         });
 
-    // initialize datepair
-    var basicExampleEl = document.getElementById('basicExample');
-    var datepair = new Datepair(basicExampleEl);
-*/
+         // initialize datepair
+         var basicExampleEl = document.getElementById('basicExample');
+         var datepair = new Datepair(basicExampleEl);
+         */
     </script>
 
 </head>

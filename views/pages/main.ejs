@@ -96,13 +96,13 @@
                     <script>
                         courses = <%- courses %>;
                         for (var i = 0; i < courses.length; i++) {
-                            $('#courses').append("<button type='submit' class='list-group-item' value=" + courses[i].courseCode + ">" + courses[i].courseCode + ": " + courses[i].courseName + "</button>");
+                            $('#courses').prepend("<button type='submit' class='list-group-item' value=" + courses[i].courseCode + ">" + courses[i].courseCode + ": " + courses[i].courseName + "</button>");
                         }
                     </script>
 
                     <!-- Active class added when clicked -->
                     <script>
-                        $('.list-group-item').click(function(e) {
+                        $('body').on('click', '.list-group-item', function(e) {
                             e.preventDefault();
                             var $this = $(this);
                             if (!$this.hasClass('active')) {
