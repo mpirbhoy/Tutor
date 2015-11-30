@@ -57,7 +57,7 @@
     <script>
         $(function(){
             $(".select2").select2({
-                placeholder: "Select a state",
+                placeholder: "Select courses",
                 ajax: {
                     url: "/injectcourses",
                     dataType: 'json',
@@ -112,23 +112,6 @@
         }
 
         function formatCourseSelection (status) {
-            if (status.courseCode != undefined) {
-                var $text = $('#select2-7xhi-container').text();
-                var $email = $('#user-nav').attr('href');
-                $.ajax({
-                    type: "PUT",
-                    url: $email,
-                    dataType: 'json',
-                    data: {courseCode: $text},
-                    success: function(data) {
-                        var msg = '<button type="submit" class="list-group-item" value=' + status.courseCode + '>' + status.courseCode + ': ' + status.courseName + '</button>'
-                        $('#courses').prepend(msg);
-                    },
-                    fail: function() {
-                    }
-                });
-            }
-
             return status.courseCode || status.text;
         }
 

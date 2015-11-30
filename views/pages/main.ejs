@@ -14,23 +14,74 @@
                     <option></option>
                 </select>
                 <script>
-//                    $(document).on('change', 'select', function() {
-//                        var $text = $('.select2-selection__rendered').text();
-//                        var $email = $('#user-nav').attr('href');
-//
-//                        $.ajax({
-//                            type: "PUT",
-//                            url: $email,
-//                            dataType: 'json',
-//                            data: {courseCode: $text},
-//                            success: function(data) {
-//                                var msg = '<button type="button" class="list-group-item">' + data.status + '</button>'
-//                                $('#courses').append(msg);
-//                            },
-//                            fail: function() {
-//                            }
-//                        });
-//                    });
+                    var $eventSelect = $(".select2");
+                    $eventSelect.on("select2:select", function (e) { log("select2:select", e); });
+
+                    function log (name, evt) {
+                        if (!evt) {
+                            var args = "{}";
+                        } else {
+                            var args = JSON.stringify(evt.params, function (key, value) {
+                                if (value && value.nodeName) return "[DOM node]";
+                                if (value instanceof $.Event) return "[$.Event]";
+                                return value;
+                            });
+                        }
+                        var $email = $('#user-nav').attr('href');
+
+                        var courseCode = JSON.parse(args).data['courseCode'];
+                        var courseName = JSON.parse(args).data['courseName']
+
+                        $.ajax({
+                            type: "PUT",
+                            url: $email,
+                            dataType: 'json',
+                            data: {courseCode: courseCode},
+                            success: function(data) {
+                                var msg = '<button type="submit" class="list-group-item" value=' + courseCode + '>' + courseCode + ': ' + courseName + '</button>'
+                                $('#courses').prepend(msg);
+                            },
+                            fail: function() {
+                            }
+                        });
+                        $(".select2").val('').trigger('change');
+                    }
+
+                    //                    if (status.courseCode != undefined) {
+                    //                        var $text = $('.select2-selection__rendered').text();
+                    //                        var $email = $('#user-nav').attr('href');
+                    //                        $.ajax({
+                    //                            type: "PUT",
+                    //                            url: $email,
+                    //                            dataType: 'json',
+                    //                            data: {courseCode: $text},
+                    //                            success: function(data) {
+                    //                                var msg = '<button type="submit" class="list-group-item" value=' + status.courseCode + '>' + status.courseCode + ': ' + status.courseName + '</button>'
+                    //                                $('#courses').prepend(msg);
+                    //                            },
+                    //                            fail: function() {
+                    //                            }
+                    //                        });
+                    //                        $(".select2").val('').trigger('change');
+                    //                    }
+
+                    //                    $(document).on('change', 'select', function() {
+                    //                        var $text = $('.select2-selection__rendered').text();
+                    //                        var $email = $('#user-nav').attr('href');
+                    //
+                    //                        $.ajax({
+                    //                            type: "PUT",
+                    //                            url: $email,
+                    //                            dataType: 'json',
+                    //                            data: {courseCode: $text},
+                    //                            success: function(data) {
+                    //                                var msg = '<button type="button" class="list-group-item">' + data.status + '</button>'
+                    //                                $('#courses').append(msg);
+                    //                            },
+                    //                            fail: function() {
+                    //                            }
+                    //                        });
+                    //                    });
                 </script>
             </div>
 
@@ -42,7 +93,7 @@
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
                     <button type="submit" class="list-group-item" value="CSC309">CSC309: Programming on the Web</button>
 
-                    <script> 
+                    <script>
                         courses = <%- courses %>;
                         for (var i = 0; i < courses.length; i++) {
                             $('#courses').append("<button type='submit' class='list-group-item' value=" + courses[i].courseCode + ">" + courses[i].courseCode + ": " + courses[i].courseName + "</button>");
@@ -189,7 +240,7 @@
                 <div class="panel panel-default" id="thread-example">
 
                     <div class="panel-heading">
-                            &nbsp
+                        &nbsp
                         <div style="float:left;">
                             <h3 class="panel-title"><!--Looking for (tutor / tuttee)--></h3>
                         </div>
@@ -273,7 +324,7 @@
 
             //$( "#thread-example" ).hide();
 
-            
+
             $.ajax({
                 type: "POST",
                 url: "/thread/" + $(".active").val(),
@@ -289,11 +340,11 @@
                 fail: function() {
                     // $('.main').html("failed loading data");
                 }
-            }); 
-            
+            });
+
 
         });
-        
+
         /* Comment button that populated a thread with a comment */
         $('body').on('click', '.glyphicon-comment', function() {
 
@@ -304,43 +355,43 @@
             $('#response').val('');
 
             /* KEEP WORKING ON THIS LATER
-            $.ajax({
-                type: "POST",
-                url: "/comment/"
-                dataType: 'json',
-                data: {
-                    author: NEED INJECTION FROM NAV BAR
-                    response: $('#response').val()
-                },
-                success: function(data) {
+             $.ajax({
+             type: "POST",
+             url: "/comment/"
+             dataType: 'json',
+             data: {
+             author: NEED INJECTION FROM NAV BAR
+             response: $('#response').val()
+             },
+             success: function(data) {
 
-                },
+             },
 
-                fail: function() {
+             fail: function() {
 
-                }
+             }
 
-            });*/
+             });*/
         });
 
         /* Delete button that will delete the comment */
         $('body').on('click', '.btn-comment', function() {
             $(this).parents("div:first").remove();
             /* =========================== UNCOMMENT WHEN BACK-END CATCHES UP
-            $.ajax({
-                type: "DELETE",
-                url: "/comment/comment_id",
-                timeout: 2000,
-                success: function(data) {
-                    $(this).parents("div:first").remove();
-                },
-                fail: function() {
-                    $('.main').html("comment cannot be removed");
-                }
+             $.ajax({
+             type: "DELETE",
+             url: "/comment/comment_id",
+             timeout: 2000,
+             success: function(data) {
+             $(this).parents("div:first").remove();
+             },
+             fail: function() {
+             $('.main').html("comment cannot be removed");
+             }
 
-            }); */
-    });
-    
+             }); */
+        });
+
 
     });
 
