@@ -114,45 +114,6 @@
         function formatCourseSelection (status) {
             return status.courseCode || status.text;
         }
-
-
-
-        $("#main").on('click', '#button', function () {
-            var input = $("#input").val().trim(); //used to retrieve either tweetID or userID
-            var url;
-            if ($('input').attr('placeholder') == 'Tweet ID') {
-                url = './tweets/' + input;
-            } else {
-                url = './users/' + input;
-            }
-
-            // send an ajax request and display the result on the same page
-            $.ajax({
-                type: "GET",
-                url: url,
-                timeout: 2000,
-                dataType: 'json',
-                success: function(data) {
-                    var msg = '<h2>Results</h2>';
-                    $.each(data, function(i, json) {
-                        $.each($.parseJSON(json), function(key, val) {
-                            if (key == "created_at") {
-                                var timeSplit = val.split(" ");
-                                var time = timeSplit[0] + " " + timeSplit[1] + " " + timeSplit[2] + " " + timeSplit[5];
-                                msg += '<div class="' + key + ' padding">' + key.replace('_', ' ') + ': ' + time + '</div>';
-                            } else {
-                                msg += '<div class="' + key + ' padding">' + key.replace('_', ' ') + ': ' + val + '</div>';
-                            }
-                        });
-                    });
-
-                    $('#result').html(msg);
-                },
-                fail: function() {
-                    $('#side').append('CANNOT LOAD');
-                }
-            });
-        });
     </script>
 
     <!-- JQUERY DATE & TIME PICKER -->

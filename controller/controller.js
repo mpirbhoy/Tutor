@@ -115,28 +115,10 @@ module.exports.getAllCourses = function (req, res) {
         instructors: 'J. Campbell'
     }).save();
 
-
-
-    new User ({
-        email: 'abc@abc.abc',
-        password: 'abc',
-        dispName : 'abc',
-        auth : 'user',
-        imgPath : 'def.jpg',
-        descr: '',
-        pId: '1',
-        facebookId : '',
-        courses:[],
-        facebookName: '',
-        facebookToken: '',
-        facebookProfilePicture: '',
-        admin: true
-    }).save();
-
-
     var allCourses = [];
     var i = 1;
-    Course.find({courseCode: req.query.term}, function (err, courses) {
+
+    Course.find({courseCode: new RegExp(req.query.term, "i")}, function (err, courses) {
         if (courses) {
             courses.forEach(function (course) {
                 var tempCourse = {};
