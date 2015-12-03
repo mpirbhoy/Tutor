@@ -190,6 +190,54 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
     }
 };
 
+// For creating a new thread for a particular course. It also inserts into the course's thread collections
+module.exports.postComment = function (req, res) { //TODO: Untested
+    var threadToCreateIn = req.params.threadId;
+    if (threadToCreateIn) {
+        console.log(req.params.course);
+        Thread.where({_id: threadToCreateIn}).findOne(function (err, myThread) {
+
+            if (err) {
+                res.json({
+                    status: 409,
+                    msg: "Error occurred with adding comment to thread " + myThread.threadId + "\n"
+                });
+            } else if (myThread) {
+                User.findById(req.session.passport.user, function(err, user) {
+                    if (err) {
+                      console.log(err);
+                      return;
+                    } else{
+                        if (user) {
+                                var newComment = new Comment({
+                                    author: user,
+                                    response: req.body.response,
+                                    creationTime: currTime.......
+                                });
+
+                                newComment.save();
+                                myThread.comments.push(newComment);
+                                myThread.save();
+
+                                var returnComment = {
+                                    author:user,
+                                    response: req.body.response,
+                                    creationTime: currTime.....
+                                }
+                                res.json({status: 301, msg : "New comment created", data: returnComment});
+
+                        } else {
+                            res.json({status: 401, msg : "Login required", data: {}});
+                        }
+                    }
+                });
+            }
+        });
+    }
+};
+
+
+
 // Get all threads for a particular course
 module.exports.getAllThreads = function(req, res) {
 

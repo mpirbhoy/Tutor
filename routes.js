@@ -48,19 +48,21 @@ module.exports = function(app, passport) {
 
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	// PUT request when enrolling in a course from search bar.
-	app.put('/user/:email', controller.updateUserCourses);
+	app.put('/user/:email', middleware.isLoggedIn, controller.updateUserCourses);
 
 	app.get('/injectcourses', middleware.isLoggedIn, controller.getAllCourses);
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
-
 	// Route for making thread for a particular course
-	app.post('/thread/:course', controller.makeNewThread);
+	app.post('/thread/:course', middleware.isLoggedIn, controller.makeNewThread);
 	// Route for getting threads for a particular course
-	app.get('/thread/:course', controller.getAllThreads);
+	app.get('/thread/:course', middleware.isLoggedIn, controller.getAllThreads);
 	// Route for deleting a particular thread for a particular course
 	//app.delete('thread/:course', controller.deleteAThread);
-	app.post('/user/:email', controller.injectAllCoursesToUser);
+	app.post('/user/:email', middleware.isLoggedIn, controller.injectAllCoursesToUser);
+
+	//Route for posting a comment to a thread
+	app.post('/comment/:threadId', middleware.isLoggedIn, controller.postComment);
 }
 
 

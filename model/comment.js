@@ -6,12 +6,13 @@ var mongoose = require('mongoose');
 var User = require('./user');
 var Thread  = require('./thread');
 var Comment = require('./comment');
-module.exports = mongoose.model('Section',{
+module.exports = mongoose.model('Comment',{
     author: {type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     creationTime: Date,
-    modificationTime: Date,
-    threadHost: {type: mongoose.Schema.Types.ObjectId, ref: 'Thread' },
-    commentID: {type: Number, unique: true},
-    response: String
+    response: String,
+//    threadHost: {type: mongoose.Schema.Types.ObjectId, ref: 'Thread' }
+//    commentID: {type: Number, unique: true},
+//    modificationTime: Date
+    
 });
 
