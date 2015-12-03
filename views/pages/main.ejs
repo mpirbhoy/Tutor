@@ -346,11 +346,10 @@
         /* Comment button that populated a thread with a comment */
         $('body').on('click', '.glyphicon-comment', function() {
 
-            var response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p><p>" + $(this).parent().prev('#response').val() + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+            //var response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p><p>" + $(this).parent().prev('#response').val() + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
 
             
-
-            //$(this).closest(".panel-body").append(response);
+            var thread = $(this).closest(".panel-body");
             //$('#response').val('');
             //console.log($(this).parents(".panel-default").attr("id"));
 
@@ -362,9 +361,11 @@
                  data: {response: $(this).parent().prev('#response').val()},
                  success: function(data) {
                     console.log(data);
-                    response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>" + data.author.dispName + " (" + data.author.email + ")" + "</a> created on 11/23/2015 5:00 PM</p><p>" + data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
-                        $(this).closest(".panel-body").append(response);
-                        $('#response').val('');
+                    var response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>" + data.data.author.dispName + " (" + data.data.author.email + ")" + "</a> created on "+ data.data.creationTime + "</p><p>" + data.data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>";
+
+                    thread.append(response);
+                    $('#response').val('');
+
                  },
 
                  fail: function() {
