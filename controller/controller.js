@@ -1,6 +1,7 @@
 var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
+var Comment = require('../model/comment');
 
 // For getting profile for a particular user
 module.exports.getProfile = function (req, res) {
