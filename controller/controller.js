@@ -248,7 +248,7 @@ module.exports.getAllThreads = function(req, res) {
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
-        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').populate('threads.comments').exec(function (err, myCourse) {
             if (myCourse) {
                 res.json({status: 301, allThreadsFromCourse: myCourse['threads']})
             }
