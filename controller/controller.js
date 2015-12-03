@@ -217,7 +217,6 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 var newComment = new Comment({
                                     author: user,
                                     response: req.body.response
-//                                    creationTime: currTime.......
                                 });
 
                                 newComment.save();
@@ -226,8 +225,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
 
                                 var returnComment = {
                                     author:user,
-                                    response: req.body.response
-  //                                  creationTime: currTime.....
+                                    response: req.body.response,
                                 }
                                 res.json({status: 301, msg : "New comment created", data: returnComment});
 
