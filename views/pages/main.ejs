@@ -350,26 +350,28 @@
 
             
 
-            $(this).closest(".panel-body").append(response);
-            $('#response').val('');
-            console.log($(this).parents(".panel-default").attr("id"));
+            //$(this).closest(".panel-body").append(response);
+            //$('#response').val('');
+            //console.log($(this).parents(".panel-default").attr("id"));
 
-            /* KEEP WORKING ON THIS LATER
+
              $.ajax({
                  type: "POST",
-                 url: "/comment/" + $(this).parents(".panel-default").attr("id") 
+                 url: "/comment/" + $(this).parents(".panel-default").attr("id"), 
                  dataType: 'json',
-                 data: {response: $(this).parent().prev('#response').val()}
-                 },
+                 data: {response: $(this).parent().prev('#response').val()},
                  success: function(data) {
-                    response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>" + data.author.dispName + " (" + "data.author.email" + ")" + "</a> created on 11/23/2015 5:00 PM</p><p>" + data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+                    console.log(data);
+                    response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>" + data.author.dispName + " (" + data.author.email + ")" + "</a> created on 11/23/2015 5:00 PM</p><p>" + data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+                        $(this).closest(".panel-body").append(response);
+                        $('#response').val('');
                  },
 
                  fail: function() {
 
                  }
 
-             });*/
+             });
         });
 
         /* Delete button that will delete the comment */
