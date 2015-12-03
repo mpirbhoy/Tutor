@@ -348,16 +348,18 @@
 
             var response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p><p>" + $(this).parent().prev('#response').val() + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
 
-            console.log($(this).parent())
+            
+
             $(this).closest(".panel-body").append(response);
             $('#response').val('');
+            console.log($(this).parents(".panel-default").attr("id"));
 
             /* KEEP WORKING ON THIS LATER
              $.ajax({
              type: "POST",
-             url: "/comment/"
+             url: "/comment/" 
              dataType: 'json',
-             data: {
+             data: {response: $(this).parent().prev('#response').val()}
              author: NEED INJECTION FROM NAV BAR
              response: $('#response').val()
              },
