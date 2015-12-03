@@ -38,8 +38,10 @@
                             dataType: 'json',
                             data: {courseCode: courseCode},
                             success: function(data) {
-                                var msg = '<button type="submit" class="list-group-item" value=' + courseCode + '>' + courseCode + ': ' + courseName + '</button>'
-                                $('#courses').prepend(msg);
+                                if (data.status != 409) {
+                                    var msg = '<button type="submit" class="list-group-item" value=' + courseCode + '>' + courseCode + ': ' + courseName + '</button>'
+                                    $('#courses').prepend(msg);
+                                }
                             },
                             fail: function() {
                             }

@@ -81,39 +81,44 @@ module.exports.getMain = function (req, res) {
 // Hardcode all courses and send all courses as JSON
 module.exports.getAllCourses = function (req, res) {
 
-    new Course({
-        courseCode: 'CSC108H1',
-        courseName: 'Introduction to Computer Programming',
-        exclusions: 'CSC120H1, CSC148H1',
-        instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
-    }).save();
-    new Course({
-        courseCode: 'CSC148H1',
-        courseName: ' Introduction to Computer Science',
-        prereqs: ' CSC108H1',
-        exclusions: 'CSC150H1',
-        instructors: 'D. Liu, D. Heap'
-    }).save();
-    new Course({
-        courseCode: 'CSC207H1',
-        courseName: 'Software Design',
-        prereqs: 'CSC148H1',
-        instructors: 'J. Campbell'
-    }).save();
-    new Course({
+    Course.count({}, function (err, count) {
+        if (count == 0) {
+            new Course({
+                courseCode: 'CSC108H1',
+                courseName: 'Introduction to Computer Programming',
+                exclusions: 'CSC120H1, CSC148H1',
+                instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
+            }).save();
+            new Course({
+                courseCode: 'CSC148H1',
+                courseName: ' Introduction to Computer Science',
+                prereqs: ' CSC108H1',
+                exclusions: 'CSC150H1',
+                instructors: 'D. Liu, D. Heap'
+            }).save();
+            new Course({
+                courseCode: 'CSC207H1',
+                courseName: 'Software Design',
+                prereqs: 'CSC148H1',
+                instructors: 'J. Campbell'
+            }).save();
+            new Course({
 
-        courseCode: 'CSC309H1',
-        courseName: 'Programming on the Web',
-        prereqs: 'CSC209H1',
-        instructors: 'A. Mashiyat'
-    }).save();
-    new Course({
+                courseCode: 'CSC309H1',
+                courseName: 'Programming on the Web',
+                prereqs: 'CSC209H1',
+                instructors: 'A. Mashiyat'
+            }).save();
+            new Course({
 
-        courseCode: 'CSC343H1',
-        courseName: 'Introduction to Databases',
-        prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
-        instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
-    }).save();
+                courseCode: 'CSC343H1',
+                courseName: 'Introduction to Databases',
+                prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
+                instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
+            }).save();
+        }
+    });
+
 
     var allCourses = [];
     var i = 1;
@@ -256,7 +261,7 @@ module.exports.getAllThreads = function(req, res) {
     }
 };
 
-// Add a new course to a particular user's course collection|| Now, insert all courses into given user
+// Add a new course to a particular user's course collection
 module.exports.updateUserCourses = function(req, res){
 
     var email = req.params.email;
@@ -283,14 +288,27 @@ module.exports.updateUserCourses = function(req, res){
                             msg: "Errors when trying to find the course for enrollment"
                         })
                     } else if (myCourse){
-
-                        foundUser.courses.push(myCourse);
-
-                        foundUser.save();
-                        res.json({
-                            status: 301,
-                            msg: "Course added"
+                        var isAlreadyEnrolled = false;
+                        foundUser.courses.forEach(function (course) {
+                            if (myCourse._id.equals(course)) {
+                                isAlreadyEnrolled = true;
+                            }
                         });
+
+                        if (isAlreadyEnrolled) {
+                            res.json({
+                                status: 409,
+                                msg: "You've already registered that course"
+                            })
+                        } else {
+                            foundUser.courses.push(myCourse);
+
+                            foundUser.save();
+                            res.json({
+                                status: 301,
+                                msg: "Course added"
+                            });
+                        }
                     }
                 });
             }
