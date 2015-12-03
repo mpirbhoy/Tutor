@@ -356,20 +356,18 @@
 
             /* KEEP WORKING ON THIS LATER
              $.ajax({
-             type: "POST",
-             url: "/comment/" 
-             dataType: 'json',
-             data: {response: $(this).parent().prev('#response').val()}
-             author: NEED INJECTION FROM NAV BAR
-             response: $('#response').val()
-             },
-             success: function(data) {
+                 type: "POST",
+                 url: "/comment/" + $(this).parents(".panel-default").attr("id") 
+                 dataType: 'json',
+                 data: {response: $(this).parent().prev('#response').val()}
+                 },
+                 success: function(data) {
+                    response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>" + data.author.dispName + " (" + "data.author.email" + ")" + "</a> created on 11/23/2015 5:00 PM</p><p>" + data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+                 },
 
-             },
+                 fail: function() {
 
-             fail: function() {
-
-             }
+                 }
 
              });*/
         });
