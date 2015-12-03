@@ -82,20 +82,6 @@ module.exports.getMain = function (req, res) {
 module.exports.getAllCourses = function (req, res) {
 
     new Course({
-
-        courseCode: 'CSC309H1',
-        courseName: 'Programming on the Web',
-        prereqs: 'CSC209H1',
-        instructors: 'A. Mashiyat'
-    }).save();
-    new Course({
-
-        courseCode: 'CSC343H1',
-        courseName: 'Introduction to Databases',
-        prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
-        instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
-    }).save();
-    new Course({
         courseCode: 'CSC108H1',
         courseName: 'Introduction to Computer Programming',
         exclusions: 'CSC120H1, CSC148H1',
@@ -113,6 +99,20 @@ module.exports.getAllCourses = function (req, res) {
         courseName: 'Software Design',
         prereqs: 'CSC148H1',
         instructors: 'J. Campbell'
+    }).save();
+    new Course({
+
+        courseCode: 'CSC309H1',
+        courseName: 'Programming on the Web',
+        prereqs: 'CSC209H1',
+        instructors: 'A. Mashiyat'
+    }).save();
+    new Course({
+
+        courseCode: 'CSC343H1',
+        courseName: 'Introduction to Databases',
+        prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
+        instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
     }).save();
 
     var allCourses = [];
