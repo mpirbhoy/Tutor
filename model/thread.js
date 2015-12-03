@@ -13,7 +13,7 @@ module.exports = mongoose.model('Thread',{
     modificationTime: Date,
     price: Number,
     status: String,
-    starTime: String,
+    startTime: String,
     endTime: String,
     description: String
 });
