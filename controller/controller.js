@@ -62,13 +62,15 @@ module.exports.getProfile = function (req, res) {
                 } else {
                     dispName = foundUser.dispName;
                 }
-
+/*
                 var courseCode = [];
                 for (i = 0; i < user.courses.length; i++) { 
                     Course.where({_id: user.courses[i]}).findOne(function (err, myCourse) {
-                        
+                        if (myCourse) {
+
+                        }
                     }
-                }
+                }*/
 
                 res.render('./pages/view_user', {
                     title: "View User",
