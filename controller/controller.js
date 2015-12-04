@@ -268,18 +268,23 @@ module.exports.deleteComment = function (req, res) {
                           res.status(400).send(err);
                           return;
                     } else{
-                        if (comment.author._id == req.session.passport.user._id) {
-                            Comment.remove({'_id' : commentToDel}, function(err) {
-                                if (err) {
-                                  res.status(400).send(err);
-                                  return;
-                                } else{
-                                    res.send('Comment Removed!');
-                                }
-                            });
+                        if (comment) {
+
+                            if (comment.author._id == req.session.passport.user._id) {
+                                Comment.remove({'_id' : commentToDel}, function(err) {
+                                    if (err) {
+                                      res.status(400).send(err);
+                                      return;
+                                    } else{
+                                        res.send('Comment Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authoried!');
+                            }
                         } else {
-                            res.status(401).send('Not Authoried!');
-                        }
+                            res.status(404.send('Comment not found!'));
+                        } 
                     }
                 });
             
