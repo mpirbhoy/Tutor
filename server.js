@@ -47,7 +47,7 @@ var server;
 var start = exports.start = function start(port, callback){
   server = app.listen(port, callback);
 };
-//app.listen(port);
+app.listen(port);
 var end = exports.end = function end(callback){
   server.close(callback);
 };
