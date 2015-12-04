@@ -227,6 +227,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 myThread.save();
 
                                 var returnComment = {
+                                    _id: newComment._id,
                                     author:user,
                                     response: req.body.response,
                                     creationTime: currDate
