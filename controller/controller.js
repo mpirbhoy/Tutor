@@ -445,20 +445,19 @@ module.exports.getAllThreads = function (req, res) {
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
-        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').lean().exec(function (err, myCourse) {
             if (myCourse) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
-
                     var curUserId = req.session.passport.user;
                     for (var i = 0; i < data.length; i++) {
-
                         if (data[i]['author']['_id'].equals(curUserId)) {
                             data[i].byAuthor = true;
                         }
 
                         for (var j = 0; j < data[i]['comments'].length; j++) {
                             if (data[i]['comments'][j]['author']['_id'] == curUserId) {
-                                data[i]['comments'][j]['author']['_id'].byAuthor = true;
+                                data[i]['comments'][j] = data[i]['comments'][j].toObject();
+                                data[i]['comments'][j].byAuthor = true;
                             }
                         }
                     }
