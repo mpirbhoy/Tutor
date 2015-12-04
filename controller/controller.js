@@ -296,6 +296,24 @@ module.exports.deleteComment = function (req, res) {
 };
 
 
+// For deleting a comment with a particular courseCode
+module.exports.deleteCourse = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user) {
+                var courseCode = req.params.courseCode;
+                user.courses.pull({'courseCode': courseCode});
+            } else {
+                res.status(404).send('User not found');
+            }
+        }
+    });
+};
+
+
 // Get all threads for a particular course
 module.exports.getAllThreads = function(req, res) {
 
