@@ -295,6 +295,56 @@ module.exports.deleteComment = function (req, res) {
     });
 };
 
+// For deleting a comment with a particular commentId. 
+module.exports.deleteThread = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user.auth == 'superAdmin') {
+                var threadToDel = req.params.threadId;
+                Comment.remove({'_id' : commentToDel}, function(err) {
+                        if (err) {
+                          res.status(400).send(err);
+                          return;
+                        } else{
+                            res.send('Thread Removed');
+                        }
+
+                });
+            } else {
+                var threadToDel = req.params.threadId;
+                console.log(threadToDel);
+                Comment.findOne({'_id' : threadToDel}, function(err, thread) {
+                    if (err) {
+                          res.status(400).send(err);
+                          return;
+                    } else{
+                        if (thread) {
+                            if (thread.author._id == req.session.passport.user._id) {
+                                Thread.remove({'_id' : threadToDel}, function(err) {
+                                    if (err) {
+                                      res.status(400).send(err);
+                                      return;
+                                    } else{
+                                        res.send('Comment Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authoried!');
+                            }
+                        } else {
+                            res.status(404).send('Comment not found!');
+                        } 
+                    }
+                });
+            
+            }
+        }
+    });
+};
+
 
 // For deleting a comment with a particular courseCode
 module.exports.deleteCourse = function (req, res) {
