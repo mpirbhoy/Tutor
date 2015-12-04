@@ -62,6 +62,7 @@ module.exports.getProfile = function (req, res) {
                 } else {
                     dispName = foundUser.dispName;
                 }
+<<<<<<< HEAD
 
                 var courseColl = [];
                 for (i = 0; i < foundUser.courses.length; i++) {
@@ -78,6 +79,27 @@ module.exports.getProfile = function (req, res) {
                         dispName: foundUser.dispName,
                         courses: courseColl,
                         localImg : localImg
+=======
+                /*
+                 var courseCode = [];
+                 for (i = 0; i < user.courses.length; i++) {
+                 Course.where({_id: user.courses[i]}).findOne(function (err, myCourse) {
+                 if (myCourse) {
+
+                 }
+                 }
+                 }*/
+
+                res.render('./pages/view_user', {
+                    title: "View User",
+                    email: foundUser.email,
+                    name: dispName,
+                    descr: foundUser.descr,
+                    imgPath: correctImagePath,
+                    dispName: foundUser.dispName,
+                    courses: foundUser.courses,
+                    localImg: localImg
+>>>>>>> origin/dev
                 })
 
                 
@@ -116,7 +138,7 @@ module.exports.getEditProfile = function (req, res) {
                     imgPath: correctImagePath,
                     dispName: foundUser.dispName,
                     courses: foundUser.courses,
-                    localImg : localImg
+                    localImg: localImg
                 })
             }
         })
@@ -155,7 +177,7 @@ module.exports.getMain = function (req, res) {
                     descr: foundUser.descr,
                     imgPath: correctImagePath,
                     courses: JSON.stringify(foundUser.courses),
-                    localImg : localImg
+                    localImg: localImg
 
                 })
             }
@@ -202,40 +224,40 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                     msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
                 });
             } else if (myCourse) {
-                User.findById(req.session.passport.user, function(err, user) {
+                User.findById(req.session.passport.user, function (err, user) {
                     if (err) {
-                      console.log(err);
-                      return;
-                    } else{
+                        console.log(err);
+                        return;
+                    } else {
                         if (user) {
-                                var newThread = new Thread({
-                                    title: req.body.title,
-                                    author: user,
-                                    price: req.body.price,
-                                    description: req.body.description,
-                                    status: req.body.status,
-                                    startTime: req.body.start_time,
-                                    endTime: req.body.end_time
-                                });
+                            var newThread = new Thread({
+                                title: req.body.title,
+                                author: user,
+                                price: req.body.price,
+                                description: req.body.description,
+                                status: req.body.status,
+                                startTime: req.body.start_time,
+                                endTime: req.body.end_time
+                            });
 
-                                newThread.save();
-                                myCourse.threads.push(newThread);
-                                myCourse.save();
+                            newThread.save();
+                            myCourse.threads.push(newThread);
+                            myCourse.save();
 
-                                var returnThread = {
-                                    _id: newThread._id,
-                                    title: req.body.title,
-                                    author: user,
-                                    price: req.body.price,
-                                    description: req.body.description,
-                                    status: req.body.status,
-                                    startTime: req.body.start_time,
-                                    endTime: req.body.end_time
-                                }
-                                res.json({status: 200, msg : "New thread created", data: returnThread});
+                            var returnThread = {
+                                _id: newThread._id,
+                                title: req.body.title,
+                                author: user,
+                                price: req.body.price,
+                                description: req.body.description,
+                                status: req.body.status,
+                                startTime: req.body.start_time,
+                                endTime: req.body.end_time
+                            }
+                            res.json({status: 200, msg: "New thread created", data: returnThread});
 
                         } else {
-                            res.json({status: 401, msg : "Login required", data: {}});
+                            res.json({status: 401, msg: "Login required", data: {}});
                         }
                     }
                 });
@@ -257,33 +279,33 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                     msg: "Error occurred with adding comment to thread " + myThread.threadId + "\n"
                 });
             } else if (myThread) {
-                User.findById(req.session.passport.user, function(err, user) {
+                User.findById(req.session.passport.user, function (err, user) {
                     if (err) {
-                      console.log(err);
-                      return;
-                    } else{
+                        console.log(err);
+                        return;
+                    } else {
                         if (user) {
                             var currDate = new Date().toString();
-                                var newComment = new Comment({
-                                    author: user,
-                                    response: req.body.response,
-                                    creationTime: currDate
-                                });
+                            var newComment = new Comment({
+                                author: user,
+                                response: req.body.response,
+                                creationTime: currDate
+                            });
 
-                                newComment.save();
-                                myThread.comments.push(newComment);
-                                myThread.save();
+                            newComment.save();
+                            myThread.comments.push(newComment);
+                            myThread.save();
 
-                                var returnComment = {
-                                    _id: newComment._id,
-                                    author:user,
-                                    response: req.body.response,
-                                    creationTime: currDate
-                                }
-                                res.json({status: 200, msg : "New comment created", data: returnComment});
+                            var returnComment = {
+                                _id: newComment._id,
+                                author: user,
+                                response: req.body.response,
+                                creationTime: currDate
+                            }
+                            res.json({status: 200, msg: "New comment created", data: returnComment});
 
                         } else {
-                            res.json({status: 401, msg : "Login required", data: {}});
+                            res.json({status: 401, msg: "Login required", data: {}});
                         }
                     }
                 });
@@ -294,38 +316,38 @@ module.exports.postComment = function (req, res) { //TODO: Untested
 
 // For deleting a comment with a particular commentId. 
 module.exports.deleteComment = function (req, res) {
-    User.findById(req.session.passport.user, function(err, user) {
+    User.findById(req.session.passport.user, function (err, user) {
         if (err) {
-          res.status(400).send(err);
-          return;
-        } else{
+            res.status(400).send(err);
+            return;
+        } else {
             if (user.auth == 'superAdmin') {
                 var commentToDel = req.params.commentId;
-                Comment.remove({'_id' : commentToDel}, function(err) {
-                        if (err) {
-                          res.status(400).send(err);
-                          return;
-                        } else{
-                            res.send('Comment Removed');
-                        }
+                Comment.remove({'_id': commentToDel}, function (err) {
+                    if (err) {
+                        res.status(400).send(err);
+                        return;
+                    } else {
+                        res.send('Comment Removed');
+                    }
 
                 });
             } else {
                 var commentToDel = req.params.commentId;
                 console.log(commentToDel);
-                Comment.findOne({'_id' : commentToDel}, function(err, comment) {
+                Comment.findOne({'_id': commentToDel}, function (err, comment) {
                     if (err) {
-                          res.status(400).send(err);
-                          return;
-                    } else{
+                        res.status(400).send(err);
+                        return;
+                    } else {
                         if (comment) {
 
                             if (comment.author._id == req.session.passport.user._id) {
-                                Comment.remove({'_id' : commentToDel}, function(err) {
+                                Comment.remove({'_id': commentToDel}, function (err) {
                                     if (err) {
-                                      res.status(400).send(err);
-                                      return;
-                                    } else{
+                                        res.status(400).send(err);
+                                        return;
+                                    } else {
                                         res.send('Comment Removed!');
                                     }
                                 });
@@ -334,10 +356,10 @@ module.exports.deleteComment = function (req, res) {
                             }
                         } else {
                             res.status(404).send('Comment not found!');
-                        } 
+                        }
                     }
                 });
-            
+
             }
         }
     });
@@ -345,36 +367,36 @@ module.exports.deleteComment = function (req, res) {
 
 // For deleting a comment with a particular commentId. 
 module.exports.deleteThread = function (req, res) {
-    User.findById(req.session.passport.user, function(err, user) {
+    User.findById(req.session.passport.user, function (err, user) {
         if (err) {
-          res.status(400).send(err);
-          return;
-        } else{
+            res.status(400).send(err);
+            return;
+        } else {
             if (user.auth == 'superAdmin') {
                 var threadToDel = req.params.threadId;
-                Comment.remove({'_id' : commentToDel}, function(err) {
-                        if (err) {
-                          res.status(400).send(err);
-                          return;
-                        } else{
-                            res.send('Thread Removed');
-                        }
+                Comment.remove({'_id': commentToDel}, function (err) {
+                    if (err) {
+                        res.status(400).send(err);
+                        return;
+                    } else {
+                        res.send('Thread Removed');
+                    }
 
                 });
             } else {
                 var threadToDel = req.params.threadId;
-                Thread.findOne({'_id' : threadToDel}, function(err, thread) {
+                Thread.findOne({'_id': threadToDel}, function (err, thread) {
                     if (err) {
-                          res.status(400).send(err);
-                          return;
-                    } else{
+                        res.status(400).send(err);
+                        return;
+                    } else {
                         if (thread) {
                             if (thread.author._id.equals(req.session.passport.user)) {
-                                Thread.remove({'_id' : threadToDel}, function(err) {
+                                Thread.remove({'_id': threadToDel}, function (err) {
                                     if (err) {
-                                      res.status(400).send('blah');
-                                      return;
-                                    } else{
+                                        res.status(400).send('blah');
+                                        return;
+                                    } else {
                                         res.send('Thread Removed!');
                                     }
                                 });
@@ -386,7 +408,7 @@ module.exports.deleteThread = function (req, res) {
                         }
                     }
                 });
-            
+
             }
         }
     });
@@ -395,22 +417,22 @@ module.exports.deleteThread = function (req, res) {
 
 // For deleting a comment with a particular courseCode
 module.exports.deleteCourse = function (req, res) {
-    User.findById(req.session.passport.user, function(err, user) {
+    User.findById(req.session.passport.user, function (err, user) {
         if (err) {
-          res.status(400).send(err);
-          return;
-        } else{
+            res.status(400).send(err);
+            return;
+        } else {
             if (user) {
                 var courseCode = req.params.courseCode;
-                
-                 Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
+
+                Course.where({courseCode: courseCode}).findOne(function (findCourseErr, myCourse) {
                     if (findCourseErr) {
                         res.send(findCourseErr);
                     } else {
                         if (myCourse) {
-                            for (i = 0; i < user.courses.length; i++) { 
-                                
-                                if (myCourse._id.equals(user.courses[i])){
+                            for (i = 0; i < user.courses.length; i++) {
+
+                                if (myCourse._id.equals(user.courses[i])) {
                                     user.courses.splice(i, 1);
                                     i = user.courses.length;
                                     user.save();
@@ -420,14 +442,13 @@ module.exports.deleteCourse = function (req, res) {
                             }
 
 
-
                         } else {
                             res.status(404).send('Course Not Found!');
                         }
                     }
-                 });   
-                
-                
+                });
+
+
             } else {
                 res.status(404).send('User not found');
             }
@@ -447,6 +468,20 @@ module.exports.getAllThreads = function (req, res) {
         Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
             if (myCourse) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
+
+                    var curUserId = req.session.passport.user;
+                    for (var i = 0; i < data.length; i++) {
+
+                        if (data[i]['author']['_id'].equals(curUserId)) {
+                            data[i].byAuthor = true;
+                        }
+
+                        for (var j = 0; j < data[i]['comments'].length; j++) {
+                            if (data[i]['comments'][j]['author']['_id'] == curUserId) {
+                                data[i]['comments'][j]['author']['_id'].byAuthor = true;
+                            }
+                        }
+                    }
                     res.json({status: 200, allThreadsFromCourse: data})
                 });
             }
@@ -458,7 +493,7 @@ module.exports.getAllThreads = function (req, res) {
 };
 
 // Add a new course to a particular user's course collection
-module.exports.updateUserCourses = function(req, res){
+module.exports.updateUserCourses = function (req, res) {
 
     var email = req.params.email;
     var courseCode = req.body.courseCode; //TODO: Need to get the correct identifier for course data
@@ -467,7 +502,7 @@ module.exports.updateUserCourses = function(req, res){
         // Find the user to add course for
         User.where({email: email}).findOne(function (findUserErr, foundUser) {
 
-            if (findUserErr){
+            if (findUserErr) {
                 res.json({
                     status: 409,
                     msg: "Errors when trying to find the user for enrollment"
@@ -477,13 +512,13 @@ module.exports.updateUserCourses = function(req, res){
             else if (foundUser) {
 
                 // Find the course for enrolment
-                Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
-                    if(findCourseErr){
+                Course.where({courseCode: courseCode}).findOne(function (findCourseErr, myCourse) {
+                    if (findCourseErr) {
                         res.json({
                             status: 409,
                             msg: "Errors when trying to find the course for enrollment"
                         })
-                    } else if (myCourse){
+                    } else if (myCourse) {
                         var isAlreadyEnrolled = false;
                         foundUser.courses.forEach(function (course) {
                             if (myCourse._id.equals(course)) {
