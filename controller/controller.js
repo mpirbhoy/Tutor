@@ -184,7 +184,7 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                                     startTime: req.body.start_time,
                                     endTime: req.body.end_time
                                 }
-                                res.json({status: 301, msg : "New thread created", data: returnThread});
+                                res.json({status: 200, msg : "New thread created", data: returnThread});
 
                         } else {
                             res.json({status: 401, msg : "Login required", data: {}});
@@ -232,7 +232,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                     response: req.body.response,
                                     creationTime: currDate
                                 }
-                                res.json({status: 301, msg : "New comment created", data: returnComment});
+                                res.json({status: 200, msg : "New comment created", data: returnComment});
 
                         } else {
                             res.json({status: 401, msg : "Login required", data: {}});
@@ -315,20 +315,19 @@ module.exports.deleteThread = function (req, res) {
                 });
             } else {
                 var threadToDel = req.params.threadId;
-                console.log(threadToDel);
-                Comment.findOne({'_id' : threadToDel}, function(err, thread) {
+                Thread.findOne({'_id' : threadToDel}, function(err, thread) {
                     if (err) {
                           res.status(400).send(err);
                           return;
                     } else{
                         if (thread) {
-                            if (thread.author._id == req.session.passport.user._id) {
+                            if (thread.author._id.equals(req.session.passport.user)) {
                                 Thread.remove({'_id' : threadToDel}, function(err) {
                                     if (err) {
-                                      res.status(400).send(err);
+                                      res.status(400).send('blah');
                                       return;
                                     } else{
-                                        res.send('Thread Removed!');
+                                        res.status(404).send('Thread Removed!');
                                     }
                                 });
                             } else {
@@ -336,7 +335,7 @@ module.exports.deleteThread = function (req, res) {
                             }
                         } else {
                             res.status(404).send('Thread not found!');
-                        } 
+                        }
                     }
                 });
             
@@ -367,7 +366,7 @@ module.exports.deleteCourse = function (req, res) {
                                     user.courses.splice(i, 1);
                                     i = user.courses.length;
                                     user.save();
-                                    res.status(301).send('Course: ' + myCourse + " Removed from User");
+                                    res.send('Course: ' + myCourse + " Removed from User");
                                 }
 
                             }
@@ -399,7 +398,7 @@ module.exports.getAllThreads = function(req, res) {
     if (getThreadsFrom) {
         Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').populate('threads.comments').exec(function (err, myCourse) {
             if (myCourse) {
-                res.json({status: 301, allThreadsFromCourse: myCourse['threads']})
+                res.json({status: 200, allThreadsFromCourse: myCourse['threads']})
             }
             else {
                 res.json({status: 409, msg: "Can't find anything"});
@@ -453,7 +452,7 @@ module.exports.updateUserCourses = function(req, res){
 
                             foundUser.save();
                             res.json({
-                                status: 301,
+                                status: 200,
                                 msg: "Course added"
                             });
                         }
@@ -479,7 +478,7 @@ module.exports.injectAllCoursesToUser = function (req, res) {
                     user.courses.push(course);
                 });
                 user.save();
-                res.status(301).json({
+                res.status(200).json({
                     msg: "All course in DB added"
                 });
             }
