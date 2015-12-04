@@ -367,7 +367,7 @@ module.exports.deleteCourse = function (req, res) {
                                     user.courses.splice(i, 1);
                                     i = user.courses.length;
                                     user.save();
-                                    res.status(301).send('Course: ' + myCourse + " Removed from User");
+                                    res.send('Course: ' + myCourse + " Removed from User");
                                 }
 
                             }
