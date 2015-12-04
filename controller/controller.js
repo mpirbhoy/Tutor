@@ -352,7 +352,7 @@ module.exports.deleteThread = function (req, res) {
         } else {
             if (user.auth == 'superAdmin') {
                 var threadToDel = req.params.threadId;
-                Comment.remove({'_id': commentToDel}, function (err) {
+                Thread.remove({'_id': threadToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
                         return;
