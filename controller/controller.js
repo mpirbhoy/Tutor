@@ -283,7 +283,7 @@ module.exports.deleteComment = function (req, res) {
                                 res.status(401).send('Not Authoried!');
                             }
                         } else {
-                            res.status(404.send('Comment not found!'));
+                            res.status(404).send('Comment not found!');
                         } 
                     }
                 });
