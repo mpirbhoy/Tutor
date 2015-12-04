@@ -19,7 +19,7 @@ app.use(express.static('public'));
 
 //Configuring passport authentication here
 require('./config/passport.js')(passport);
-	
+
   app.set('views', './views');
   app.set('view engine', 'ejs');
   app.use(logger('dev'));
@@ -28,7 +28,7 @@ require('./config/passport.js')(passport);
 	extended: true
   }));
   app.use(bodyParser.json({limit: '5mb'}));
-  app.use(expressSession({ 
+  app.use(expressSession({
 			secret: 'mujtaba rox' ,
 			saveUninitialized: true,
                  resave: true
@@ -36,10 +36,10 @@ require('./config/passport.js')(passport);
   app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
-  
+
 //Sets up the routes that the server accepts
 require('./routes.js')(app, passport);
-												
+
 //Starts server at given port number
 app.listen(port);
 
