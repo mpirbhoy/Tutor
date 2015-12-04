@@ -130,17 +130,22 @@
                                         }
 
 
-                                        $("#all_threads").prepend("<div class='panel panel-default' id='" + threads[i]._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + threads[i].status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + threads[i]._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + threads[i].author.dispName + " ("+ threads[i].author.email + ") " + "</div><div class='col-lg-4'><h6>" + "Price:</h6>" + "$" + threads[i].price + "</div><div class='col-lg-4'><h6>Date Available: </h6>"+ threads[i].startTime + " to " + threads[i].endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + threads[i].title + "</b></i></h3>" + threads[i].description + "</p></div>" + "<p><button type='button' class='btn btn-danger btn-thread'>Close Thread</button></p>" + "<div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>");
+                                        $("#all_threads").prepend("<div class='panel panel-default' id='" + threads[i]._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + threads[i].status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + threads[i]._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + threads[i].author.dispName + " ("+ threads[i].author.email + ") " + "</div><div class='col-lg-2'><h6>" + "Price:</h6>" + "$" + threads[i].price + "</div><div class='col-lg-6'><h6>Date Available: </h6>"+ threads[i].startTime + " to " + threads[i].endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + threads[i].title + "</b></i></h3>" + threads[i].description + "</p></div>" + "<p><button type='button' class='btn btn-danger btn-thread'>Close Ad</button></p>" + "<div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>");
 
                                         //thread = "<div class='panel panel-default' id='" + threads[i]._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + threads[i].status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + threads[i]._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + threads[i].author.dispName + " ("+ threads[i].author.email + ") " + "</div><div class='col-lg-4'><h6>" + "Price:</h6>" + "$" + threads[i].price + "</div><div class='col-lg-4'><h6>Date Available: </h6>"+ threads[i].startTime + " to " + threads[i].endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + threads[i].title + "</b></i></h3>" + threads[i].description + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span>"
 
-                                    //     for (y = 0; y < threads[i].comments.length; y++) {
-                                    //         var comment = "<div id=" + threads[i].comments[y]._id + "class='panel-footer' style='margin-top: 20px;'><p><a>" + threads[i].comments[y].author.dispName + " (" + threads[i].comments[y].author.email + ")" + "</a> created on "+ threads[i].comments[y].creationTime + "</p><p>" + threads[i].comments[y].response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
-                                    //         thead = thread + comment
+                                        // for (y = 0; y < threads[i].comments.length; y++) {
+                                        //     if (user = true) {
 
-                                    //     }
+                                        //     } else {
 
-                                    //     thread = thread + "</div>"
+                                        //     }
+                                        //     var comment = "<div id=" + threads[i].comments[y]._id + "class='panel-footer' style='margin-top: 20px;'><p><a>" + threads[i].comments[y].author.dispName + " (" + threads[i].comments[y].author.email + ")" + "</a> created on "+ threads[i].comments[y].creationTime + "</p><p>" + threads[i].comments[y].response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+                                        //     thead = thread + comment
+
+                                        // }
+
+                                        // thread = thread + "</div>"
 
                                     }
                                 },
@@ -157,35 +162,21 @@
         <!-- RIGHT SIDE OF THE PAGE -->
         <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
 
-            <button type="submit" id="create" class="btn btn-primary" style="margin: 15px 15px 30px 15px;">Create thread</button>
+            <button type="submit" id="create" class="btn btn-primary" style="margin: 15px 15px 30px 15px;">Create Ad</button>
 
 
             <!-- CREATE A NEW THREAD -->
             <form class="form-horizontal" id="myForm">
-
-                <!-- First Name & Last Name -->
-                <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">Name</label>
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" placeholder="First Name" name="author_first_name">
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" placeholder="Last Name" name="author_last_name">
-                        </div>
-                    </div>
-                </div>
-
 
                 <!-- Availability -->
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Availability</label>
                     <div class="row">
                         <div class="col-sm-2">
-                            <input type="text"  class="form-control from" placeholder="Start Time" name="start_time">
+                            <input type="text"  class="form-control from" placeholder="Start Time" name="start_time" required>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text"  class="form-control to" placeholder="End Time" name="end_time">
+                            <input type="text"  class="form-control to" placeholder="End Time" name="end_time" required>
                         </div>
                     </div>
                 </div>
@@ -201,7 +192,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Title</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" id="inputPassword3" placeholder="Title of thread" name="title">
+                        <input type="text" class="form-control" id="inputPassword3" placeholder="Title of thread" name="title" required>
                     </div>
                 </div>
 
@@ -209,7 +200,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">Price</label>
                     <div class="col-sm-5">
-                        <input type="text"  class="form-control" placeholder="$" name="price">
+                        <input type="number"  class="form-control" placeholder="$" name="price" required>
                     </div>
                 </div>
 
@@ -372,7 +363,7 @@
                 success: function(data) {
 
                     console.log(data.data);
-                    new_thread = "<div class='panel panel-default' id='" + data.data._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + data.data.status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + data.data._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + data.data.author.dispName + " ("+ data.data.author.email + ") " + "</div><div class='col-lg-4'><h6>" + "Price:</h6>" + "$" + data.data.price + "</div><div class='col-lg-4'><h6>Date Available: </h6>" + data.data.startTime + " to " + data.data.endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + data.data.title + "</b></i></h3>" + data.data.description + "</p></div>" + "<p><button type='button' class='btn btn-danger btn-thread'>Close Thread</button></p>" + "<div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
+                    new_thread = "<div class='panel panel-default' id='" + data.data._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + data.data.status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + data.data._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + data.data.author.dispName + " ("+ data.data.author.email + ") " + "</div><div class='col-lg-2'><h6>" + "Price:</h6>" + "$" + data.data.price + "</div><div class='col-lg-6'><h6>Date Available: </h6>" + data.data.startTime + " to " + data.data.endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + data.data.title + "</b></i></h3>" + data.data.description + "</p></div>" + "<p><button type='button' class='btn btn-danger btn-thread'>Close Thread</button></p>" + "<div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>";
 
 
                     $('#all_threads').prepend(new_thread);
@@ -435,7 +426,7 @@
         });
 
         /* Delete button that will delete a thread */
-        $('body').on('click', '.btn-thread', function() {
+        $('body').on('click', '.btn-thread', function() {  
             thread = $(this).parents(".panel");
 
              $.ajax({
