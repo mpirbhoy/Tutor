@@ -438,19 +438,20 @@ module.exports.deleteCourse = function (req, res) {
 
 
 // Get all threads for a particular course
-module.exports.getAllThreads = function(req, res) {
+module.exports.getAllThreads = function (req, res) {
 
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
-        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').populate('threads.comments').exec(function (err, myCourse) {
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
             if (myCourse) {
-                res.json({status: 200, allThreadsFromCourse: myCourse['threads']})
+                Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
+                    res.json({status: 200, allThreadsFromCourse: data})
+                });
             }
             else {
                 res.json({status: 409, msg: "Can't find anything"});
             }
-
         });
     }
 };
