@@ -9,11 +9,11 @@ module.exports = mongoose.model('Thread',{
     title: String,
     //author: User,
     creationTime: Date,
-    comments: [Comment],
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
     modificationTime: Date,
     price: Number,
     status: String,
-    starTime: String,
+    startTime: String,
     endTime: String,
     description: String
 });
