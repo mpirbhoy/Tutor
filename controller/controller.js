@@ -78,6 +78,44 @@ module.exports.getProfile = function (req, res) {
 
 };
 
+// For getting profile for a particular user
+module.exports.getEditProfile = function (req, res) {
+    var email = req.params.email;
+    if (email) {
+        User.where({email: email}).findOne(function (err, foundUser) {
+            if (foundUser) {
+                var correctImagePath;
+                var localImg = 1;
+                if (foundUser.facebookProfilePicture) {
+                    correctImagePath = foundUser.facebookProfilePicture;
+                    localImg = 0;
+                } else {
+                    correctImagePath = foundUser.imgPath;
+                }
+
+                var dispName;
+                if (foundUser.dispName == "") {
+                    dispName = foundUser.facebookName;
+                } else {
+                    dispName = foundUser.dispName;
+                }
+                res.render('./pages/edit_user', {
+                    title: "Edit User",
+                    email: foundUser.email,
+                    name: dispName,
+                    descr: foundUser.descr,
+                    imgPath: correctImagePath,
+                    dispName: foundUser.dispName,
+                    courses: foundUser.courses,
+                    localImg : localImg
+                })
+            }
+        })
+    }
+
+};
+
+
 // For getting all courses that are belong to a particular user and necessary info about user for navbar
 module.exports.getMain = function (req, res) {
     var _id = req.session.passport.user;
@@ -176,6 +214,7 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                                 myCourse.save();
 
                                 var returnThread = {
+                                    _id: newThread._id,
                                     title: req.body.title,
                                     author: user,
                                     price: req.body.price,
@@ -327,7 +366,7 @@ module.exports.deleteThread = function (req, res) {
                                       res.status(400).send('blah');
                                       return;
                                     } else{
-                                        res.status(404).send('Thread Removed!');
+                                        res.send('Thread Removed!');
                                     }
                                 });
                             } else {
