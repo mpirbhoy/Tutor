@@ -301,8 +301,8 @@ module.exports.deleteComment = function (req, res) {
             res.status(400).send(err);
             return;
         } else {
+            var commentToDel = req.params.commentId;
             if (user.auth == 'superAdmin') {
-                var commentToDel = req.params.commentId;
                 Comment.remove({'_id': commentToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
@@ -313,8 +313,6 @@ module.exports.deleteComment = function (req, res) {
 
                 });
             } else {
-                var commentToDel = req.params.commentId;
-                console.log(commentToDel);
                 Comment.findOne({'_id': commentToDel}, function (err, comment) {
                     if (err) {
                         res.status(400).send(err);
@@ -322,7 +320,7 @@ module.exports.deleteComment = function (req, res) {
                     } else {
                         if (comment) {
 
-                            if (comment.author._id == req.session.passport.user._id) {
+                            if (comment.author._id == req.session.passport.user) {
                                 Comment.remove({'_id': commentToDel}, function (err) {
                                     if (err) {
                                         res.status(400).send(err);
