@@ -295,6 +295,56 @@ module.exports.deleteComment = function (req, res) {
     });
 };
 
+// For deleting a comment with a particular commentId. 
+module.exports.deleteThread = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user.auth == 'superAdmin') {
+                var threadToDel = req.params.threadId;
+                Comment.remove({'_id' : commentToDel}, function(err) {
+                        if (err) {
+                          res.status(400).send(err);
+                          return;
+                        } else{
+                            res.send('Thread Removed');
+                        }
+
+                });
+            } else {
+                var threadToDel = req.params.threadId;
+                console.log(threadToDel);
+                Comment.findOne({'_id' : threadToDel}, function(err, thread) {
+                    if (err) {
+                          res.status(400).send(err);
+                          return;
+                    } else{
+                        if (thread) {
+                            if (thread.author._id == req.session.passport.user._id) {
+                                Thread.remove({'_id' : threadToDel}, function(err) {
+                                    if (err) {
+                                      res.status(400).send(err);
+                                      return;
+                                    } else{
+                                        res.send('Thread Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authorized!');
+                            }
+                        } else {
+                            res.status(404).send('Thread not found!');
+                        } 
+                    }
+                });
+            
+            }
+        }
+    });
+};
+
 
 // For deleting a comment with a particular courseCode
 module.exports.deleteCourse = function (req, res) {
@@ -305,12 +355,39 @@ module.exports.deleteCourse = function (req, res) {
         } else{
             if (user) {
                 var courseCode = req.params.courseCode;
-                user.courses.pull({'courseCode': courseCode});
+                
+                 Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
+                    if (findCourseErr) {
+                        res.send(findCourseErr);
+                    } else {
+                        if (myCourse) {
+                            for (i = 0; i < user.courses.length; i++) { 
+                                
+                                if (myCourse._id.equals(user.courses[i])){
+                                    user.courses.splice(i, 1);
+                                    i = user.courses.length;
+                                    user.save();
+                                    res.status(301).send('Course: ' + myCourse + " Removed from User");
+                                }
+
+                            }
+
+
+
+                        } else {
+                            res.status(404).send('Course Not Found!');
+                        }
+                    }
+                 });   
+                
+                
             } else {
                 res.status(404).send('User not found');
             }
         }
     });
+
+
 };
 
 
