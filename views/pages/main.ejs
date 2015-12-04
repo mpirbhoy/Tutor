@@ -388,17 +388,18 @@
         /* Delete button that will delete the comment */
         $('body').on('click', '.btn-comment', function() {
             comment = $(this).parents("div:first");
+            comment.remove();
 
-             $.ajax({
-                 type: "DELETE",
-                 url: "/comment/" + $(this).parents("div:first").attr('id'),
-                 success: function(data) {
-                    comment.remove();
-                 },
-                 fail: function() {
-                    $('.main').html("comment cannot be removed");
-                 }
-             }); 
+             // $.ajax({
+             //     type: "DELETE",
+             //     url: "/comment/" + $(this).parents("div:first").attr('id'),
+             //     success: function(data) {
+             //        comment.remove();
+             //     },
+             //     fail: function() {
+             //        $('.main').html("comment cannot be removed");
+             //     }
+             // }); 
         });
 
 
