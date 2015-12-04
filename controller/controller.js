@@ -263,6 +263,8 @@ module.exports.deleteComment = function (req, res) {
 
                 });
             } else {
+                var commentToDel = req.params.commentId;
+                console.log(commentToDel);
                 Comment.findOne({'_id' : commentToDel}, function(err, comment) {
                     if (err) {
                           res.status(400).send(err);
