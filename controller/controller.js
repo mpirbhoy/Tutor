@@ -448,7 +448,10 @@ module.exports.getAllThreads = function (req, res) {
         Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
             if (myCourse) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
-                    res.json({status: 200, allThreadsFromCourse: data})
+                    //User.populate(data['comments'], {path: 'author'}, function(err, data2){
+                    //    res.json({status: 200, allThreadsFromCourse: data2})
+                    //});
+                        res.json({status: 200, allThreadsFromCourse: data})
                 });
             }
             else {
