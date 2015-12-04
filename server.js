@@ -41,6 +41,16 @@ require('./config/passport.js')(passport);
 require('./routes.js')(app, passport);
 												
 //Starts server at given port number
-app.listen(port);
+
+var server;
+
+var start = exports.start = function start(port, callback){
+  server = app.listen(port, callback);
+};
+//app.listen(port);
+var end = exports.end = function end(callback){
+  server.close(callback);
+};
+
 
 console.log("Starting Tutors 4 U Server at port" + port + "!");

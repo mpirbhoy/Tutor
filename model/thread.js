@@ -7,7 +7,7 @@ var User = require('./user');
 var Comment = require('./comment');
 module.exports = mongoose.model('Thread',{
     title: String,
-    author: User,
+    //author: User,
     creationTime: Date,
     comments: [Comment],
     modificationTime: Date,
