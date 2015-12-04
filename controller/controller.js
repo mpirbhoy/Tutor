@@ -558,5 +558,47 @@ module.exports.injectAllCoursesToUser = function (req, res) {
 };
 
 module.exports.getOtherProfile = function (req, res) {
-    res.render('./pages/test');
+    var email = req.params.email;
+    if (email) {
+        User.where({email: email}).findOne(function (err, foundUser) {
+            if (foundUser) {
+                var correctImagePath;
+                var localImg = 1;
+                if (foundUser.facebookProfilePicture) {
+                    correctImagePath = foundUser.facebookProfilePicture;
+                    localImg = 0;
+                } else {
+                    correctImagePath = foundUser.imgPath;
+                }
+
+                var dispName;
+                if (foundUser.dispName == "") {
+                    dispName = foundUser.facebookName;
+                } else {
+                    dispName = foundUser.dispName;
+                }
+                /*
+                 var courseCode = [];
+                 for (i = 0; i < user.courses.length; i++) {
+                 Course.where({_id: user.courses[i]}).findOne(function (err, myCourse) {
+                 if (myCourse) {
+
+                 }
+                 }
+                 }*/
+
+                res.render('./pages/view_Other', {
+                    title: "View other",
+                    email: foundUser.email,
+                    name: dispName,
+                    descr: foundUser.descr,
+                    imgPath: correctImagePath,
+                    dispName: foundUser.dispName,
+                    courses: foundUser.courses,
+                    localImg: localImg
+                })
+            }
+        })
+    }
+
 }

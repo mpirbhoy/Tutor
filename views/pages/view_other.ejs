@@ -12,25 +12,15 @@
 			<!--<div class="col-xs-6 col-sm-3 placeholder">-->
 			<!--<img data-src="" class="img-responsive" alt="Profile picture thumbnail">-->
 			<!--</div>-->
-			<h1>Profile<small><a id="edit-user" href="/user/<%= email %>/edit" style="cursor:pointer;">&nbsp Edit</a></small></h1>
+			<h1>Profile</h1>
 			<div class="thumbnail">
-				<img id="profile-img"
-
-						<%if (localImg == 1) { %>
-					 src="/img/<%=imgPath%>"
-						<% } %>
-
-						<%if (localImg == 0) { %>
-					 src="<%=imgPath%>"
-						<% } %>
-
-
-					 alt="avatar">
+				<img id="profile-img"></img>
 				<div class="caption">
-					<h3 id="profile-name"><%= dispName %></h3>
-					<p id="profile-email"><%= email %></p>
-					<p id="profile-description"><%= descr %></p>
-					<p id="profile-classes"><%= courses %></p>
+
+					<h3 id="profile-name"></h3>
+					<p id="profile-email"></p>
+					<p id="profile-description"></p>
+					<p id="profile-classes"></p>
 
 					<!-- Admin & Super admin privelages -->
                     <p id="profile-height"></p>
@@ -61,38 +51,10 @@
 			<input id="input-2" class="rating rating-tuttee col-lg-6" data-min="0" data-max="5" data-step="0.1">
 		</div>
 
-		<div>
-			<h1>Messages: </h1>
+		<div style="margin-top:150px;">
+			<h1>Send Message: </h1>
 
-			<div id="messages">
-				<div class="panel panel-default" id="">
-				 	<div class="panel-heading">
-				 		&nbsp;
-				 		<h3 class="panel-title" style="float: left">Sean Han</h3>
-				 		<h3 class="panel-title" style="float: right">Time:</h3>
-				 	</div>
-
-				 	<div class="panel-body">
-				    	Message here
-					</div>
-				</div>
-
-				<div class="panel panel-default" id="">
-				 	<div class="panel-heading">
-				 		&nbsp;
-				 		<h3 class="panel-title" style="float: left">Sean Han</h3>
-				 		<h3 class="panel-title" style="float: right">Time:</h3>
-				 	</div>
-
-				 	<div class="panel-body">
-				    	<p>Message here</p>
-				    	<button type='button' class='btn btn-danger btn-msg'>Delete Message</button>
-					</div>
-
-					
-
-				</div>
-			</div>
+			<div class='input-group' style="margin:20px 0 20px 0;"><input id='response' type='text' class='form-control' placeholder='Send your message...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>
 
 		</div>
 </div>
