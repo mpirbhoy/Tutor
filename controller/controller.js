@@ -196,7 +196,7 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
     }
 };
 
-// For creating a new thread for a particular course. It also inserts into the course's thread collections
+// For creating a new comment for a particular thread. It also inserts into the threads's comment collections
 module.exports.postComment = function (req, res) { //TODO: Untested
     var threadToCreateIn = req.params.threadId;
     if (threadToCreateIn) {
@@ -215,9 +215,11 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                       return;
                     } else{
                         if (user) {
+                            var currDate = new Date().toString();
                                 var newComment = new Comment({
                                     author: user,
-                                    response: req.body.response
+                                    response: req.body.response,
+                                    creationTime: currDate
                                 });
 
                                 newComment.save();
@@ -227,6 +229,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 var returnComment = {
                                     author:user,
                                     response: req.body.response,
+                                    creationTime: currDate
                                 }
                                 res.json({status: 301, msg : "New comment created", data: returnComment});
 
@@ -240,6 +243,49 @@ module.exports.postComment = function (req, res) { //TODO: Untested
     }
 };
 
+// For deleting a comment with a particular commentId. 
+module.exports.deleteComment = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user.auth == 'superAdmin') {
+                var commentToDel = req.params.commentId;
+                Comment.remove({'_id' : commentToDel}, function(err) {
+                        if (err) {
+                          res.status(400).send(err);
+                          return;
+                        } else{
+                            res.send('Comment Removed');
+                        }
+
+                });
+            } else {
+                Comment.findOne({'_id' : commentToDel}, function(err, comment) {
+                    if (err) {
+                          res.status(400).send(err);
+                          return;
+                    } else{
+                        if (comment.author._id == req.session.passport.user._id) {
+                            Comment.remove({'_id' : commentToDel}, function(err) {
+                                if (err) {
+                                  res.status(400).send(err);
+                                  return;
+                                } else{
+                                    res.send('Comment Removed!');
+                                }
+                            });
+                        } else {
+                            res.status(401).send('Not Authoried!');
+                        }
+                    }
+                });
+            
+            }
+        }
+    });
+};
 
 
 // Get all threads for a particular course
