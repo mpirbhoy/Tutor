@@ -45,7 +45,7 @@ Course.count({}, function (err, count) {
 module.exports.getProfile = function (req, res) {
     var email = req.params.email;
     if (email) {
-        User.where({email: email}).findOne(function (err, foundUser) {
+        User.where({email: email}).findOne().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
                 var correctImagePath;
                 var localImg = 1;
@@ -62,26 +62,25 @@ module.exports.getProfile = function (req, res) {
                 } else {
                     dispName = foundUser.dispName;
                 }
-/*
-                var courseCode = [];
-                for (i = 0; i < user.courses.length; i++) { 
-                    Course.where({_id: user.courses[i]}).findOne(function (err, myCourse) {
-                        if (myCourse) {
 
-                        }
-                    }
-                }*/
+                var courseColl = [];
+                for (i = 0; i < foundUser.courses.length; i++) {
+                    courseColl.push(foundUser.courses[i].courseCode);
+                    console.log(foundUser.courses[i].courseCode);
+                }
 
                 res.render('./pages/view_user', {
-                    title: "View User",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: foundUser.courses,
-                    localImg : localImg
+                        title: "View User",
+                        email: foundUser.email,
+                        name: dispName,
+                        descr: foundUser.descr,
+                        imgPath: correctImagePath,
+                        dispName: foundUser.dispName,
+                        courses: courseColl,
+                        localImg : localImg
                 })
+
+                
             }
         })
     }
