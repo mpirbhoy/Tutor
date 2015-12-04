@@ -44,18 +44,32 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
 		<div>
 			<h1>Ratings:</h1>
-			<h2 class="col-lg-6">Average Tutor Rating:</h2>
-			<h2 class="col-lg-6">Average Tuttee Rating:</h2>
+			<h2 class="col-lg-6">Tutor Rating:</h2>
+			<h2 class="col-lg-6">Tutee Rating:</h2>
 
-			<input id="input-2" class="rating rating-tutor col-lg-6" data-min="0" data-max="5" data-step="0.1">
-			<input id="input-2" class="rating rating-tuttee col-lg-6" data-min="0" data-max="5" data-step="0.1">
+			<input id="input-4" value="2" class="rating tutor-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+			<input id="input-4" value="3" class="rating tutee-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+
+			<script>
+				// Set the default star rating -> Get data from DB
+	    		$(".tutor-rating").val(2.2)
+	    		$(".tutee-rating").val(3)
+    		</script>
 		</div>
 
-		<div style="margin-top:150px;">
+		<div id="messages" style="margin-top:150px;">
 			<h1>Send Message: </h1>
 
 			<div class='input-group' style="margin:20px 0 20px 0;"><input id='response' type='text' class='form-control' placeholder='Send your message...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>
 
+			<script>
+ 				/* Comment button that populated a thread with a comment */
+        		$('body').on('click', '.glyphicon-comment', function() {
+        			//AJAX CALL
+        			$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+        		});
+
+			</script>
 		</div>
 </div>
 
@@ -64,6 +78,12 @@
     // for (var i = 0; i < messages.length; i++) {
     //     $('#messages').prepend('<div class="panel panel-default' id=''><div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>messages[i].from</h3><h3 class='panel-title' style='float: right'>messages[i].timeCreated</h3></div><div class='panel-body'><p>messages[i].message</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>');
     // }
+
+    // Splitting column for Tutor & Tuttee rating 
+    $( document ).ready(function() {
+    	$( ".star-rating" ).addClass( "col-lg-6" );
+	});
+    
 </script>
 
 
