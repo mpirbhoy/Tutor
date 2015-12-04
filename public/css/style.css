@@ -154,6 +154,19 @@ MAIN - SEARCH SIDE BAR
     margin-bottom: 10px;
 }
 
+#close {
+    float:right;
+    padding:3px 4px;
+    color: #ddd;
+}
+
+#close:hover {
+    float:right;
+    padding:3px 4px;
+    color: #000;
+
+}
+
 /* ==========================================================================
 MAIN - THREADS
 ========================================================================== */

@@ -3,6 +3,44 @@ var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 
+Course.count({}, function (err, count) {
+    if (count == 0) {
+        new Course({
+            courseCode: 'CSC108H1',
+            courseName: 'Introduction to Computer Programming',
+            exclusions: 'CSC120H1, CSC148H1',
+            instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
+        }).save();
+        new Course({
+            courseCode: 'CSC148H1',
+            courseName: ' Introduction to Computer Science',
+            prereqs: ' CSC108H1',
+            exclusions: 'CSC150H1',
+            instructors: 'D. Liu, D. Heap'
+        }).save();
+        new Course({
+            courseCode: 'CSC207H1',
+            courseName: 'Software Design',
+            prereqs: 'CSC148H1',
+            instructors: 'J. Campbell'
+        }).save();
+        new Course({
+
+            courseCode: 'CSC309H1',
+            courseName: 'Programming on the Web',
+            prereqs: 'CSC209H1',
+            instructors: 'A. Mashiyat'
+        }).save();
+        new Course({
+
+            courseCode: 'CSC343H1',
+            courseName: 'Introduction to Databases',
+            prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
+            instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
+        }).save();
+    }
+});
+
 // For getting profile for a particular user
 module.exports.getProfile = function (req, res) {
     var email = req.params.email;
@@ -81,44 +119,6 @@ module.exports.getMain = function (req, res) {
 
 // Hardcode all courses and send all courses as JSON
 module.exports.getAllCourses = function (req, res) {
-
-    Course.count({}, function (err, count) {
-        if (count == 0) {
-            new Course({
-                courseCode: 'CSC108H1',
-                courseName: 'Introduction to Computer Programming',
-                exclusions: 'CSC120H1, CSC148H1',
-                instructors: 'J. Smith, T. Fairgrieve, M. Papadopoulou'
-            }).save();
-            new Course({
-                courseCode: 'CSC148H1',
-                courseName: ' Introduction to Computer Science',
-                prereqs: ' CSC108H1',
-                exclusions: 'CSC150H1',
-                instructors: 'D. Liu, D. Heap'
-            }).save();
-            new Course({
-                courseCode: 'CSC207H1',
-                courseName: 'Software Design',
-                prereqs: 'CSC148H1',
-                instructors: 'J. Campbell'
-            }).save();
-            new Course({
-
-                courseCode: 'CSC309H1',
-                courseName: 'Programming on the Web',
-                prereqs: 'CSC209H1',
-                instructors: 'A. Mashiyat'
-            }).save();
-            new Course({
-
-                courseCode: 'CSC343H1',
-                courseName: 'Introduction to Databases',
-                prereqs: 'CSC165H1/CSC240H1/(MAT135H1, MAT136H1)/MAT135Y1/MAT137Y1/MAT157Y1; CSC207H1',
-                instructors: 'F. Nargesian, B. Simion, N. El-Sayed'
-            }).save();
-        }
-    });
 
 
     var allCourses = [];
@@ -263,6 +263,8 @@ module.exports.deleteComment = function (req, res) {
 
                 });
             } else {
+                var commentToDel = req.params.commentId;
+                console.log(commentToDel);
                 Comment.findOne({'_id' : commentToDel}, function(err, comment) {
                     if (err) {
                           res.status(400).send(err);
@@ -288,6 +290,74 @@ module.exports.deleteComment = function (req, res) {
                     }
                 });
             
+            }
+        }
+    });
+};
+
+// For deleting a comment with a particular commentId. 
+module.exports.deleteThread = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user.auth == 'superAdmin') {
+                var threadToDel = req.params.threadId;
+                Comment.remove({'_id' : commentToDel}, function(err) {
+                        if (err) {
+                          res.status(400).send(err);
+                          return;
+                        } else{
+                            res.send('Thread Removed');
+                        }
+
+                });
+            } else {
+                var threadToDel = req.params.threadId;
+                console.log(threadToDel);
+                Comment.findOne({'_id' : threadToDel}, function(err, thread) {
+                    if (err) {
+                          res.status(400).send(err);
+                          return;
+                    } else{
+                        if (thread) {
+                            if (thread.author._id == req.session.passport.user._id) {
+                                Thread.remove({'_id' : threadToDel}, function(err) {
+                                    if (err) {
+                                      res.status(400).send(err);
+                                      return;
+                                    } else{
+                                        res.send('Thread Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authoried!');
+                            }
+                        } else {
+                            res.status(404).send('Thread not found!');
+                        } 
+                    }
+                });
+            
+            }
+        }
+    });
+};
+
+
+// For deleting a comment with a particular courseCode
+module.exports.deleteCourse = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user) {
+                var courseCode = req.params.courseCode;
+                user.courses.pull({'courseCode': courseCode});
+            } else {
+                res.status(404).send('User not found');
             }
         }
     });
