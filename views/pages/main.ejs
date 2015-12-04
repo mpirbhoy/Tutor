@@ -134,7 +134,7 @@
 
                                         for (y = 0; y < threads[i].comments.length; y++) {
                                             if(threads[i].comments[y].byAuthor) {
-                                                var comment = "<div id=" + threads[i].comments[y]._id + " class='panel-footer' style='margin-top: 20px;'><p><a>" + threads[i].comments[y].author.email + "</a> created on "+ threads[i].comments[y].creationTime + "</p><p>" + threads[i].comments[y].response + "</p><button type='button' class='btn btn-warning btn-comment'>Delete Comment</button></div>"
+                                                var comment = "<div id=" + threads[i].comments[y]._id + " class='panel-footer' style='margin-top: 20px;'><p><a>" + threads[i].comments[y].author.email + "</a> created on "+ threads[i].comments[y].creationTime + "</p><p>" + threads[i].comments[y].response + "</p><button type='button' class='btn btn-warning btn-comment'>Delete Reply</button></div>"
                                             } else {
                                                 var comment = "<div id=" + threads[i].comments[y]._id + " class='panel-footer' style='margin-top: 20px;'><p><a>" + threads[i].comments[y].author.email + "</a> created on "+ threads[i].comments[y].creationTime + "</p><p>" + threads[i].comments[y].response + "</p></div>"
 
@@ -386,7 +386,7 @@
                  data: {response: $(this).parent().prev('#response').val()},
                  success: function(data) {
                     console.log(data);
-                    var response = "<div id=" + data.data._id + " class='panel-footer' style='margin-top: 20px;'><p><a>" +  data.data.author.email + "</a> created on "+ data.data.creationTime + "</p><p>" + data.data.response + "</p><button type='button' class='btn btn-warning btn-comment'>Delete Comment</div>";
+                    var response = "<div id=" + data.data._id + " class='panel-footer' style='margin-top: 20px;'><p><a>" +  data.data.author.email + "</a> created on "+ data.data.creationTime + "</p><p>" + data.data.response + "</p><button type='button' class='btn btn-warning btn-comment'>Delete Reply</div>";
 
                     thread.append(response);
                     $('#response').val('');
