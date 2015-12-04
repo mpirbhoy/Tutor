@@ -556,3 +556,7 @@ module.exports.injectAllCoursesToUser = function (req, res) {
     });
 
 };
+
+module.exports.getOtherProfile = function (req, res) {
+    res.render('./pages/test');
+}
