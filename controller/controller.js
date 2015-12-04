@@ -452,13 +452,17 @@ module.exports.getAllThreads = function (req, res) {
                     for (var i = 0; i < data.length; i++) {
                         if (data[i]['author']['_id'].equals(curUserId)) {
                             data[i].byAuthor = true;
+                        } else {
+                            data[i].byAuthor = false;
                         }
 
 
                         for (var j = 0; j < data[i]['comments'].length; j++) {
+                            data[i]['comments'][j] = data[i]['comments'][j].toObject();
                             if (data[i]['comments'][j]['author']['_id'] == curUserId) {
-                                data[i]['comments'][j] = data[i]['comments'][j].toObject();
                                 data[i]['comments'][j].byAuthor = true;
+                            } else {
+                                data[i]['comments'][j].byAuthor = false;
                             }
                         }
 
