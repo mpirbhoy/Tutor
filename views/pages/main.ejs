@@ -325,16 +325,15 @@
         $('body').on('click', '#close', function(){
 
             var $email = $('#user-nav').attr('href');
-            $('close').parent().val()
-            console.log($(".active").val());
             $.ajax({
                 type: "DELETE",
-                url: "/course/" + $(".active").val(),
+                url: "/course/" + $(this).closest('button').attr('value'),
                 timeout: 2000,
                 dataType: 'json',
                 success: function(data) {
                     if (data.status != 409) {
-                        this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
+                        console.log("success");
+//                        this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
                     }
                 },
                 fail: function() {
