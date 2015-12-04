@@ -125,6 +125,16 @@
 
                                         $("#all_threads").prepend("<div class='panel panel-default' id='" + threads[i]._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + threads[i].status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + threads[i]._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + threads[i].author.dispName + " ("+ threads[i].author.email + ") " + "</div><div class='col-lg-4'><h6>" + "Price:</h6>" + "$" + threads[i].price + "</div><div class='col-lg-4'><h6>Date Available: </h6>"+ threads[i].startTime + " to " + threads[i].endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + threads[i].title + "</b></i></h3>" + threads[i].description + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>");
 
+                                        //thread = "<div class='panel panel-default' id='" + threads[i]._id +"'><div class='panel-heading'>&nbsp<div style='float:left;'><h3 class='panel-title'>I am a " + threads[i].status + "</h3></div><div style='float:right;'><h3 class='panel-title'> id: " + threads[i]._id + "</h3></div></div><div class='panel-body'><div class='col-lg-4'><h6>Author: </h6>" + threads[i].author.dispName + " ("+ threads[i].author.email + ") " + "</div><div class='col-lg-4'><h6>" + "Price:</h6>" + "$" + threads[i].price + "</div><div class='col-lg-4'><h6>Date Available: </h6>"+ threads[i].startTime + " to " + threads[i].endTime + "</div><div class='col-lg-12'><p><h3><i><b>" + threads[i].title + "</b></i></h3>" + threads[i].description + "</p></div><div class='input-group'><input id='response' type='text' class='form-control' placeholder='Type in your response...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span>"
+
+                                    //     for (y = 0; y < threads[i].comments.length; y++) {
+                                    //         var comment = "<div id=" + threads[i].comments[y]._id + "class='panel-footer' style='margin-top: 20px;'><p><a>" + threads[i].comments[y].author.dispName + " (" + threads[i].comments[y].author.email + ")" + "</a> created on "+ threads[i].comments[y].creationTime + "</p><p>" + threads[i].comments[y].response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+                                    //         thead = thread + comment
+
+                                    //     }
+
+                                    //     thread = thread + "</div>"
+
                                     }
                                 },
                                 fail: function() {
@@ -369,47 +379,50 @@
         /* Comment button that populated a thread with a comment */
         $('body').on('click', '.glyphicon-comment', function() {
 
-            var response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p><p>" + $(this).parent().prev('#response').val() + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+            //var response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>Sexy Beast (sexybeast@hotmail.com)</a> created on 11/23/2015 5:00 PM</p><p>" + $(this).parent().prev('#response').val() + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
 
             
+            var thread = $(this).closest(".panel-body");
+            //$('#response').val('');
+            //console.log($(this).parents(".panel-default").attr("id"));
 
-            $(this).closest(".panel-body").append(response);
-            $('#response').val('');
-
-            /* KEEP WORKING ON THIS LATER
              $.ajax({
                  type: "POST",
-                 url: "/comment/" + $(this).parents(".panel-default").attr("id") 
+                 url: "/comment/" + $(this).parents(".panel-default").attr("id"), 
                  dataType: 'json',
-                 data: {response: $(this).parent().prev('#response').val()}
-                 },
+                 data: {response: $(this).parent().prev('#response').val()},
                  success: function(data) {
-                    response = "<div class='panel-footer' style='margin-top: 20px;'><p><a>" + data.author.dispName + " (" + "data.author.email" + ")" + "</a> created on 11/23/2015 5:00 PM</p><p>" + data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>"
+                    console.log(data);
+                    var response = "<div id=" + data.data._id + " class='panel-footer' style='margin-top: 20px;'><p><a>" + data.data.author.dispName + " (" + data.data.author.email + ")" + "</a> created on "+ data.data.creationTime + "</p><p>" + data.data.response + "</p><button type='button' class='btn btn-danger btn-comment'>Delete</div>";
+
+                    thread.append(response);
+                    $('#response').val('');
+
                  },
 
                  fail: function() {
 
                  }
 
-             });*/
+             });
         });
 
         /* Delete button that will delete the comment */
         $('body').on('click', '.btn-comment', function() {
-            $(this).parents("div:first").remove();
-            /* =========================== UNCOMMENT WHEN BACK-END CATCHES UP
-             $.ajax({
-             type: "DELETE",
-             url: "/comment/comment_id",
-             timeout: 2000,
-             success: function(data) {
-             $(this).parents("div:first").remove();
-             },
-             fail: function() {
-             $('.main').html("comment cannot be removed");
-             }
+            comment = $(this).parents("div:first");
+            
+            console.log($(this).parents("div:first").attr('id'))
 
-             }); */
+             $.ajax({
+                 type: "DELETE",
+                 url: "/comment/" + $(this).parents("div:first").attr('id'),
+                 success: function(data) {
+                    comment.remove();
+                 },
+                 fail: function() {
+                    $('.main').html("comment cannot be removed");
+                 }
+             }); 
         });
 
 

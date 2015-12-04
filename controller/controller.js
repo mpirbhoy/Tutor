@@ -1,6 +1,7 @@
 var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
+var Comment = require('../model/comment');
 
 Course.count({}, function (err, count) {
     if (count == 0) {
@@ -195,7 +196,7 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
     }
 };
 
-// For creating a new thread for a particular course. It also inserts into the course's thread collections
+// For creating a new comment for a particular thread. It also inserts into the threads's comment collections
 module.exports.postComment = function (req, res) { //TODO: Untested
     var threadToCreateIn = req.params.threadId;
     if (threadToCreateIn) {
@@ -214,10 +215,11 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                       return;
                     } else{
                         if (user) {
+                            var currDate = new Date().toString();
                                 var newComment = new Comment({
                                     author: user,
-                                    response: req.body.response
-//                                    creationTime: currTime.......
+                                    response: req.body.response,
+                                    creationTime: currDate
                                 });
 
                                 newComment.save();
@@ -225,9 +227,10 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 myThread.save();
 
                                 var returnComment = {
+                                    _id: newComment._id,
                                     author:user,
-                                    response: req.body.response
-  //                                  creationTime: currTime.....
+                                    response: req.body.response,
+                                    creationTime: currDate
                                 }
                                 res.json({status: 301, msg : "New comment created", data: returnComment});
 
@@ -241,6 +244,74 @@ module.exports.postComment = function (req, res) { //TODO: Untested
     }
 };
 
+// For deleting a comment with a particular commentId. 
+module.exports.deleteComment = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user.auth == 'superAdmin') {
+                var commentToDel = req.params.commentId;
+                Comment.remove({'_id' : commentToDel}, function(err) {
+                        if (err) {
+                          res.status(400).send(err);
+                          return;
+                        } else{
+                            res.send('Comment Removed');
+                        }
+
+                });
+            } else {
+                var commentToDel = req.params.commentId;
+                console.log(commentToDel);
+                Comment.findOne({'_id' : commentToDel}, function(err, comment) {
+                    if (err) {
+                          res.status(400).send(err);
+                          return;
+                    } else{
+                        if (comment) {
+
+                            if (comment.author._id == req.session.passport.user._id) {
+                                Comment.remove({'_id' : commentToDel}, function(err) {
+                                    if (err) {
+                                      res.status(400).send(err);
+                                      return;
+                                    } else{
+                                        res.send('Comment Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authoried!');
+                            }
+                        } else {
+                            res.status(404).send('Comment not found!');
+                        } 
+                    }
+                });
+            
+            }
+        }
+    });
+};
+
+
+// For deleting a comment with a particular courseCode
+module.exports.deleteCourse = function (req, res) {
+    User.findById(req.session.passport.user, function(err, user) {
+        if (err) {
+          res.status(400).send(err);
+          return;
+        } else{
+            if (user) {
+                var courseCode = req.params.courseCode;
+                user.courses.pull({'courseCode': courseCode});
+            } else {
+                res.status(404).send('User not found');
+            }
+        }
+    });
+};
 
 
 // Get all threads for a particular course
@@ -249,7 +320,7 @@ module.exports.getAllThreads = function(req, res) {
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
-        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').populate('threads.comments').exec(function (err, myCourse) {
             if (myCourse) {
                 res.json({status: 301, allThreadsFromCourse: myCourse['threads']})
             }
