@@ -62,7 +62,7 @@ module.exports.getProfile = function (req, res) {
                 } else {
                     dispName = foundUser.dispName;
                 }
-<<<<<<< HEAD
+
 
                 var courseColl = [];
                 for (i = 0; i < foundUser.courses.length; i++) {
@@ -79,27 +79,7 @@ module.exports.getProfile = function (req, res) {
                         dispName: foundUser.dispName,
                         courses: courseColl,
                         localImg : localImg
-=======
-                /*
-                 var courseCode = [];
-                 for (i = 0; i < user.courses.length; i++) {
-                 Course.where({_id: user.courses[i]}).findOne(function (err, myCourse) {
-                 if (myCourse) {
 
-                 }
-                 }
-                 }*/
-
-                res.render('./pages/view_user', {
-                    title: "View User",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: foundUser.courses,
-                    localImg: localImg
->>>>>>> origin/dev
                 })
 
                 
