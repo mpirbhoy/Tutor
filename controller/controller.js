@@ -445,7 +445,7 @@ module.exports.getAllThreads = function (req, res) {
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
-        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').exec(function (err, myCourse) {
+        Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').lean().exec(function (err, myCourse) {
             if (myCourse) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
 
@@ -456,13 +456,17 @@ module.exports.getAllThreads = function (req, res) {
                             data[i].byAuthor = true;
                         }
 
-                        for (var j = 0; j < data[i]['comments'].length; j++) {
-                            if (data[i]['comments'][j]['author']['_id'] == curUserId) {
-                                data[i]['comments'][j]['author']['_id'].byAuthor = true;
-                            }
-                        }
+                         for (var j = 0; j < data[i]['comments'].length; j++) {
+                             if (data[i]['comments'][j]['author']['_id'] == curUserId) {
+                                 data[i]['comments'][j].byAuthor = true;
+                                 console.log(data[i]['comments'][j].byAuthor);
+                             }
+                         }
+                        
                     }
-                    res.json({status: 200, allThreadsFromCourse: data})
+                    // var data2 = [1];
+                    // console.log("data 2 " + data2); 
+                    res.json({status: 200, allThreadsFromCourse: data});
                 });
             }
             else {
