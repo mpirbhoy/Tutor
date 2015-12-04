@@ -328,14 +328,14 @@ module.exports.deleteThread = function (req, res) {
                                       res.status(400).send(err);
                                       return;
                                     } else{
-                                        res.send('Comment Removed!');
+                                        res.send('Thread Removed!');
                                     }
                                 });
                             } else {
                                 res.status(401).send('Not Authoried!');
                             }
                         } else {
-                            res.status(404).send('Comment not found!');
+                            res.status(404).send('Thread not found!');
                         } 
                     }
                 });
