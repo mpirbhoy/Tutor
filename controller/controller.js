@@ -332,7 +332,7 @@ module.exports.deleteThread = function (req, res) {
                                     }
                                 });
                             } else {
-                                res.status(401).send('Not Authoried!');
+                                res.status(401).send('Not Authorized!');
                             }
                         } else {
                             res.status(404).send('Thread not found!');
@@ -355,12 +355,15 @@ module.exports.deleteCourse = function (req, res) {
         } else{
             if (user) {
                 var courseCode = req.params.courseCode;
+                console.log(courseCode);
                 user.courses.pull({'courseCode': courseCode});
             } else {
                 res.status(404).send('User not found');
             }
         }
     });
+
+
 };
 
 
