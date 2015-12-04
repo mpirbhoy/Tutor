@@ -355,8 +355,32 @@ module.exports.deleteCourse = function (req, res) {
         } else{
             if (user) {
                 var courseCode = req.params.courseCode;
-                console.log(courseCode);
-                user.courses.pull({'courseCode': courseCode});
+                
+                 Course.where({courseCode: courseCode}).findOne(function(findCourseErr, myCourse){
+                    if (findCourseErr) {
+                        res.send(findCourseErr);
+                    } else {
+                        if (myCourse) {
+                            for (i = 0; i < user.courses.length; i++) { 
+                                
+                                if (myCourse._id.equals(user.courses[i])){
+                                    user.courses.splice(i, 1);
+                                    i = user.courses.length;
+                                    user.save();
+                                    res.status(301).send('Course: ' + myCourse + " Removed from User");
+                                }
+
+                            }
+
+
+
+                        } else {
+                            res.status(404).send('Course Not Found!');
+                        }
+                    }
+                 });   
+                
+                
             } else {
                 res.status(404).send('User not found');
             }
