@@ -460,12 +460,13 @@ module.exports.postRating = function (req, res) { //TODO: Untested
                     } else {
                         if (!user.equals(rateUser)) {
                         	console.log(req.body.rateType);
+                        	
                             if (req.body.rateType == "tutor") {
-                                rateUser.tutorRating = rateUser.tutorRating + req.body.rating;
-                                rateUser.numTutorRating = rateUser.numTutorRating + 1;
+                                rateUser.tutorRating = parseFloat(rateUser.tutorRating) + parseFloat(req.body.rating);
+                                rateUser.numTutorRating = parseInt(rateUser.numTutorRating) + 1;
                             } else if (req.body.rateType =="tutee") {
-                                rateUser.tuteeRating = rateUser.tuteeRating + req.body.rating;
-                                rateUser.numTuteeRating = rateUser.numTuteeRating + 1;
+                                rateUser.tuteeRating = parseFloat(rateUser.tuteeRating) + parseFloat(req.body.rating);
+                                rateUser.numTuteeRating = parseInt(rateUser.numTuteeRating) + 1;
                             }
                             
                             rateUser.save();
