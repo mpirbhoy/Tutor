@@ -90,7 +90,7 @@
 	// Deleting a message
     $('body').on('click', '.btn-msg', function() {
 
-        message = $(this).parents(".panel").attr('id');
+        message = $(this).parents(".panel");
         console.log($(this).parents(".panel").attr('id'));
 
         $.ajax({
