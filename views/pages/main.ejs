@@ -310,8 +310,9 @@
             dataType: 'json',
             success: function(data) {
 
-                threads = data.suggestedThreads
+                threads = data.suggestedThreads;
                 $( "#all_threads" ).empty()
+                console.log(threads);
 
                 for (i = 0; i < threads.length; i++) {
 
