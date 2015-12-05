@@ -16,11 +16,23 @@
 			<div class="thumbnail">
 				<img id="profile-img"></img>
 				<div class="caption">
+				<img id="profile-img"
 
-					<h3 id="profile-name"></h3>
-					<p id="profile-email"></p>
-					<p id="profile-description"></p>
-					<p id="profile-classes"></p>
+						<%if (localImg == 1) { %>
+					 src="/img/<%=imgPath%>"
+						<% } %>
+
+						<%if (localImg == 0) { %>
+					 src="<%=imgPath%>"
+						<% } %>
+
+
+					 alt="avatar">
+				<div class="caption">
+					<h3 id="profile-name"><%= dispName %></h3>
+					<p id="profile-email"><%= email %></p>
+					<p id="profile-description"><%= descr %></p>
+					<p id="profile-classes"><%= courses %></p>
 
 					<!-- Admin & Super admin privelages -->
                     <p id="profile-height"></p>
@@ -58,12 +70,17 @@
 	    		// Trigger an event when rating is changed
 	    		$('#input-1').on('rating.change', function(event, value, caption) {
 				    console.log(value);
-				    console.log(caption);
+				    /* 
+
+				    */
+				    
 				});
 
 	    		$('#input-2').on('rating.change', function(event, value, caption) {
 				    console.log(value);
-				    console.log(caption);
+				    /*
+
+				    */
 				});
     		</script>
 		</div>
@@ -74,10 +91,23 @@
 			<div class='input-group' style="margin:20px 0 20px 0;"><input id='response' type='text' class='form-control' placeholder='Send your message...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>
 
 			<script>
- 				/* Comment button that populated a thread with a comment */
+ 				/* Sending a message to someone */
         		$('body').on('click', '.glyphicon-comment', function() {
-        			//AJAX CALL
-        			$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+    
+		        	$.ajax({
+		                type: "POST",
+		                url: "/messages/" + $(".profile-email").text(),
+		                timeout: 2000,
+		                dataType: 'json',
+		                data: {message: $(this).parent().prev('#response').val()},
+		                success: function(data) {
+		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+		                },
+		                fail: function() {
+		                }
+		            });
+
+
         		});
 
 			</script>

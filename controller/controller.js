@@ -51,8 +51,10 @@ module.exports.getProfile = function (req, res) {
             var viewSelf;
             (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
 
-
             if (foundUser) {
+                // Check if the user who made request is trying to see his/her own profile
+                var viewSelf;
+                (foundUser._id  == req.session.passport.user)? viewSelf = true: viewSelf = false;
                 var correctImagePath;
                 var localImg = 1;
                 if (foundUser.facebookProfilePicture) {
@@ -564,12 +566,12 @@ module.exports.getAllThreads = function (req, res) {
 // Add a new course to a particular user's course collection
 module.exports.updateUserCourses = function (req, res) {
 
-    var email = req.params.email;
-    var courseCode = req.body.courseCode; //TODO: Need to get the correct identifier for course data
-    if (email) {
+    var user = req.session.passport.user;
+    var courseCode = req.params.courseCode; //TODO: Need to get the correct identifier for course data
+    if (user) {
 
         // Find the user to add course for
-        User.where({email: email}).findOne(function (findUserErr, foundUser) {
+        User.where({_id: user}).findOne(function (findUserErr, foundUser) {
 
             if (findUserErr) {
                 res.json({
@@ -646,49 +648,3 @@ module.exports.injectAllCoursesToUser = function (req, res) {
     });
 
 };
-
-module.exports.getOtherProfile = function (req, res) {
-    var email = req.params.email;
-    if (email) {
-        User.where({email: email}).findOne(function (err, foundUser) {
-            if (foundUser) {
-                var correctImagePath;
-                var localImg = 1;
-                if (foundUser.facebookProfilePicture) {
-                    correctImagePath = foundUser.facebookProfilePicture;
-                    localImg = 0;
-                } else {
-                    correctImagePath = foundUser.imgPath;
-                }
-
-                var dispName;
-                if (foundUser.dispName == "") {
-                    dispName = foundUser.facebookName;
-                } else {
-                    dispName = foundUser.dispName;
-                }
-                /*
-                 var courseCode = [];
-                 for (i = 0; i < user.courses.length; i++) {
-                 Course.where({_id: user.courses[i]}).findOne(function (err, myCourse) {
-                 if (myCourse) {
-
-                 }
-                 }
-                 }*/
-
-                res.render('./pages/view_Other', {
-                    title: "View other",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: foundUser.courses,
-                    localImg: localImg
-                })
-            }
-        })
-    }
-
-}
