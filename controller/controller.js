@@ -554,7 +554,56 @@ module.exports.deleteComment = function (req, res) {
     });
 };
 
-// For deleting a comment with a particular commentId. 
+// For deleting a message from a person
+module.exports.deleteAMessage = function (req, res) {
+    User.findById(req.session.passport.user, function (err, user) {
+        if (err) {
+            res.status(400).send(err);
+            return;
+        } else {
+            var messageToDel = req.params.messageId;
+            if (user.auth == 'superAdmin') {
+                Message.remove({'_id': messageToDel}, function (err) {
+                    if (err) {
+                        res.status(400).send(err);
+                        return;
+                    } else {
+                        res.send('Message Removed');
+                    }
+
+                });
+            } else {
+                Message.where({'_id': messageToDel}).findOne().populate('receiver').exec( function (err, message) {
+                    if (err) {
+                        res.status(400).send(err);
+                        return;
+                    } else {
+                        if (message) {
+                            if (message.receiver._id.equals(req.session.passport.user)) { //TODO: Receiver not populated
+                                Message.remove({'_id': messageToDel}, function (err) {
+                                    if (err) {
+                                        res.status(400).send('blah');
+                                        return;
+                                    } else {
+                                        res.send('Message Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authorized!');
+                            }
+                        } else {
+                            res.status(404).send('Message not found!');
+                        }
+                    }
+                });
+
+            }
+        }
+    });
+};
+
+
+// For deleting a comment with a particular commentId.
 module.exports.deleteThread = function (req, res) {
     User.findById(req.session.passport.user, function (err, user) {
         if (err) {
