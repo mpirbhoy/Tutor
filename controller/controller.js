@@ -445,12 +445,12 @@ module.exports.postRating = function (req, res) { //TODO: Untested
     var userToRate = req.params.email;
     if (userToRate) {
         
-        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+        User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
                 res.json({
                     status: 409,
-                    msg: "Error occurred with rating user id: " + userToRate + "\n"
+                    msg: "Error occurred with rating user email: " + userToRate + "\n"
                 });
             } else if (rateUser) {
                 User.findById(req.session.passport.user, function (err, user) {
@@ -459,10 +459,11 @@ module.exports.postRating = function (req, res) { //TODO: Untested
                         return;
                     } else {
                         if (!user.equals(rateUser)) {
-                            if (req.body.rateType.equals("tutor")) {
+                        	console.log(req.body.rateType);
+                            if (req.body.rateType == "tutor") {
                                 rateUser.tutorRating = rateUser.tutorRating + req.body.rating;
                                 rateUser.numTutorRating = rateUser.numTutorRating + 1;
-                            } else if (req.body.rateType.equals("tutee")) {
+                            } else if (req.body.rateType =="tutee") {
                                 rateUser.tuteeRating = rateUser.tuteeRating + req.body.rating;
                                 rateUser.numTuteeRating = rateUser.numTuteeRating + 1;
                             }
@@ -486,12 +487,12 @@ module.exports.getRating = function (req, res) { //TODO: Untested
     var userToRate = req.params.email;
     if (userToRate) {
         
-        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+        User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
                 res.json({
                     status: 409,
-                    msg: "Error occurred with rating user id: " + userToRat + "\n"
+                    msg: "Error occurred with rating user email: " + userToRate + "\n"
                 });
             } else if (rateUser) {
                 var tutorRating = rateUser.tutorRating/rateUser.numTutorRating;
