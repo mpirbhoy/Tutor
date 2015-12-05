@@ -14,6 +14,10 @@ module.exports = mongoose.model('User',{
 	facebookToken: String,
 	facebookProfilePicture: String,
 	admin: Boolean,
-	incomingMessages:  [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+	incomingMessages:  [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
+	tutorRating: {type: Number, default: 0},
+	tuteeRating: {type: Number, default: 0},
+	numTutorRating: {type: Number, default: 0},
+	numTuteeRating: {type: Number, default: 0}
 
 });

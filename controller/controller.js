@@ -381,6 +381,72 @@ module.exports.postComment = function (req, res) { //TODO: Untested
     }
 };
 
+
+// For rating a tutor or tutee 
+module.exports.postRating = function (req, res) { //TODO: Untested
+    var userToRate = req.params.email;
+    if (userToRate) {
+        
+        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+
+            if (err) {
+                res.json({
+                    status: 409,
+                    msg: "Error occurred with rating user id: " + userToRat + "\n"
+                });
+            } else if (rateUser) {
+                User.findById(req.session.passport.user, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    } else {
+                        if (!user.equals(rateUser)) {
+                            if (req.body.rateType.equals("tutor")) {
+                                rateUser.tutorRating = rateUser.tutorRating + req.body.rating;
+                                rateUser.numTutorRating = rateUser.numTutorRating + 1;
+                            } else if (req.body.rateType.equals("tutee")) {
+                                rateUser.tuteeRating = rateUser.tuteeRating + req.body.rating;
+                                rateUser.numTuteeRating = rateUser.numTuteeRating + 1;
+                            }
+                            
+                            rateUser.save();
+                            
+                            res.json({status: 200, msg: "User Rated Successfully"});
+
+                        } else {
+                            res.json({status: 401, msg: "Can't rate yourself!", data: {}});
+                        }
+                    }
+                });
+            }
+        });
+    }
+};
+
+// For rating a tutor or tutee 
+module.exports.getRating = function (req, res) { //TODO: Untested
+    var userToRate = req.params.email;
+    if (userToRate) {
+        
+        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+
+            if (err) {
+                res.json({
+                    status: 409,
+                    msg: "Error occurred with rating user id: " + userToRat + "\n"
+                });
+            } else if (rateUser) {
+                var tutorRating = rateUser.tutorRating/rateUser.numTutorRating;
+                var tuteeRating = rateUser.tuteeRating/rateUser.numTuteeRating;
+                
+                res.json({status: 200, msg: "User Rated Successfully", date: {tutorRating: tutorRating, tuteeRating: tuteeRating}});                   
+            } else {
+                res.json({status: 404, msg: "Resource not available.", data: {}});
+            }
+        });
+    }
+};
+
 // For deleting a comment with a particular commentId. 
 module.exports.deleteComment = function (req, res) {
     User.findById(req.session.passport.user, function (err, user) {
