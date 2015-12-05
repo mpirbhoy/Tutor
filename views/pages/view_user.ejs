@@ -109,6 +109,24 @@
     	$( ".star-rating" ).addClass( "col-lg-6" );
 	});
 
+	// Deleting a message
+    $('body').on('click', '.btn-comment', function() {
+
+        message = $(this).parents("div:first");
+        console.log($(this).parents("div:first").attr('id'));
+
+        $.ajax({
+            type: "DELETE",
+            url: "/comment/" + $(this).parents("div:first").attr('id'),
+            success: function(data) {
+                message.remove();
+            },
+            fail: function() {
+                $('.main').html("comment cannot be removed");
+            }
+        });
+    });
+
 	// Set the default star rating -> Get data from DB
 	tutorRating = ""
 	tuteeRating = ""
