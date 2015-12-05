@@ -110,14 +110,14 @@
 	});
 
 	// Deleting a message
-    $('body').on('click', '.btn-comment', function() {
+    $('body').on('click', '.btn-msg', function() {
 
         message = $(this).parents("div:first");
         console.log($(this).parents("div:first").attr('id'));
 
         $.ajax({
             type: "DELETE",
-            url: "/comment/" + $(this).parents("div:first").attr('id'),
+            url: "/message/" + $(this).parents("div:first").attr('id'),
             success: function(data) {
                 message.remove();
             },
