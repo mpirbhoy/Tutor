@@ -1,10 +1,8 @@
-var mongoose = require('mongoose'),
-    User = mongoose.model('User');
+var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 var Message = require('../model/message');
-
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -47,7 +45,7 @@ Course.count({}, function (err, count) {
 module.exports.getProfile = function (req, res) {
     var email = req.params.email;
     if (email) {
-        User.findOne({email: email}).populate('courses').exec(function (err, foundUser) {
+        User.where({email: email}).findOne().populate('courses').exec(function (err, foundUser) {
 
             // Check if the user who made request is trying to see his/her own profile
             var viewSelf;
