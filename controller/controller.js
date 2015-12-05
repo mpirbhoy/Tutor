@@ -156,7 +156,7 @@ module.exports.getSuggestions = function (req, res) {
                     	}
 
                     	if (maxThread != null) {
-                    		suggestedCourses.push(maxThread);
+                    		suggestedThreads.push(maxThread);
                     	}
                     }
                     
