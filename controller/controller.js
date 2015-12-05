@@ -163,7 +163,7 @@ module.exports.getSuggestions = function (req, res) {
 	                    	}
 	                    }
 	                    
-                    res.json({status: 200, suggestedThreads: data});
+                    res.json({status: 200, suggestedThreads: suggestedThreads});
                 });
                 
             }
