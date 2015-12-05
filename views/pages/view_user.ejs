@@ -57,42 +57,16 @@
 			<h2 class="col-lg-6">Tutor Rating:</h2>
 			<h2 class="col-lg-6">Tutee Rating:</h2>
 
-			<input id="input-2" class="rating tutor-rating" data-readonly="true" data-size="sm" data-show-clear="false">
+			<input id="input-1" class="rating tutor-rating" data-readonly="true" data-size="sm" data-show-clear="false">
 			<input id="input-2" class="rating tutee-rating" data-readonly="true" data-size="sm" data-show-clear="false">
 
 		</div>
 
-		<div>
+		<div style="margin-top: 200px">
 			<h1>Messages: </h1>
 
+			<!-- All messages here -->
 			<div id="messages">
-				<div class="panel panel-default" id="">
-				 	<div class="panel-heading">
-				 		&nbsp;
-				 		<h3 class="panel-title" style="float: left">Sean Han</h3>
-				 		<h3 class="panel-title" style="float: right">Time:</h3>
-				 	</div>
-
-				 	<div class="panel-body">
-				    	Message here
-					</div>
-				</div>
-
-				<div class="panel panel-default" id="">
-				 	<div class="panel-heading">
-				 		&nbsp;
-				 		<h3 class="panel-title" style="float: left">Sean Han</h3>
-				 		<h3 class="panel-title" style="float: right">Time:</h3>
-				 	</div>
-
-				 	<div class="panel-body">
-				    	<p>Message here</p>
-				    	<button type='button' class='btn btn-danger btn-msg'>Delete Message</button>
-					</div>
-
-					
-
-				</div>
 			</div>
 
 		</div>
@@ -112,12 +86,12 @@
 	// Deleting a message
     $('body').on('click', '.btn-msg', function() {
 
-        message = $(this).parents("div:first");
-        console.log($(this).parents("div:first").attr('id'));
+        message = $(this).parents(".panel").attr('id');
+        console.log($(this).parents(".panel").attr('id'));
 
         $.ajax({
             type: "DELETE",
-            url: "/message/" + $(this).parents("div:first").attr('id'),
+            url: "/message/" + message,
             success: function(data) {
                 message.remove();
             },

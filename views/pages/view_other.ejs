@@ -69,17 +69,21 @@
 	    		$(".tutor-rating").val(tutorRating);
 	    		$(".tutee-rating").val(tuteeRating);
 
+	    		console.log($("#profile-email").text());
+	    		var email = $("#profile-email").text();
+
 	    		// Trigger an event when rating is changed
 	    		$('#input-1').on('rating.change', function(event, value, caption) {
 
 		        	$.ajax({
 		                type: "POST",
-		                url: "/user/" + $("#profile-email").text() + "/rating",
+		                url: "/user/" + email + "/rating",
 		                timeout: 2000,
 		                dataType: 'json',
 		                data: {rating: value, rateType: "tutor"},
 		                success: function(data) {
-		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+		                	$('.alert').remove();
+		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Successful tutor rating!</div>");
 		                },
 		                fail: function() {
 
@@ -92,13 +96,13 @@
 
 		        	$.ajax({
 		                type: "POST",
-		                url: "/user/" + $("#profile-email").text() + "/rating",
+		                url: "/user/" + email + "/rating",
 		                timeout: 2000,
 		                dataType: 'json',
 		                data: {rating: value, rateType: "tutee"},
 		                success: function(data) {
 		                    $('.alert').remove();
-		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Successful tutee rating!</div>");
 		                },
 		                fail: function() {
 
@@ -109,7 +113,7 @@
     		</script>
 		</div>
 
-		<div id="messages" style="margin-top:150px;">
+		<div id="messages" style="margin-top:200px;">
 			<h1>Send Message: </h1>
 
 			<div class='input-group' style="margin:20px 0 20px 0;"><input id='response' type='text' class='form-control' placeholder='Send your message...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>
