@@ -91,21 +91,21 @@ module.exports.getProfile = function (req, res) {
                             courseColl.push(foundUser.courses[i].courseCode);
                             console.log(foundUser.courses[i].courseCode);
                         }
-                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                            title: "View User",
-                            email: foundUser.email,
-                            otherEmail: foundOtherUser.email,
-                            name: dispName,
-                            descr: foundUser.descr,
-                            imgPath: correctImagePath,
-                            otherImgPath: correctOtherImagePath,
-                            dispName: foundUser.dispName,
-                            courses: courseColl,
-                            localImg: localImg,
-                            otherLocalImg: otherLocalImg,
-                            messages: JSON.stringify(foundUser.incomingMessages)
-
-                        })
+                        //res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                        //    title: "View User",
+                        //    email: foundUser.email,
+                        //    otherEmail: foundOtherUser.email,
+                        //    name: dispName,
+                        //    descr: foundUser.descr,
+                        //    imgPath: correctImagePath,
+                        //    otherImgPath: correctOtherImagePath,
+                        //    dispName: foundUser.dispName,
+                        //    courses: courseColl,
+                        //    localImg: localImg,
+                        //    otherLocalImg: otherLocalImg,
+                        //    messages: JSON.stringify(foundUser.incomingMessages)
+                        //
+                        //})
                         //res.send({
                         //        title: "View User",
                         //        email: foundUser.email,
@@ -121,23 +121,22 @@ module.exports.getProfile = function (req, res) {
                         //        messages: foundUser.incomingMessages.toObject()
                         //
                         //});
-                        //Message.populate(foundUser.incomingMessages, {path: 'incomingMessages'}, function (err, userObject){
-                        //    res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                        //        title: "View User",
-                        //        email: foundUser.email,
-                        //        otherEmail: foundOtherUser.email,
-                        //        name: dispName,
-                        //        descr: foundUser.descr,
-                        //        imgPath: correctImagePath,
-                        //        otherImgPath: correctOtherImagePath,
-                        //        dispName: foundUser.dispName,
-                        //        courses: courseColl,
-                        //        localImg: localImg,
-                        //        otherLocalImg: otherLocalImg,
-                        //        messages: userObject.incomingMessages.toObject()
-                        //
-                        //    })
-                        //});
+                        Message.populate(foundUser.incomingMessages, {path: 'sender'}, function (err, userObject){
+                            res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                                title: "View User",
+                                email: foundUser.email,
+                                otherEmail: foundOtherUser.email,
+                                name: dispName,
+                                descr: foundUser.descr,
+                                imgPath: correctImagePath,
+                                otherImgPath: correctOtherImagePath,
+                                dispName: foundUser.dispName,
+                                courses: courseColl,
+                                localImg: localImg,
+                                otherLocalImg: otherLocalImg,
+                                messages: JSON.stringify(foundUser.incomingMessages)
+                            })
+                        });
                     }
                 })
             } else {
