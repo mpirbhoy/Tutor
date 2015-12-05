@@ -117,10 +117,10 @@ module.exports.getProfile = function (req, res) {
                                 otherCourses: otherCourseColl,
                                 otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
                                 otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
-                                otherTutorReviews: foundOtherUser.tutorReviews,
-                                otherTuteeReviews: foundOtherUser.tuteeReviews,
+                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
+                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
 
-                                messages: viewSelf && foundUser.incomingMessages
+                                messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
                             })
                     }
                 })
