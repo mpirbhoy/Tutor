@@ -45,6 +45,8 @@ module.exports = function(app, passport) {
 		req.logout();
 		res.redirect('/');
 	});
+	// To send/add a message to user
+	app.post('/user/:email/message', middleware.isLoggedIn, controller.sendAMessage);
 
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	app.get('/user/:email/edit', middleware.isLoggedIn, controller.getEditProfile);
