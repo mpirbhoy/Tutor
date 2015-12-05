@@ -48,6 +48,7 @@ module.exports = function(app, passport) {
 
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	app.get('/user/:email/edit', middleware.isLoggedIn, controller.getEditProfile);
+	app.put('/user/:email/edit', middleware.isLoggedIn, controller.editProfile);
 	app.get('/:email/test', middleware.isLoggedIn, controller.getOtherProfile);
 
 	// PUT request when enrolling in a course from search bar.

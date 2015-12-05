@@ -46,6 +46,12 @@ module.exports.getProfile = function (req, res) {
     var email = req.params.email;
     if (email) {
         User.where({email: email}).findOne().populate('courses').exec(function (err, foundUser) {
+
+            // Check if the user who made request is trying to see his/her own profile
+            var viewSelf;
+            (foundUser._id  == req.session.passport.user)? viewSelf = true: viewSelf = false;
+
+
             if (foundUser) {
                 var correctImagePath;
                 var localImg = 1;
@@ -70,7 +76,7 @@ module.exports.getProfile = function (req, res) {
                     console.log(foundUser.courses[i].courseCode);
                 }
 
-                res.render('./pages/view_user', {
+                res.render(viewSelf ? './pages/view_user': './pages/view_other', {
                         title: "View User",
                         email: foundUser.email,
                         name: dispName,
@@ -125,7 +131,53 @@ module.exports.getEditProfile = function (req, res) {
     }
 
 };
+// For changing the user's information. It is invoked by the edit profile view
+module.exports.editProfile = function (req, res) {
+    var userInfo = req.body;
 
+    User.where({email: req.params.email}).findOne(function (err, user) {
+        if (err) {
+            res.json({
+                msg: "Error when finding user",
+                status: 400
+            })
+        } else {
+            if (user) { //TODO: Do we need a step to authenticate ?
+                if (user.password != userInfo.oldPassword) {
+                   res.json({
+                       msg: "Cannot authenticate user with old password",
+                       status: 401
+                   });
+                   return;
+                }
+                if (userInfo.password != userInfo.oldPassword) {
+                    res.json({
+                        msg: "Cannot change password because passwords don't confirm",
+                        status: 401
+                    });
+                    return;
+                }
+                //for (var key in userInfo) { //TODO not done Muj needs to do the frontend
+                //    if (user[key] && userInfo[key]) {
+                //        if ()
+                //        user[key] = userInfo[key];
+                //    }
+                //}
+                user.save();
+                res.json({
+                    msg: "User's info changed",
+                    status: 200
+                })
+            } else {
+                res.json({
+                    msg: "Cannot find user",
+                    status: 404
+                })
+            }
+        }
+    })
+
+};
 
 // For getting all courses that are belong to a particular user and necessary info about user for navbar
 module.exports.getMain = function (req, res) {

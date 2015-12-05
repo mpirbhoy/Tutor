@@ -1,5 +1,4 @@
 var mongoose = require('mongoose'); 
-var Schema = mongoose.Schema;
 var Course = require('./course');
 module.exports = mongoose.model('User',{
     email: {type:String, unique: true},
@@ -14,5 +13,7 @@ module.exports = mongoose.model('User',{
 	facebookName: {type: String, defualt: ''},
 	facebookToken: String,
 	facebookProfilePicture: String,
-	admin: Boolean
+	admin: Boolean,
+	incomingMessages:  [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+
 });
