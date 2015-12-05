@@ -316,6 +316,10 @@
                 console.log(threads);
                 console.log(data);
 
+                if (threads == undefined) {
+                    threads = [];
+                }
+
                 for (i = 0; i < threads.length; i++) {
 
                     if (threads[i].byAuthor) {
