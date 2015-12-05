@@ -16,12 +16,12 @@
 			<div class="thumbnail">
 				<img id="profile-img"
 
-						<%if (localImg == 1) { %>
-					 src="/img/<%=imgPath%>"
+						<%if (otherLocalImg == 1) { %>
+					 src="/img/<%=otherImgPath%>"
 						<% } %>
 
-						<%if (localImg == 0) { %>
-					 src="<%=imgPath%>"
+						<%if (otherLocalImg == 0) { %>
+					 src="<%=otherImgPath%>"
 						<% } %>
 
 
@@ -54,45 +54,51 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
 		<div>
 			<h1>Ratings:</h1>
-			<h2 class="col-lg-6">Tutor Rating:</h2>
-			<h2 class="col-lg-6">Tutee Rating:</h2>
+			<div class="col-lg-6">
+				<h2>Tutor Rating:</h2>
+				<input id="input-1" class="rating tutor-rating" data-readonly="true" data-size="sm" data-show-clear="false">
+			</div>
 
-			<input id="input-2" class="rating tutor-rating" data-readonly="true" data-size="sm" data-show-clear="false">
-			<input id="input-2" class="rating tutee-rating" data-readonly="true" data-size="sm" data-show-clear="false">
+			<div class="col-lg-6">
+				<h2>Tutee Rating:</h2>
+				<input id="input-2" class="rating tutee-rating" data-readonly="true" data-size="sm" data-show-clear="false">
+			</div>
 
 		</div>
 
-		<div>
+		<div class="col-lg-6 tutor-reviews">
+			<h2>Tutor Review(s):</h2>
+		</div>
+
+		<div class="col-lg-6 tutee-reviews">
+			<h2>Tutee Review(s):</h2>
+		</div>
+
+		<script>
+
+			var	tutorReviews = <%- otherTutorReviews %>;
+			var	tuteeReviews = <%- otherTuteeReviews %>;
+
+			console.log(tutorReviews);
+			console.log(tuteeReviews);
+
+		    for (var i = 0; i < tutorReviews.length; i++) {
+		        $('.tutor-reviews').append("<div class='panel panel-default' id='" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].reviewText + "</p></div></div>");
+		    }
+
+		    for (var i = 0; i < tuteeReviews.length; i++) {
+		        $('.tutee-reviews').append("<div class='panel panel-default' id='" + tuteeReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tuteeReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tuteeReviews[i].reviewText + "</p></div></div>");
+    		}
+
+
+
+		</script>
+
+		<div style="margin-top: 300px">
 			<h1>Messages: </h1>
 
+			<!-- All messages here -->
 			<div id="messages">
-				<div class="panel panel-default" id="">
-				 	<div class="panel-heading">
-				 		&nbsp;
-				 		<h3 class="panel-title" style="float: left">Sean Han</h3>
-				 		<h3 class="panel-title" style="float: right">Time:</h3>
-				 	</div>
-
-				 	<div class="panel-body">
-				    	Message here
-					</div>
-				</div>
-
-				<div class="panel panel-default" id="">
-				 	<div class="panel-heading">
-				 		&nbsp;
-				 		<h3 class="panel-title" style="float: left">Sean Han</h3>
-				 		<h3 class="panel-title" style="float: right">Time:</h3>
-				 	</div>
-
-				 	<div class="panel-body">
-				    	<p>Message here</p>
-				    	<button type='button' class='btn btn-danger btn-msg'>Delete Message</button>
-					</div>
-
-					
-
-				</div>
 			</div>
 
 		</div>
@@ -101,17 +107,36 @@
 <script>
     var messages = <%- messages %>;
     for (var i = 0; i < messages.length; i++) {
-        $('#messages').prepend("<div class='panel panel-default'><div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>messages[i].from</h3><h3 class='panel-title' style='float: right'>messages[i].timeCreated</h3></div><div class='panel-body'><p>messages[i].message</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
-    };
+        $('#messages').prepend("<div class='panel panel-default' id='" + messages[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + messages[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + messages[i].creationTime + "</h3></div><div class='panel-body'><p>" + messages[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
+    }
 
     // Splitting column for Tutor & Tuttee rating 
     $( document ).ready(function() {
     	$( ".star-rating" ).addClass( "col-lg-6" );
 	});
 
+	// Deleting a message
+    $('body').on('click', '.btn-msg', function() {
+
+        var message = $(this).parents(".panel");
+        var id = $(this).parents(".panel").attr('id');
+
+        $.ajax({
+            type: "DELETE",
+            url: "/message/" + id,
+            success: function(data) {
+                message.remove();
+            },
+            fail: function() {
+                $('.main').html("comment cannot be removed");
+            }
+        });
+    });
+
 	// Set the default star rating -> Get data from DB
-	tutorRating = ""
-	tuteeRating = ""
+	tutorRating = <%- otherTutorRatingAvg %>
+	tuteeRating = <%- otherTuteeRatingAvg %>
+	
 	$(".tutor-rating").val(tutorRating);
 	$(".tutee-rating").val(tuteeRating); 
     

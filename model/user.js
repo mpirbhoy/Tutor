@@ -18,6 +18,7 @@ module.exports = mongoose.model('User',{
 	tutorRating: {type: Number, default: 0},
 	tuteeRating: {type: Number, default: 0},
 	numTutorRating: {type: Number, default: 0},
-	numTuteeRating: {type: Number, default: 0}
-
+	numTuteeRating: {type: Number, default: 0},
+	tutorReviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}],
+	tuteeReviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}]
 });

@@ -3,6 +3,8 @@ var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 var Message = require('../model/message');
+var Review = require('../model/Review');
+
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -43,55 +45,86 @@ Course.count({}, function (err, count) {
 
 // For getting profile for a particular user
 module.exports.getProfile = function (req, res) {
-    var email = req.params.email;
+    var email = req.session.passport.user;
+    var userBeingQueriedEmail = req.params.email;
     if (email) {
-        User.where({email: email}).findOne().populate('courses').exec(function (err, foundUser) {
+        User.where({email: userBeingQueriedEmail}).findOne().populate('courses messages tutorReviews tuteeReviews').exec(function (err, foundOtherUser) {
+            if (foundOtherUser) {
 
-            // Check if the user who made request is trying to see his/her own profile
-            var viewSelf;
-            (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
-
-            if (foundUser) {
-                // Check if the user who made request is trying to see his/her own profile
-                var viewSelf;
-                (foundUser._id  == req.session.passport.user)? viewSelf = true: viewSelf = false;
-                var correctImagePath;
-                var localImg = 1;
-                if (foundUser.facebookProfilePicture) {
-                    correctImagePath = foundUser.facebookProfilePicture;
-                    localImg = 0;
-                } else {
-                    correctImagePath = foundUser.imgPath;
-                }
-
-                var dispName;
-                if (foundUser.dispName == "") {
-                    dispName = foundUser.facebookName;
-                } else {
-                    dispName = foundUser.dispName;
-                }
+                User.where({_id: email}).findOne().populate('courses incomingMessages').exec(function (err, foundUser) {
 
 
-                var courseColl = [];
-                for (i = 0; i < foundUser.courses.length; i++) {
-                    courseColl.push(foundUser.courses[i].courseCode);
-                    console.log(foundUser.courses[i].courseCode);
-                }
+                    if (foundUser) {
+                        // Check if the user who made request is trying to see his/her own profile
+                        var viewSelf;
+                        (foundOtherUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
+                        var correctImagePath, correctOtherImagePath;
 
-                res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                    title: "View User",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: courseColl,
-                    localImg: localImg,
-                    messages: foundUser.incomingMessages
 
+                        var localImg = 1;
+                        if (foundUser.facebookProfilePicture) {
+                            correctImagePath = foundUser.facebookProfilePicture;
+                            localImg = 0;
+                        } else {
+                            correctImagePath = foundUser.imgPath;
+                        }
+
+                        var otherLocalImg = 1;
+                        if (foundOtherUser.facebookProfilePicture) {
+                            correctOtherImagePath = foundOtherUser.facebookProfilePicture;
+                            otherLocalImg = 0;
+                        } else {
+                            correctOtherImagePath = foundOtherUser.imgPath;
+                        }
+
+                        var dispName;
+                        if (foundUser.dispName == "") {
+                            dispName = foundUser.facebookName;
+                        } else {
+                            dispName = foundUser.dispName;
+                        }
+
+
+                        var courseColl = [];
+                        for (i = 0; i < foundUser.courses.length; i++) {
+                            courseColl.push(foundUser.courses[i].courseCode);
+                            console.log(foundUser.courses[i].courseCode);
+                        }
+                        var otherCourseColl = [];
+                        for (i = 0; i < foundOtherUser.courses.length; i++) {
+                           otherCourseColl.push(foundOtherUser.courses[i].courseCode);
+                            console.log(foundOtherUser.courses[i].courseCode);
+                        }
+
+
+                            res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                            //res.send({
+                                title: "View User",
+                                email: foundUser.email,
+                                name: dispName,
+                                descr: foundUser.descr,
+                                imgPath: correctImagePath,
+                                dispName: foundUser.dispName,
+                                courses: courseColl,
+                                localImg: localImg,
+
+
+                                otherImgPath: correctOtherImagePath,
+                                otherEmail: foundOtherUser.email,
+                                otherName: foundOtherUser.dispName,
+                                otherLocalImg: otherLocalImg,
+                                otherCourses: otherCourseColl,
+                                otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
+                                otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
+                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
+                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
+
+                                messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
+                            })
+                    }
                 })
-
-
+            } else {
+                res.json({msg: "can't find logged in user", status: 404});
             }
         })
     }
@@ -99,6 +132,77 @@ module.exports.getProfile = function (req, res) {
 };
 
 
+// For getting Suggestions for a particular user
+module.exports.getSuggestions = function (req, res) {
+    
+    // Get all suggestions 
+    var userId = req.session.passport.user;
+    if (userId) {
+        User.where({_id: userId}).findOne().populate('courses').lean().exec(function (err, myUser) {
+            if (myUser) {
+                Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
+                    
+	                    allCourses = data;
+	                    var suggestedThreads = [];
+	                    for (i = 0; i < allCourses.length; i++) {
+	                    	var maxPrice = 0;
+	                    	var maxThread = null;
+
+	                    	for (j = 0; j < allCourses[i].threads.length; j++) {
+	                    		if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
+	                    			maxPrice = allCourses[i].threads[j].price;
+	                    			maxThread = allCourses[i].threads[j];
+	                    		}
+	                    	}
+
+	                    	if (maxThread != null) {
+	                    		suggestedThreads.push(maxThread);
+	                    	}
+	                    }
+	                    
+                    res.json({status: 200, suggestedThreads: suggestedThreads});
+                });
+                
+            }
+            else {
+                res.json({status: 409, msg: "Can't find anything"});
+            }
+        });
+    }
+
+};
+
+
+// Leave a tutor OR tutee review to a user
+module.exports.leaveAReview = function (req, res) { //TODO: Needs testing ~!!
+    var receiverEmail = req.params.email;
+    var reviewText = req.body.reviewText; // TODO Needs testing from frontend
+    var senderId = req.session.passport.user;
+    User.where({_id: senderId}).findOne(function (err, sender) {
+        if (sender) {
+            User.where({email: receiverEmail}).findOne(function (err, receiver) {
+                if (receiver) {
+                    var reviewModel = new Review({
+                        sender: sender,
+                        receiver: receiver,
+                        reviewText: reviewText,
+                        creationTime: new Date().toString()
+                    });
+
+                    (req.body.isTutor == "true")? receiver.tutorReviews.push(reviewModel): receiver.tuteeReviews.push(reviewModel);
+                    receiver.save();
+                    reviewModel.save();
+                    res.json({msg: "Review added to receiver's reviews collection", status: 200});
+                } else {
+                    res.json({msg: "Can't find the receiver.", status: 404});
+                }
+            })
+        }
+        else {
+            res.json({msg: "Can't find the sender", status: 404});
+        }
+    })
+};
 // Add a message to a user
 
 module.exports.sendAMessage = function (req, res) {
@@ -117,6 +221,7 @@ module.exports.sendAMessage = function (req, res) {
                     });
                     receiver.incomingMessages.push(messageModel);
                     receiver.save();
+                    messageModel.save();
                     res.json({msg: "Messaged added to receiver's inbox", status: 200});
                 } else {
                     res.json({msg: "Can't find the receiver.", status: 404});
@@ -387,12 +492,12 @@ module.exports.postRating = function (req, res) { //TODO: Untested
     var userToRate = req.params.email;
     if (userToRate) {
         
-        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+        User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
                 res.json({
                     status: 409,
-                    msg: "Error occurred with rating user id: " + userToRate + "\n"
+                    msg: "Error occurred with rating user email: " + userToRate + "\n"
                 });
             } else if (rateUser) {
                 User.findById(req.session.passport.user, function (err, user) {
@@ -401,12 +506,14 @@ module.exports.postRating = function (req, res) { //TODO: Untested
                         return;
                     } else {
                         if (!user.equals(rateUser)) {
-                            if (req.body.rateType.equals("tutor")) {
-                                rateUser.tutorRating = rateUser.tutorRating + req.body.rating;
-                                rateUser.numTutorRating = rateUser.numTutorRating + 1;
-                            } else if (req.body.rateType.equals("tutee")) {
-                                rateUser.tuteeRating = rateUser.tuteeRating + req.body.rating;
-                                rateUser.numTuteeRating = rateUser.numTuteeRating + 1;
+                        	console.log(req.body.rateType);
+                        	
+                            if (req.body.rateType == "tutor") {
+                                rateUser.tutorRating = parseFloat(rateUser.tutorRating) + parseFloat(req.body.rating);
+                                rateUser.numTutorRating = parseInt(rateUser.numTutorRating) + 1;
+                            } else if (req.body.rateType =="tutee") {
+                                rateUser.tuteeRating = parseFloat(rateUser.tuteeRating) + parseFloat(req.body.rating);
+                                rateUser.numTuteeRating = parseInt(rateUser.numTuteeRating) + 1;
                             }
                             
                             rateUser.save();
@@ -428,12 +535,12 @@ module.exports.getRating = function (req, res) { //TODO: Untested
     var userToRate = req.params.email;
     if (userToRate) {
         
-        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+        User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
                 res.json({
                     status: 409,
-                    msg: "Error occurred with rating user id: " + userToRat + "\n"
+                    msg: "Error occurred with rating user email: " + userToRate + "\n"
                 });
             } else if (rateUser) {
                 var tutorRating = rateUser.tutorRating/rateUser.numTutorRating;
@@ -455,7 +562,7 @@ module.exports.deleteComment = function (req, res) {
             return;
         } else {
             var commentToDel = req.params.commentId;
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 Comment.remove({'_id': commentToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
@@ -496,14 +603,63 @@ module.exports.deleteComment = function (req, res) {
     });
 };
 
-// For deleting a comment with a particular commentId. 
+// For deleting a message from a person
+module.exports.deleteAMessage = function (req, res) {
+    User.findById(req.session.passport.user, function (err, user) {
+        if (err) {
+            res.status(400).send(err);
+            return;
+        } else {
+            var messageToDel = req.params.messageId;
+            if (user.auth == 'admin') {
+                Message.remove({'_id': messageToDel}, function (err) {
+                    if (err) {
+                        res.status(400).send(err);
+                        return;
+                    } else {
+                        res.send('Message Removed');
+                    }
+
+                });
+            } else {
+                Message.where({'_id': messageToDel}).findOne().populate('receiver').exec( function (err, message) {
+                    if (err) {
+                        res.status(400).send(err);
+                        return;
+                    } else {
+                        if (message) {
+                            if (message.receiver._id.equals(req.session.passport.user)) { //TODO: Receiver not populated
+                                Message.remove({'_id': messageToDel}, function (err) {
+                                    if (err) {
+                                        res.status(400).send('blah');
+                                        return;
+                                    } else {
+                                        res.send('Message Removed!');
+                                    }
+                                });
+                            } else {
+                                res.status(401).send('Not Authorized!');
+                            }
+                        } else {
+                            res.status(404).send('Message not found!');
+                        }
+                    }
+                });
+
+            }
+        }
+    });
+};
+
+
+// For deleting a comment with a particular commentId.
 module.exports.deleteThread = function (req, res) {
     User.findById(req.session.passport.user, function (err, user) {
         if (err) {
             res.status(400).send(err);
             return;
         } else {
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 var threadToDel = req.params.threadId;
                 Thread.remove({'_id': threadToDel}, function (err) {
                     if (err) {

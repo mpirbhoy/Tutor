@@ -48,6 +48,9 @@ module.exports = function(app, passport) {
 	// To send/add a message to user
 	app.post('/user/:email/message', middleware.isLoggedIn, controller.sendAMessage);
 
+	//To leave a tutor OR tutee review to user
+	app.post('/user/:email/review', middleware.isLoggedIn, controller.leaveAReview);
+
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	app.get('/user/:email/edit', middleware.isLoggedIn, controller.getEditProfile);
 	app.put('/user/:email/edit', middleware.isLoggedIn, controller.editProfile);
@@ -57,6 +60,9 @@ module.exports = function(app, passport) {
 
 	app.get('/injectcourses', middleware.isLoggedIn, controller.getAllCourses);
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
+
+	//GET suggestions for user 
+	 app.get('/thread/getSuggestions', middleware.isLoggedIn, controller.getSuggestions);
 
 	// Route for making thread for a particular course
 	app.post('/thread/:course', middleware.isLoggedIn, controller.makeNewThread);
@@ -83,6 +89,9 @@ module.exports = function(app, passport) {
 
 	//Route for deleting a comment from a thread
 	app.delete('/course/:courseCode', middleware.isLoggedIn, controller.deleteCourse);
+
+	//Delete message from a user
+	app.delete('/message/:messageId', middleware.isLoggedIn, controller.deleteAMessage);
 }
 
 
