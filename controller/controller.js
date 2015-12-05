@@ -103,7 +103,7 @@ module.exports.getProfile = function (req, res) {
                             courses: courseColl,
                             localImg: localImg,
                             otherLocalImg: otherLocalImg,
-                            messages: foundUser.incomingMessages.toObject()
+                            messages: JSON.stringify(foundUser.incomingMessages)
 
                         })
                         //res.send({
