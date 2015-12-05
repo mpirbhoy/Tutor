@@ -166,6 +166,7 @@ module.exports = function (passport) {
                                     // if successful, return the new user
                                     return done(null, newUser);
                                 });
+                            });
 
                         });
                     }
