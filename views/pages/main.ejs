@@ -33,14 +33,13 @@
                         var courseName = JSON.parse(args).data['courseName']
 
                         $.ajax({
-                            type: "PUT",
-                            url: $email,
+                            type: "POST",
+                            url: "/course/" + courseCode,
                             dataType: 'json',
                             data: {courseCode: courseCode},
                             success: function(data) {
                                 if (data.status != 409) {
                                     var msg = '<button type="submit" class="list-group-item" value=' + courseCode + '><span id="close">x</span>  ' + courseCode + ': ' + courseName + '</button>'
-
                                     $('#courses').prepend(msg);
                                 }
                             },

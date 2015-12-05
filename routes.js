@@ -69,6 +69,12 @@ module.exports = function(app, passport) {
 	//Route for posting a comment to a thread
 	app.post('/comment/:threadId', middleware.isLoggedIn, controller.postComment);
 
+	//Route for getting User Rating
+	app.get('/user/:email/rating', middleware.isLoggedIn, controller.getRating);
+
+	//Route for posting User Rating
+	app.post('/user/:email/rating', middleware.isLoggedIn, controller.postRating);
+
 	//Route for deleting a comment from a thread
 	app.delete('/comment/:commentId', middleware.isLoggedIn, controller.deleteComment);
 

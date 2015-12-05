@@ -1,8 +1,10 @@
-var User = require('../model/user');
+var mongoose = require('mongoose'),
+    User = mongoose.model('User');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 var Message = require('../model/message');
+
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -43,55 +45,103 @@ Course.count({}, function (err, count) {
 
 // For getting profile for a particular user
 module.exports.getProfile = function (req, res) {
-    var email = req.params.email;
+    var email = req.session.passport.user;
+    var userBeingQueriedEmail = req.params.email;
     if (email) {
-        User.where({email: email}).findOne().populate('courses').exec(function (err, foundUser) {
-
-            // Check if the user who made request is trying to see his/her own profile
-            var viewSelf;
-            (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
-
-            if (foundUser) {
-                // Check if the user who made request is trying to see his/her own profile
-                var viewSelf;
-                (foundUser._id  == req.session.passport.user)? viewSelf = true: viewSelf = false;
-                var correctImagePath;
-                var localImg = 1;
-                if (foundUser.facebookProfilePicture) {
-                    correctImagePath = foundUser.facebookProfilePicture;
-                    localImg = 0;
-                } else {
-                    correctImagePath = foundUser.imgPath;
-                }
-
-                var dispName;
-                if (foundUser.dispName == "") {
-                    dispName = foundUser.facebookName;
-                } else {
-                    dispName = foundUser.dispName;
-                }
+        User.where({email: userBeingQueriedEmail}).findOne().populate('courses').exec(function (err, foundOtherUser) {
+            if (foundOtherUser) {
 
 
-                var courseColl = [];
-                for (i = 0; i < foundUser.courses.length; i++) {
-                    courseColl.push(foundUser.courses[i].courseCode);
-                    console.log(foundUser.courses[i].courseCode);
-                }
+                User.where({_id: email}).findOne().populate('courses incomingMessages').exec(function (err, foundUser) {
 
-                res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                    title: "View User",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: courseColl,
-                    localImg: localImg,
-                    messages: foundUser.incomingMessages
 
+                    if (foundUser) {
+                        // Check if the user who made request is trying to see his/her own profile
+                        var viewSelf;
+                        (foundOtherUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
+                        var correctImagePath, correctOtherImagePath;
+
+
+                        var localImg = 1;
+                        if (foundUser.facebookProfilePicture) {
+                            correctImagePath = foundUser.facebookProfilePicture;
+                            localImg = 0;
+                        } else {
+                            correctImagePath = foundUser.imgPath;
+                        }
+
+                        var otherLocalImg = 1;
+                        if (foundOtherUser.facebookProfilePicture) {
+                            correctOtherImagePath = foundOtherUser.facebookProfilePicture;
+                            otherLocalImg = 0;
+                        } else {
+                            correctOtherImagePath = foundOtherUser.imgPath;
+                        }
+
+                        var dispName;
+                        if (foundUser.dispName == "") {
+                            dispName = foundUser.facebookName;
+                        } else {
+                            dispName = foundUser.dispName;
+                        }
+
+
+                        var courseColl = [];
+                        for (i = 0; i < foundUser.courses.length; i++) {
+                            courseColl.push(foundUser.courses[i].courseCode);
+                            console.log(foundUser.courses[i].courseCode);
+                        }
+                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                            title: "View User",
+                            email: foundUser.email,
+                            otherEmail: foundOtherUser.email,
+                            name: dispName,
+                            descr: foundUser.descr,
+                            imgPath: correctImagePath,
+                            otherImgPath: correctOtherImagePath,
+                            dispName: foundUser.dispName,
+                            courses: courseColl,
+                            localImg: localImg,
+                            otherLocalImg: otherLocalImg,
+                            messages: foundUser.incomingMessages.toObject()
+
+                        })
+                        //res.send({
+                        //        title: "View User",
+                        //        email: foundUser.email,
+                        //        otherEmail: foundOtherUser.email,
+                        //        name: dispName,
+                        //        descr: foundUser.descr,
+                        //        imgPath: correctImagePath,
+                        //        otherImgPath: correctOtherImagePath,
+                        //        dispName: foundUser.dispName,
+                        //        courses: courseColl,
+                        //        localImg: localImg,
+                        //        otherLocalImg: otherLocalImg,
+                        //        messages: foundUser.incomingMessages.toObject()
+                        //
+                        //});
+                        //Message.populate(foundUser.incomingMessages, {path: 'incomingMessages'}, function (err, userObject){
+                        //    res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                        //        title: "View User",
+                        //        email: foundUser.email,
+                        //        otherEmail: foundOtherUser.email,
+                        //        name: dispName,
+                        //        descr: foundUser.descr,
+                        //        imgPath: correctImagePath,
+                        //        otherImgPath: correctOtherImagePath,
+                        //        dispName: foundUser.dispName,
+                        //        courses: courseColl,
+                        //        localImg: localImg,
+                        //        otherLocalImg: otherLocalImg,
+                        //        messages: userObject.incomingMessages.toObject()
+                        //
+                        //    })
+                        //});
+                    }
                 })
-
-
+            } else {
+                res.json({msg: "can't find logged in user", status: 404});
             }
         })
     }
@@ -117,6 +167,7 @@ module.exports.sendAMessage = function (req, res) {
                     });
                     receiver.incomingMessages.push(messageModel);
                     receiver.save();
+                    messageModel.save();
                     res.json({msg: "Messaged added to receiver's inbox", status: 200});
                 } else {
                     res.json({msg: "Can't find the receiver.", status: 404});
@@ -376,6 +427,72 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                         }
                     }
                 });
+            }
+        });
+    }
+};
+
+
+// For rating a tutor or tutee 
+module.exports.postRating = function (req, res) { //TODO: Untested
+    var userToRate = req.params.email;
+    if (userToRate) {
+        
+        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+
+            if (err) {
+                res.json({
+                    status: 409,
+                    msg: "Error occurred with rating user id: " + userToRate + "\n"
+                });
+            } else if (rateUser) {
+                User.findById(req.session.passport.user, function (err, user) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    } else {
+                        if (!user.equals(rateUser)) {
+                            if (req.body.rateType.equals("tutor")) {
+                                rateUser.tutorRating = rateUser.tutorRating + req.body.rating;
+                                rateUser.numTutorRating = rateUser.numTutorRating + 1;
+                            } else if (req.body.rateType.equals("tutee")) {
+                                rateUser.tuteeRating = rateUser.tuteeRating + req.body.rating;
+                                rateUser.numTuteeRating = rateUser.numTuteeRating + 1;
+                            }
+                            
+                            rateUser.save();
+                            
+                            res.json({status: 200, msg: "User Rated Successfully"});
+
+                        } else {
+                            res.json({status: 401, msg: "Can't rate yourself!", data: {}});
+                        }
+                    }
+                });
+            }
+        });
+    }
+};
+
+// For rating a tutor or tutee 
+module.exports.getRating = function (req, res) { //TODO: Untested
+    var userToRate = req.params.email;
+    if (userToRate) {
+        
+        User.where({_id: userToRate}).findOne(function (err, rateUser) {
+
+            if (err) {
+                res.json({
+                    status: 409,
+                    msg: "Error occurred with rating user id: " + userToRat + "\n"
+                });
+            } else if (rateUser) {
+                var tutorRating = rateUser.tutorRating/rateUser.numTutorRating;
+                var tuteeRating = rateUser.tuteeRating/rateUser.numTuteeRating;
+                
+                res.json({status: 200, msg: "User Rated Successfully", date: {tutorRating: tutorRating, tuteeRating: tuteeRating}});                   
+            } else {
+                res.json({status: 404, msg: "Resource not available.", data: {}});
             }
         });
     }
