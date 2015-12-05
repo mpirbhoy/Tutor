@@ -48,6 +48,9 @@ module.exports = function(app, passport) {
 	// To send/add a message to user
 	app.post('/user/:email/message', middleware.isLoggedIn, controller.sendAMessage);
 
+	//To leave a tutor OR tutee review to user
+	app.post('/user/:email/review', middleware.isLoggedIn, controller.leaveAReview);
+
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
 	app.get('/user/:email/edit', middleware.isLoggedIn, controller.getEditProfile);
 	app.put('/user/:email/edit', middleware.isLoggedIn, controller.editProfile);

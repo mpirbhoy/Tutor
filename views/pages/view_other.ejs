@@ -145,6 +145,52 @@
 
 			</script>
 		</div>
+	<div id="leave_a_tutor_review" style="margin-top:200px;">
+		<h1 id="forTutor">Leave a Tutor Review: </h1>
+		<div class='input-group' style="margin:20px 0 20px 0;">
+			<input id='response2' type='text' class='form-control' placeholder='How was he/she as a tutor?'>
+			<span class='input-group-btn'>
+				<button id="btnForTutor" class='btn btn-default glyphicon glyphicon-envelope' type='button'>
+				</button>
+			</span>
+		</div>
+
+		<h1 id="forTutee"> Leave a Tutee Review: </h1>
+		<div class='input-group' style="margin:20px 0 20px 0;">
+			<input id='response3' type='text' class='form-control' placeholder='How was he/she as a tutee?'>
+			<span class='input-group-btn'>
+				<button id="btnForTutee" class='btn btn-default glyphicon glyphicon-envelope' type='button'>
+				</button>
+			</span>
+		</div>
+
+		<script>
+			/* Sending a message to someone */
+			$('body').on('click', '.glyphicon-envelope', function() {
+
+				var reviewText = $(this).parents(".input-group-btn").siblings("input").val()
+				console.log(reviewText);
+				var isTutor = $(this).attr("id") == "btnForTutor";
+				console.log(isTutor);
+				$.ajax({
+					type: "POST",
+					url: "/user/" + $("#profile-email").text() + "/review",
+					timeout: 2000,
+					dataType: 'json',
+					data: {reviewText: reviewText, isTutor: isTutor},
+					success: function(data) {
+						$('.alert').remove();
+						$('.main').prepend("<div class='alert alert-success' role='alert'>Review Sent!</div>");
+					},
+					fail: function() {
+					}
+				});
+
+
+			});
+
+		</script>
+	</div>
 </div>
 
 <script>

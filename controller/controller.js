@@ -4,7 +4,7 @@ var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 var Message = require('../model/message');
-
+var Review = require('../model/Review');
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -100,6 +100,7 @@ module.exports.getProfile = function (req, res) {
 
                         Message.populate(foundUser.incomingMessages, {path: 'sender'}, function (err, userObject){
                             res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                            //res.send({
                                 title: "View User",
                                 email: foundUser.email,
                                 name: dispName,
@@ -115,9 +116,11 @@ module.exports.getProfile = function (req, res) {
                                 otherName: foundOtherUser.dispName,
                                 otherLocalImg: otherLocalImg,
                                 otherCourses: otherCourseColl,
-
                                 otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
                                 otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
+                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
+                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
+
                                 messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
                             })
                         });
@@ -173,6 +176,36 @@ module.exports.getSuggestions = function (req, res) {
 };
 
 
+// Leave a tutor OR tutee review to a user
+module.exports.leaveAReview = function (req, res) { //TODO: Needs testing ~!!
+    var receiverEmail = req.params.email;
+    var reviewText = req.body.reviewText; // TODO Needs testing from frontend
+    var senderId = req.session.passport.user;
+    User.where({_id: senderId}).findOne(function (err, sender) {
+        if (sender) {
+            User.where({email: receiverEmail}).findOne(function (err, receiver) {
+                if (receiver) {
+                    var reviewModel = new Review({
+                        sender: sender,
+                        receiver: receiver,
+                        reviewText: reviewText,
+                        creationTime: new Date().toString()
+                    });
+
+                    (req.body.isTutor == "true")? receiver.tutorReviews.push(reviewModel): receiver.tuteeReviews.push(reviewModel);
+                    receiver.save();
+                    reviewModel.save();
+                    res.json({msg: "Review added to receiver's reviews collection", status: 200});
+                } else {
+                    res.json({msg: "Can't find the receiver.", status: 404});
+                }
+            })
+        }
+        else {
+            res.json({msg: "Can't find the sender", status: 404});
+        }
+    })
+};
 // Add a message to a user
 
 module.exports.sendAMessage = function (req, res) {
