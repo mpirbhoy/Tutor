@@ -43,55 +43,71 @@ Course.count({}, function (err, count) {
 
 // For getting profile for a particular user
 module.exports.getProfile = function (req, res) {
-    var email = req.params.email;
+    var email = req.session.passport.user;
+    var userBeingQueriedEmail = req.params.email;
     if (email) {
-        User.where({email: email}).findOne().populate('courses').exec(function (err, foundUser) {
-
-            // Check if the user who made request is trying to see his/her own profile
-            var viewSelf;
-            (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
-
-            if (foundUser) {
-                // Check if the user who made request is trying to see his/her own profile
-                var viewSelf;
-                (foundUser._id  == req.session.passport.user)? viewSelf = true: viewSelf = false;
-                var correctImagePath;
-                var localImg = 1;
-                if (foundUser.facebookProfilePicture) {
-                    correctImagePath = foundUser.facebookProfilePicture;
-                    localImg = 0;
-                } else {
-                    correctImagePath = foundUser.imgPath;
-                }
-
-                var dispName;
-                if (foundUser.dispName == "") {
-                    dispName = foundUser.facebookName;
-                } else {
-                    dispName = foundUser.dispName;
-                }
+        User.where({email: userBeingQueriedEmail}).findOne().populate('courses').exec(function (err, foundOtherUser) {
+            if (foundOtherUser) {
 
 
-                var courseColl = [];
-                for (i = 0; i < foundUser.courses.length; i++) {
-                    courseColl.push(foundUser.courses[i].courseCode);
-                    console.log(foundUser.courses[i].courseCode);
-                }
+                User.where({_id: email}).findOne().populate('courses').exec(function (err, foundUser) {
 
-                res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                    title: "View User",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: courseColl,
-                    localImg: localImg,
-                    messages: foundUser.incomingMessages
 
+                    if (foundUser) {
+                        // Check if the user who made request is trying to see his/her own profile
+                        var viewSelf;
+                        (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
+                        var correctImagePath, correctOtherImagePath;
+
+
+                        var localImg = 1;
+                        if (foundUser.facebookProfilePicture) {
+                            correctImagePath = foundUser.facebookProfilePicture;
+                            localImg = 0;
+                        } else {
+                            correctImagePath = foundUser.imgPath;
+                        }
+
+                        var otherLocalImg = 1;
+                        if (foundOtherUser.facebookProfilePicture) {
+                            correctOtherImagePath = foundOtherUser.facebookProfilePicture;
+                            otherLocalImg = 0;
+                        } else {
+                            correctOtherImagePath = foundOtherUser.imgPath;
+                        }
+
+                        var dispName;
+                        if (foundUser.dispName == "") {
+                            dispName = foundUser.facebookName;
+                        } else {
+                            dispName = foundUser.dispName;
+                        }
+
+
+                        var courseColl = [];
+                        for (i = 0; i < foundUser.courses.length; i++) {
+                            courseColl.push(foundUser.courses[i].courseCode);
+                            console.log(foundUser.courses[i].courseCode);
+                        }
+                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                            title: "View User",
+                            email: foundUser.email,
+                            otherEmail: foundOtherUser.email,
+                            name: dispName,
+                            descr: foundUser.descr,
+                            imgPath: correctImagePath,
+                            otherImgPath: correctOtherImagePath,
+                            dispName: foundUser.dispName,
+                            courses: courseColl,
+                            localImg: localImg,
+                            otherLocalImg: otherLocalImg,
+                            messages: foundUser.incomingMessages
+
+                        })
+                    }
                 })
-
-
+            } else {
+                res.json({msg: "can't find logged in user", status: 404});
             }
         })
     }
