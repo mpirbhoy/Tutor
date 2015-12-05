@@ -47,13 +47,24 @@
 			<h2 class="col-lg-6">Tutor Rating:</h2>
 			<h2 class="col-lg-6">Tutee Rating:</h2>
 
-			<input id="input-4" value="2" class="rating tutor-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
-			<input id="input-4" value="3" class="rating tutee-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+			<input id="input-1" value="2" class="rating tutor-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+			<input id="input-2" value="3" class="rating tutee-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
 
 			<script>
 				// Set the default star rating -> Get data from DB
 	    		$(".tutor-rating").val(2.2)
 	    		$(".tutee-rating").val(3)
+
+	    		// Trigger an event when rating is changed
+	    		$('#input-1').on('rating.change', function(event, value, caption) {
+				    console.log(value);
+				    console.log(caption);
+				});
+
+	    		$('#input-2').on('rating.change', function(event, value, caption) {
+				    console.log(value);
+				    console.log(caption);
+				});
     		</script>
 		</div>
 
