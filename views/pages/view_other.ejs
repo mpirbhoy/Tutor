@@ -69,25 +69,23 @@
 
 			<div class="col-lg-6 tutor-reviews">
 				<h2>Tutor Review(s):</h2>
-				<div class='panel panel-default' id=''><div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>email</h3><h3 class='panel-title' style='float: right'>creationTime</h3></div><div class='panel-body'><p>content</p></div></div>
 			</div>
 
 			<div class="col-lg-6 tutee-reviews">
 				<h2>Tutee Review(s):</h2>
-				<div class='panel panel-default' id=''><div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>email</h3><h3 class='panel-title' style='float: right'>creationTime</h3></div><div class='panel-body'><p>content</p></div></div>
 			</div>
 
 			<script>
 
-				var tutorReviews = "";
-				var tuteeReviews = "";
+				var tutorReviews = <%- otherTutorReviews %>;
+				var tuteeReviews = <%- otherTuteeReviews %>;
 
 			    for (var i = 0; i < tutorReviews.length; i++) {
-			        $('.tutor-reviews').append("<div class='panel panel-default' id='" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + tutorReviews[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
+			        $('.tutor-reviews').append("<div class='panel panel-default'" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + tutorReviews[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
 			    }
 
 			    for (var i = 0; i < tuteeReviews.length; i++) {
-			        $('.tutee-reviews').append("<div class='panel panel-default' id='" + tuteeReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + tuteeReviews[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + tuteeReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tuteeReviews[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
+			        $('.tutee-reviews').append("<div class='panel panel-default'" + tuteeReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + tuteeReviews[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + tuteeReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tuteeReviews[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
 	    		}
 
 
@@ -145,7 +143,7 @@
     		</script>
 		</div>
 
-		<div id="messages" style="margin-top:200px;">
+		<div id="messages" style="margin-top:300px;">
 			<h1>Send Message: </h1>
 
 			<div class='input-group' style="margin:20px 0 20px 0;"><input id='response' type='text' class='form-control' placeholder='Send your message...'><span class='input-group-btn'><button class='btn btn-default glyphicon glyphicon-comment' type='button'></button></span></div>

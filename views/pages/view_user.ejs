@@ -68,18 +68,16 @@
 
 		<div class="col-lg-6 tutor-reviews">
 			<h2>Tutor Review(s):</h2>
-			<div class='panel panel-default' id=''><div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>email</h3><h3 class='panel-title' style='float: right'>creationTime</h3></div><div class='panel-body'><p>content</p></div></div>
 		</div>
 
 		<div class="col-lg-6 tutee-reviews">
 			<h2>Tutee Review(s):</h2>
-			<div class='panel panel-default' id=''><div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>email</h3><h3 class='panel-title' style='float: right'>creationTime</h3></div><div class='panel-body'><p>content</p></div></div>
 		</div>
 
 		<script>
 
-			var tutorReviews = "";
-			var tuteeReviews = "";
+			var	tutorRating = <%- otherTutorRatingAvg %>
+			var	tuteeRating = <%- otherTuteeRatingAvg %>
 
 		    for (var i = 0; i < tutorReviews.length; i++) {
 		        $('.tutor-reviews').append("<div class='panel panel-default' id='" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + tutorReviews[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
@@ -93,7 +91,7 @@
 
 		</script>
 
-		<div style="margin-top: 250px">
+		<div style="margin-top: 300px">
 			<h1>Messages: </h1>
 
 			<!-- All messages here -->
