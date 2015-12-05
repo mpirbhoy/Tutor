@@ -1,3 +1,4 @@
+var Message = require('../model/message');
 var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
@@ -56,7 +57,7 @@ module.exports.getProfile = function (req, res) {
                     if (foundUser) {
                         // Check if the user who made request is trying to see his/her own profile
                         var viewSelf;
-                        (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
+                        (foundOtherUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
                         var correctImagePath, correctOtherImagePath;
 
 
@@ -89,21 +90,23 @@ module.exports.getProfile = function (req, res) {
                             courseColl.push(foundUser.courses[i].courseCode);
                             console.log(foundUser.courses[i].courseCode);
                         }
-                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                            title: "View User",
-                            email: foundUser.email,
-                            otherEmail: foundOtherUser.email,
-                            name: dispName,
-                            descr: foundUser.descr,
-                            imgPath: correctImagePath,
-                            otherImgPath: correctOtherImagePath,
-                            dispName: foundUser.dispName,
-                            courses: courseColl,
-                            localImg: localImg,
-                            otherLocalImg: otherLocalImg,
-                            messages: foundUser.incomingMessages
+                        Message.populate(foundUser.incomingMessages, {path: 'abc'}, function (err, plainfoundIncomingMessages){
+                            res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                                title: "View User",
+                                email: foundUser.email,
+                                otherEmail: foundOtherUser.email,
+                                name: dispName,
+                                descr: foundUser.descr,
+                                imgPath: correctImagePath,
+                                otherImgPath: correctOtherImagePath,
+                                dispName: foundUser.dispName,
+                                courses: courseColl,
+                                localImg: localImg,
+                                otherLocalImg: otherLocalImg,
+                                messages:plainfoundIncomingMessages.toObject()
 
-                        })
+                            })
+                        });
                     }
                 })
             } else {
@@ -133,6 +136,7 @@ module.exports.sendAMessage = function (req, res) {
                     });
                     receiver.incomingMessages.push(messageModel);
                     receiver.save();
+                    messageModel.save();
                     res.json({msg: "Messaged added to receiver's inbox", status: 200});
                 } else {
                     res.json({msg: "Can't find the receiver.", status: 404});
