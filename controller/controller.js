@@ -2,7 +2,7 @@ var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
-
+var Message = require('../model/message');
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -49,7 +49,7 @@ module.exports.getProfile = function (req, res) {
 
             // Check if the user who made request is trying to see his/her own profile
             var viewSelf;
-            (foundUser._id  == req.session.passport.user)? viewSelf = true: viewSelf = false;
+            (foundUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
 
 
             if (foundUser) {
@@ -76,25 +76,57 @@ module.exports.getProfile = function (req, res) {
                     console.log(foundUser.courses[i].courseCode);
                 }
 
-                res.render(viewSelf ? './pages/view_user': './pages/view_other', {
-                        title: "View User",
-                        email: foundUser.email,
-                        name: dispName,
-                        descr: foundUser.descr,
-                        imgPath: correctImagePath,
-                        dispName: foundUser.dispName,
-                        courses: courseColl,
-                        localImg : localImg
+                res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                    title: "View User",
+                    email: foundUser.email,
+                    name: dispName,
+                    descr: foundUser.descr,
+                    imgPath: correctImagePath,
+                    dispName: foundUser.dispName,
+                    courses: courseColl,
+                    localImg: localImg,
+                    messages: foundUser.incomingMessages
 
                 })
 
-                
+
             }
         })
     }
 
 };
 
+
+// Add a message to a user
+
+module.exports.sendAMessage = function (req, res) {
+    var receiverEmail = req.body.email;
+    var messageText = req.body.message; // TODO Needs testing from frontend
+    var senderId = req.session.passport;
+    User.where({_id: senderId}).findOne(function (err, sender) {
+        if (sender) {
+            User.where({email: receiverEmail}).findOne(function (err, receiver) {
+                if (receiver) {
+                    var messageModel = new Message({
+                        sender: sender,
+                        receiver: receiver,
+                        content: messageText,
+                        creationTime: new Date().toString()
+                    });
+                    receiver.incomingMessages.push(messageModel);
+                    res.json({msg: "Messaged added to receiver's inbox", status: 200});
+                } else {
+                    res.json({msg: "Can't find the receiver.", status: 404});
+                }
+            })
+        }
+        else {
+            res.json({msg: "Can't find the sender", status: 404});
+        }
+    })
+
+
+};
 // For getting profile for a particular user
 module.exports.getEditProfile = function (req, res) {
     var email = req.params.email;
@@ -144,11 +176,11 @@ module.exports.editProfile = function (req, res) {
         } else {
             if (user) { //TODO: Do we need a step to authenticate ?
                 if (user.password != userInfo.oldPassword) {
-                   res.json({
-                       msg: "Cannot authenticate user with old password",
-                       status: 401
-                   });
-                   return;
+                    res.json({
+                        msg: "Cannot authenticate user with old password",
+                        status: 401
+                    });
+                    return;
                 }
                 if (userInfo.password != userInfo.oldPassword) {
                     res.json({
