@@ -11,7 +11,7 @@
                         </div>  
                         <div class="panel-body" >
 
-                            <form id="editForm" class="form-horizontal" role="form" method="PUT" action="/edit">
+                            <form id="editForm" class="form-horizontal" role="form">
                                     
                                 <div class="form-group">
                                     <label for="email" class="col-md-3 control-label">Email</label>
@@ -75,5 +75,20 @@
                     </div>
                 
          </div>
+
+         <script>
+              $.ajax({
+                  url: '/users/' + $('#editUsername').text(),
+                  type: 'PUT',
+                  data: $('#editForm').serialize(),
+                  contentType: "application/json; charset=utf-8",
+                  success: function(data) {
+                  },
+
+                  fail: function() {
+                    $('.main').html("comment cannot be removed");
+                }
+
+         </script>
 
     </body>

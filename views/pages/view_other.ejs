@@ -64,23 +64,44 @@
 
 			<script>
 				// Set the default star rating -> Get data from DB
-	    		$(".tutor-rating").val(2.2)
-	    		$(".tutee-rating").val(3)
+				tutorRating = ""
+				tuteeRating = ""
+	    		$(".tutor-rating").val(tutorRating);
+	    		$(".tutee-rating").val(tuteeRating);
 
 	    		// Trigger an event when rating is changed
 	    		$('#input-1').on('rating.change', function(event, value, caption) {
-				    console.log(value);
-				    /* 
 
-				    */
+		        	$.ajax({
+		                type: "PUT",
+		                url: "/user/" + $("#profile-email").text() + "/rating",
+		                timeout: 2000,
+		                dataType: 'json',
+		                data: {rating: value, type: "tutor"},
+		                success: function(data) {
+		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+		                },
+		                fail: function() {
+		                }
+		            });
 				    
 				});
 
 	    		$('#input-2').on('rating.change', function(event, value, caption) {
-				    console.log(value);
-				    /*
 
-				    */
+		        	$.ajax({
+		                type: "PUT",
+		                url: "/user/" + $("#profile-email").text() + "/rating",
+		                timeout: 2000,
+		                dataType: 'json',
+		                data: {rating: value, type: "tutee"},
+		                success: function(data) {
+		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+		                },
+		                fail: function() {
+		                }
+		            });
+
 				});
     		</script>
 		</div>
@@ -93,14 +114,15 @@
 			<script>
  				/* Sending a message to someone */
         		$('body').on('click', '.glyphicon-comment', function() {
-    
+    				console.log($(this).parent().prev('#response').val());
 		        	$.ajax({
 		                type: "POST",
-		                url: "/messages/" + $(".profile-email").text(),
+		                url: "/user/" + $("#profile-email").text() + "/message",
 		                timeout: 2000,
 		                dataType: 'json',
 		                data: {message: $(this).parent().prev('#response').val()},
 		                success: function(data) {
+
 		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
 		                },
 		                fail: function() {

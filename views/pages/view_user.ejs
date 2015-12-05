@@ -60,11 +60,6 @@
 			<input id="input-2" class="rating tutor-rating" data-readonly="true" data-size="sm" data-show-clear="false">
 			<input id="input-2" class="rating tutee-rating" data-readonly="true" data-size="sm" data-show-clear="false">
 
-			<script>
-				// Set the default star rating -> Get data from DB
-	    		$(".tutor-rating").val(2.2)
-	    		$(".tutee-rating").val(3)
-    		</script>
 		</div>
 
 		<div>
@@ -113,6 +108,12 @@
     $( document ).ready(function() {
     	$( ".star-rating" ).addClass( "col-lg-6" );
 	});
+
+	// Set the default star rating -> Get data from DB
+	tutorRating = ""
+	tuteeRating = ""
+	$(".tutor-rating").val(tutorRating);
+	$(".tutee-rating").val(tuteeRating); 
     
 </script>
 
