@@ -56,11 +56,16 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
 		<div>
 			<h1>Ratings:</h1>
-			<h2 class="col-lg-6">Tutor Rating:</h2>
-			<h2 class="col-lg-6">Tutee Rating:</h2>
 
-			<input id="input-1" value="2" class="rating tutor-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
-			<input id="input-2" value="3" class="rating tutee-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+			<div class="col-lg-6">
+				<h2>Tutor Rating:</h2>
+				<input id="input-1" value="2" class="rating tutor-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+			</div>
+
+			<div class="col-lg-6">
+				<h2>Tutee Rating:</h2>
+				<input id="input-2" value="3" class="rating tutee-rating" data-show-clear="false" data-show-caption="true" data-min="0" data-max="5" data-step="0.1" data-size="sm">
+			</div>
 
 			<script>
 				// Set the default star rating -> Get data from DB
