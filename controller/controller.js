@@ -125,15 +125,17 @@ module.exports.getProfile = function (req, res) {
                             res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                                 title: "View User",
                                 email: foundUser.email,
-                                otherEmail: foundOtherUser.email,
                                 name: dispName,
                                 descr: foundUser.descr,
                                 imgPath: correctImagePath,
-                                otherImgPath: correctOtherImagePath,
                                 dispName: foundUser.dispName,
                                 courses: courseColl,
                                 localImg: localImg,
+                                otherImgPath: correctOtherImagePath,
+                                otherEmail: foundOtherUser.email,
+                                otherName: foundOtherUser.dispName,
                                 otherLocalImg: otherLocalImg,
+                                otherCourses: foundOtherUser.courses,
                                 messages: JSON.stringify(foundUser.incomingMessages)
                             })
                         });
