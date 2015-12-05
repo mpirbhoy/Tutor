@@ -116,6 +116,8 @@ module.exports.getProfile = function (req, res) {
                                 otherLocalImg: otherLocalImg,
                                 otherCourses: otherCourseColl,
 
+                                otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
+                                otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
                                 messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
                             })
                         });
