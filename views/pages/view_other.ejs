@@ -77,7 +77,7 @@
 		                url: "/user/" + $("#profile-email").text() + "/rating",
 		                timeout: 2000,
 		                dataType: 'json',
-		                data: {rating: value, type: "tutor"},
+		                data: {rating: value, rateType: "tutor"},
 		                success: function(data) {
 		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
 		                },
@@ -95,12 +95,13 @@
 		                url: "/user/" + $("#profile-email").text() + "/rating",
 		                timeout: 2000,
 		                dataType: 'json',
-		                data: {rating: value, type: "tutee"},
+		                data: {rating: value, rateType: "tutee"},
 		                success: function(data) {
+		                    $('.alert').remove();
 		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
 		                },
 		                fail: function() {
-		          
+
 		                }
 		            });
 
