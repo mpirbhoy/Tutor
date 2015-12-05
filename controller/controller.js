@@ -563,7 +563,7 @@ module.exports.deleteComment = function (req, res) {
             return;
         } else {
             var commentToDel = req.params.commentId;
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 Comment.remove({'_id': commentToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
@@ -612,7 +612,7 @@ module.exports.deleteAMessage = function (req, res) {
             return;
         } else {
             var messageToDel = req.params.messageId;
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 Message.remove({'_id': messageToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
@@ -660,7 +660,7 @@ module.exports.deleteThread = function (req, res) {
             res.status(400).send(err);
             return;
         } else {
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 var threadToDel = req.params.threadId;
                 Thread.remove({'_id': threadToDel}, function (err) {
                     if (err) {
