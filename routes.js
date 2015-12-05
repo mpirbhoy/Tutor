@@ -59,7 +59,7 @@ module.exports = function(app, passport) {
 	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
 	//GET suggestions for user 
-	app.get('/getSuggestions', middleware.isLoggedIn, controller.getSuggestions);
+	// app.get('/getSuggestions', middleware.isLoggedIn, controller.getSuggestions);
 
 	// Route for making thread for a particular course
 	app.post('/thread/:course', middleware.isLoggedIn, controller.makeNewThread);
