@@ -143,7 +143,7 @@ module.exports.getSuggestions = function (req, res) {
                 Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
                     
                     allCourses = data;
-                    var suggestedCourses = [];
+                    var suggestedThreads = [];
                     for (i = 0; i < allCourses.length; i++) {
                     	var maxPrice = 0;
                     	var maxThread = null;
@@ -160,7 +160,7 @@ module.exports.getSuggestions = function (req, res) {
                     	}
                     }
                     
-                    res.json({status: 200, suggestedCourses: suggestedCourses});
+                    res.json({status: 200, suggestedThreads: suggestedThreads});
                 });
                 
             }
