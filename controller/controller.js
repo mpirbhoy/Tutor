@@ -142,25 +142,25 @@ module.exports.getSuggestions = function (req, res) {
             if (myUser) {
                 Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
                     
-                    allCourses = data;
-                    var suggestedThreads = [];
-                    for (i = 0; i < allCourses.length; i++) {
-                    	var maxPrice = 0;
-                    	var maxThread = null;
+	                    allCourses = data;
+	                    var suggestedThreads = [];
+	                    for (i = 0; i < allCourses.length; i++) {
+	                    	var maxPrice = 0;
+	                    	var maxThread = null;
 
-                    	for (j = 0; j < allCourses[i].threads.length; j++) {
-                    		if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
-                    			maxPrice = allCourses[i].threads[j].price;
-                    			maxThread = allCourses[i].threads[j];
-                    		}
-                    	}
+	                    	for (j = 0; j < allCourses[i].threads.length; j++) {
+	                    		if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
+	                    			maxPrice = allCourses[i].threads[j].price;
+	                    			maxThread = allCourses[i].threads[j];
+	                    		}
+	                    	}
 
-                    	if (maxThread != null) {
-                    		suggestedThreads.push(maxThread);
-                    	}
-                    }
-                    
-                    res.json({status: 200, suggestedThreads: suggestedThreads});
+	                    	if (maxThread != null) {
+	                    		suggestedThreads.push(maxThread);
+	                    	}
+	                    }
+	                    
+                    res.json({status: 200, suggestedThreads: data});
                 });
                 
             }
