@@ -132,30 +132,45 @@ module.exports.getProfile = function (req, res) {
 };
 
 
-// // For getting Suggestions for a particular user
-// module.exports.getSuggestions = function (req, res) {
-//     var allCourses;
-//     // Get all suggestions 
-//     var userId = req.session.passport.user;
-//     if (userId) {
-//         User.where({_id: userId}).findOne().populate('courses').lean().exec(function (err, myUser) {
-//             if (myUser) {
-//                 Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
+// For getting Suggestions for a particular user
+module.exports.getSuggestions = function (req, res) {
+    
+    // Get all suggestions 
+    var userId = req.session.passport.user;
+    if (userId) {
+        User.where({_id: userId}).findOne().populate('courses').lean().exec(function (err, myUser) {
+            if (myUser) {
+                Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
                     
-//                     allCourses = data;
-//                     for (i = 0; i < data.)
-//                     res.json({status: 200, allCourses: allCourses});
-//                 });
-                
-                
-//             }
-//             else {
-//                 res.json({status: 409, msg: "Can't find anything"});
-//             }
-//         });
-//     }
+                    allCourses = data;
+                    var suggestedCourses = [];
+                    for (i = 0; i < allCourses.length; i++) {
+                    	var maxPrice = 0;
+                    	var maxThread = null;
 
-// };
+                    	for (j = 0; j < allCourses[i].threads.length; j++) {
+                    		if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
+                    			maxPrice = allCourses[i].threads[j].price;
+                    			maxThread = allCourses[i].threads[j];
+                    		}
+                    	}
+
+                    	if (maxThread != null) {
+                    		suggestedCourses.push(maxThread);
+                    	}
+                    }
+                    
+                    res.json({status: 200, suggestedCourses: suggestedCourses});
+                });
+                
+            }
+            else {
+                res.json({status: 409, msg: "Can't find anything"});
+            }
+        });
+    }
+
+};
 
 
 // Add a message to a user
