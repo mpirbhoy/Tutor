@@ -102,9 +102,9 @@ module.exports.getProfile = function (req, res) {
 // Add a message to a user
 
 module.exports.sendAMessage = function (req, res) {
-    var receiverEmail = req.body.email;
+    var receiverEmail = req.params.email;
     var messageText = req.body.message; // TODO Needs testing from frontend
-    var senderId = req.session.passport;
+    var senderId = req.session.passport.user;
     User.where({_id: senderId}).findOne(function (err, sender) {
         if (sender) {
             User.where({email: receiverEmail}).findOne(function (err, receiver) {
@@ -116,6 +116,7 @@ module.exports.sendAMessage = function (req, res) {
                         creationTime: new Date().toString()
                     });
                     receiver.incomingMessages.push(messageModel);
+                    receiver.save();
                     res.json({msg: "Messaged added to receiver's inbox", status: 200});
                 } else {
                     res.json({msg: "Can't find the receiver.", status: 404});
