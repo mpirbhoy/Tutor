@@ -48,7 +48,7 @@ module.exports.getProfile = function (req, res) {
     var email = req.session.passport.user;
     var userBeingQueriedEmail = req.params.email;
     if (email) {
-        User.where({email: userBeingQueriedEmail}).findOne().populate('courses').exec(function (err, foundOtherUser) {
+        User.where({email: userBeingQueriedEmail}).findOne().populate('courses messages tutorReviews tuteeReviews').exec(function (err, foundOtherUser) {
             if (foundOtherUser) {
 
 
@@ -98,7 +98,6 @@ module.exports.getProfile = function (req, res) {
                         }
 
 
-                        Message.populate(foundUser.incomingMessages, {path: 'sender'}, function (err, userObject){
                             res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                             //res.send({
                                 title: "View User",
@@ -118,12 +117,11 @@ module.exports.getProfile = function (req, res) {
                                 otherCourses: otherCourseColl,
                                 otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
                                 otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
-                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
-                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
+                                otherTutorReviews: foundOtherUser.tutorReviews,
+                                otherTuteeReviews: foundOtherUser.tuteeReviews,
 
-                                messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
+                                messages: viewSelf && foundUser.incomingMessages
                             })
-                        });
                     }
                 })
             } else {
