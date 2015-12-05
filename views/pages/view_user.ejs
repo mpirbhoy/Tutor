@@ -66,7 +66,7 @@
 
 		</div>
 
-		<div style="margin-top: 200px">
+		<div style="margin-top: 250px">
 			<h1>Messages: </h1>
 
 			<!-- All messages here -->
@@ -90,12 +90,12 @@
 	// Deleting a message
     $('body').on('click', '.btn-msg', function() {
 
-        message = $(this).parents(".panel");
-        console.log($(this).parents(".panel").attr('id'));
+        var message = $(this).parents(".panel");
+        var id = $(this).parents(".panel").attr('id');
 
         $.ajax({
             type: "DELETE",
-            url: "/message/" + message,
+            url: "/message/" + id,
             success: function(data) {
                 message.remove();
             },
