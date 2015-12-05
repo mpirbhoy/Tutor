@@ -101,7 +101,7 @@
 <script>
     var messages = <%- messages %>;
     for (var i = 0; i < messages.length; i++) {
-        $('#messages').prepend("<div class='panel panel-default' id='" + messages[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + messages[i].sender + "</h3><h3 class='panel-title' style='float: right'>" + messages[i].creationTime + "</h3></div><div class='panel-body'><p>" + messages[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
+        $('#messages').prepend("<div class='panel panel-default' id='" + messages[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + messages[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + messages[i].creationTime + "</h3></div><div class='panel-body'><p>" + messages[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
     }
 
     // Splitting column for Tutor & Tuttee rating 
