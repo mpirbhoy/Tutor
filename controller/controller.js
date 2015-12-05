@@ -531,12 +531,12 @@ module.exports.getAllThreads = function (req, res) {
 // Add a new course to a particular user's course collection
 module.exports.updateUserCourses = function (req, res) {
 
-    var email = req.params.email;
-    var courseCode = req.body.courseCode; //TODO: Need to get the correct identifier for course data
-    if (email) {
+    var user = req.session.passport.user;
+    var courseCode = req.params.courseCode; //TODO: Need to get the correct identifier for course data
+    if (user) {
 
         // Find the user to add course for
-        User.where({email: email}).findOne(function (findUserErr, foundUser) {
+        User.where({_id: user}).findOne(function (findUserErr, foundUser) {
 
             if (findUserErr) {
                 res.json({
