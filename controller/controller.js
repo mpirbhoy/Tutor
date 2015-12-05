@@ -52,7 +52,7 @@ module.exports.getProfile = function (req, res) {
             if (foundOtherUser) {
 
 
-                User.where({_id: email}).findOne().populate('courses').exec(function (err, foundUser) {
+                User.where({_id: email}).findOne().populate('courses incomingMessages').exec(function (err, foundUser) {
 
 
                     if (foundUser) {
@@ -91,23 +91,53 @@ module.exports.getProfile = function (req, res) {
                             courseColl.push(foundUser.courses[i].courseCode);
                             console.log(foundUser.courses[i].courseCode);
                         }
-                        Message.populate(foundUser.incomingMessages, {path: 'abc'}, function (err, plainfoundIncomingMessages){
-                            res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                                title: "View User",
-                                email: foundUser.email,
-                                otherEmail: foundOtherUser.email,
-                                name: dispName,
-                                descr: foundUser.descr,
-                                imgPath: correctImagePath,
-                                otherImgPath: correctOtherImagePath,
-                                dispName: foundUser.dispName,
-                                courses: courseColl,
-                                localImg: localImg,
-                                otherLocalImg: otherLocalImg,
-                                messages:plainfoundIncomingMessages.toObject()
+                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                            title: "View User",
+                            email: foundUser.email,
+                            otherEmail: foundOtherUser.email,
+                            name: dispName,
+                            descr: foundUser.descr,
+                            imgPath: correctImagePath,
+                            otherImgPath: correctOtherImagePath,
+                            dispName: foundUser.dispName,
+                            courses: courseColl,
+                            localImg: localImg,
+                            otherLocalImg: otherLocalImg,
+                            messages: foundUser.incomingMessages.toObject()
 
-                            })
-                        });
+                        })
+                        //res.send({
+                        //        title: "View User",
+                        //        email: foundUser.email,
+                        //        otherEmail: foundOtherUser.email,
+                        //        name: dispName,
+                        //        descr: foundUser.descr,
+                        //        imgPath: correctImagePath,
+                        //        otherImgPath: correctOtherImagePath,
+                        //        dispName: foundUser.dispName,
+                        //        courses: courseColl,
+                        //        localImg: localImg,
+                        //        otherLocalImg: otherLocalImg,
+                        //        messages: foundUser.incomingMessages.toObject()
+                        //
+                        //});
+                        //Message.populate(foundUser.incomingMessages, {path: 'incomingMessages'}, function (err, userObject){
+                        //    res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                        //        title: "View User",
+                        //        email: foundUser.email,
+                        //        otherEmail: foundOtherUser.email,
+                        //        name: dispName,
+                        //        descr: foundUser.descr,
+                        //        imgPath: correctImagePath,
+                        //        otherImgPath: correctOtherImagePath,
+                        //        dispName: foundUser.dispName,
+                        //        courses: courseColl,
+                        //        localImg: localImg,
+                        //        otherLocalImg: otherLocalImg,
+                        //        messages: userObject.incomingMessages.toObject()
+                        //
+                        //    })
+                        //});
                     }
                 })
             } else {
