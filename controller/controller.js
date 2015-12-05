@@ -91,36 +91,13 @@ module.exports.getProfile = function (req, res) {
                             courseColl.push(foundUser.courses[i].courseCode);
                             console.log(foundUser.courses[i].courseCode);
                         }
-                        //res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                        //    title: "View User",
-                        //    email: foundUser.email,
-                        //    otherEmail: foundOtherUser.email,
-                        //    name: dispName,
-                        //    descr: foundUser.descr,
-                        //    imgPath: correctImagePath,
-                        //    otherImgPath: correctOtherImagePath,
-                        //    dispName: foundUser.dispName,
-                        //    courses: courseColl,
-                        //    localImg: localImg,
-                        //    otherLocalImg: otherLocalImg,
-                        //    messages: JSON.stringify(foundUser.incomingMessages)
-                        //
-                        //})
-                        //res.send({
-                        //        title: "View User",
-                        //        email: foundUser.email,
-                        //        otherEmail: foundOtherUser.email,
-                        //        name: dispName,
-                        //        descr: foundUser.descr,
-                        //        imgPath: correctImagePath,
-                        //        otherImgPath: correctOtherImagePath,
-                        //        dispName: foundUser.dispName,
-                        //        courses: courseColl,
-                        //        localImg: localImg,
-                        //        otherLocalImg: otherLocalImg,
-                        //        messages: foundUser.incomingMessages.toObject()
-                        //
-                        //});
+                        var otherCourseColl = [];
+                        for (i = 0; i < foundOtherUser.courses.length; i++) {
+                           otherCourseColl.push(foundOtherUser.courses[i].courseCode);
+                            console.log(foundOtherUser.courses[i].courseCode);
+                        }
+
+
                         Message.populate(foundUser.incomingMessages, {path: 'sender'}, function (err, userObject){
                             res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                                 title: "View User",
@@ -131,12 +108,15 @@ module.exports.getProfile = function (req, res) {
                                 dispName: foundUser.dispName,
                                 courses: courseColl,
                                 localImg: localImg,
+
+
                                 otherImgPath: correctOtherImagePath,
                                 otherEmail: foundOtherUser.email,
                                 otherName: foundOtherUser.dispName,
                                 otherLocalImg: otherLocalImg,
-                                otherCourses: foundOtherUser.courses,
-                                messages: JSON.stringify(foundUser.incomingMessages)
+                                otherCourses: otherCourseColl,
+
+                                messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
                             })
                         });
                     }
