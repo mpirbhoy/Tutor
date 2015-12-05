@@ -85,6 +85,7 @@
                   data: $('#editForm').serialize(),
                   contentType: "application/json; charset=utf-8",
                   success: function(data) {
+                        $('.alert').remove();
                         $('body').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
                   },
 
