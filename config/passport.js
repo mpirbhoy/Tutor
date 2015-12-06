@@ -111,7 +111,7 @@ module.exports = function (passport) {
     passport.use(new FacebookStrategy({
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
-            callbackURL: "http://localhost:3000/auth/facebook/callback",
+            callbackURL: "https://tutors4you.herokuapp.com/auth/facebook/callback",
             profileFields: ['id', 'name', 'displayName', 'email']
         },
         function (token, refreshToken, profile, done) {
