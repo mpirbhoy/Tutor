@@ -57,7 +57,7 @@ module.exports = function (passport) {
                         return done(null, false, {message: 'That email is already taken!'});
                     } else {
 
-                        User.findOne({}, function (error, superAdminUser) {
+                        User.findOne({}, function (error, adminUser) {
 
                             //if there are any errors, return the error
                             if (error)
@@ -73,9 +73,9 @@ module.exports = function (passport) {
                             newUser.pId = hashEmail(username);
                             newUser.dispName = req.body.fname + " " + req.body.lname;//changess
 
-                            //If no user exists in database, then this should be superAdmin
-                            if (superAdminUser == null) {
-                                newUser.auth = 'superAdmin';
+                            //If no user exists in database, then this should be Admin
+                            if (adminUser == null) {
+                                newUser.auth = 'admin';
                             }
 
                             // save the user
@@ -134,26 +134,38 @@ module.exports = function (passport) {
 
                         request(facebookAPIEndPoint + profile.id + facebookAPIGetPicturePath + "/?type=large&redirect=false", function (error, response, body) {
 
-                            // if there is no user found with that facebook id, create them
-                            var newUser = new User();
+                            User.findOne({}, function (error2, adminUser) {
 
-                            // set all of the facebook information in our user model
-                            newUser.facebookId = profile.id; // set the users facebook id
-                            newUser.email = profile.emails[0].value;
-                            newUser.facebookToken = token; // we will save the token that facebook provides to the user
-                            newUser.facebookName = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+                                //if there are any errors, return the error
+                                if (error2)
+                                    return done(error2);
 
-                            if (!error) {
-                                body = JSON.parse(body);
-                                newUser.facebookProfilePicture = body.data.url;
-                            }
-                            // save our user to the database
-                            newUser.save(function (err) {
-                                if (err)
-                                    throw err;
+                                // if there is no user found with that facebook id, create them
+                                var newUser = new User();
 
-                                // if successful, return the new user
-                                return done(null, newUser);
+                                // set all of the facebook information in our user model
+                                newUser.facebookId = profile.id; // set the users facebook id
+                                newUser.email = profile.emails[0].value;
+                                newUser.facebookToken = token; // we will save the token that facebook provides to the user
+                                newUser.facebookName = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+
+                                //If no user exists in database, then this should be Admin
+                                if (adminUser == null) {
+                                    newUser.auth = 'admin';
+                                }
+
+                                if (!error) {
+                                    body = JSON.parse(body);
+                                    newUser.facebookProfilePicture = body.data.url;
+                                }
+                                // save our user to the database
+                                newUser.save(function (err) {
+                                    if (err)
+                                        throw err;
+
+                                    // if successful, return the new user
+                                    return done(null, newUser);
+                                });
                             });
 
                         });

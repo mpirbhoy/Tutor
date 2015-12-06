@@ -1,10 +1,10 @@
-var mongoose = require('mongoose'),
-    User = mongoose.model('User');
+var User = require('../model/user');
 var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 var Message = require('../model/message');
 var Review = require('../model/Review');
+
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -50,7 +50,6 @@ module.exports.getProfile = function (req, res) {
     if (email) {
         User.where({email: userBeingQueriedEmail}).findOne().populate('courses messages tutorReviews tuteeReviews').exec(function (err, foundOtherUser) {
             if (foundOtherUser) {
-
 
                 User.where({_id: email}).findOne().populate('courses incomingMessages').exec(function (err, foundUser) {
 
@@ -563,7 +562,7 @@ module.exports.deleteComment = function (req, res) {
             return;
         } else {
             var commentToDel = req.params.commentId;
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 Comment.remove({'_id': commentToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
@@ -612,7 +611,7 @@ module.exports.deleteAMessage = function (req, res) {
             return;
         } else {
             var messageToDel = req.params.messageId;
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 Message.remove({'_id': messageToDel}, function (err) {
                     if (err) {
                         res.status(400).send(err);
@@ -660,7 +659,7 @@ module.exports.deleteThread = function (req, res) {
             res.status(400).send(err);
             return;
         } else {
-            if (user.auth == 'superAdmin') {
+            if (user.auth == 'admin') {
                 var threadToDel = req.params.threadId;
                 Thread.remove({'_id': threadToDel}, function (err) {
                     if (err) {
@@ -757,27 +756,39 @@ module.exports.getAllThreads = function (req, res) {
             if (myCourse) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
                     var curUserId = req.session.passport.user;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i]['author']['_id'].equals(curUserId)) {
-                            data[i].byAuthor = true;
-                        } else {
-                            data[i].byAuthor = false;
-                        }
+                    User.findById(curUserId, function (err, user) {
+		                if (err) {
+		                    console.log(err);
+		                    return;
+		                } else {
+		                    if (user) {
+			                    for (var i = 0; i < data.length; i++) {
+			                        if ((data[i]['author']['_id'].equals(curUserId)) || (user.auth == 'admin')) {
+			                            data[i].byAuthor = true;
+			                        } else {
+			                            data[i].byAuthor = false;
+			                        }
 
+			                        for (var j = 0; j < data[i]['comments'].length; j++) {
+			                            data[i]['comments'][j] = data[i]['comments'][j].toObject();
+			                            if ((data[i]['comments'][j]['author']['_id'] == curUserId)  || (user.auth2 == 'admin')) {
+			                            	console.log("user auth2: " + user.auth);
+			                                data[i]['comments'][j].byAuthor = true;
+			                            } else {
+			                                data[i]['comments'][j].byAuthor = false;
+			                            }
+			                        }
+			                    }
 
-                        for (var j = 0; j < data[i]['comments'].length; j++) {
-                            data[i]['comments'][j] = data[i]['comments'][j].toObject();
-                            if (data[i]['comments'][j]['author']['_id'] == curUserId) {
-                                data[i]['comments'][j].byAuthor = true;
-                            } else {
-                                data[i]['comments'][j].byAuthor = false;
-                            }
-                        }
+			                    res.json({status: 200, allThreadsFromCourse: data});
 
-                    }
-                    // var data2 = [1];
-                    // console.log("data 2 " + data2); 
-                    res.json({status: 200, allThreadsFromCourse: data});
+	                        } else {
+	                        	//send response that user doesn't exist anymore and login required
+	                        }
+	                    }
+					});                    
+
+                    
                 });
             }
             else {
