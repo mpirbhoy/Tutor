@@ -1,0 +1,202 @@
+
+/* ==========================================================================
+PAGE 1: HOME
+========================================================================== */
+#banner {
+    font-family: 'Montserrat', serif;
+    font-size: 48px;
+}
+
+/* ==========================================================================
+HOME - Hero (PICTURE)
+========================================================================== */
+.hero {
+    position: relative;
+    padding: 0 0 60px 0;
+    min-height: 800px;
+    background: rgb(40, 70, 102) url('../img/hero-01.jpg') no-repeat center center;
+    background-size: cover;
+    color: #fff;
+}
+.hero h1 {
+    margin: 10% 0 45px 0;
+    font-weight: 300;
+    font-size: 45px;
+}
+
+.hero h2 {
+    margin: 75px 0 45px 0;
+}
+.hero h1 span {
+    display: inline-block;
+    color: #a1a9b0;
+}
+
+#home {
+    width: 100%;
+    height: 100%;
+}
+.hero {
+    width: 100%;
+    height: 100%;
+}
+header i {
+    margin-left: 5px
+}
+
+/* ==========================================================================
+HOME - Video
+========================================================================== */
+.video i {
+    margin-right: 10px;
+    color: #323a45;
+    vertical-align: middle;
+    font-size: 50px;
+    -webkit-transition: color 300ms ease-in-out;
+    transition: color 300ms ease-in-out;
+}
+.video h1 {
+    font-weight: 400;
+    font-size: 20px;
+}
+.video {
+    padding: 20px 0;
+    color: #323a45;
+    font-size: 20px;
+}
+.video a {
+    color: #323a45
+}
+a:hover, .video a:focus {
+    color: #73d0da;
+    text-decoration: none;
+}
+a:hover i, .video a:focus i {
+    color: #73d0da
+}
+
+/* ==========================================================================
+HOME - Buttons
+========================================================================== */
+.use-btn {
+    display: inline-block;
+    margin: 0 10px 10px 0;
+    padding: 20px 50px;
+    border-radius: 3px;
+    background-color: #fff;
+    color: #4b98a9;
+    font-size: 16px;
+}
+.use-btn:hover, .use-btn:focus {
+    background-color: #73d0da;
+    color: #fff;
+    text-decoration: none;
+}
+.learn-btn, .download-btn {
+    display: inline-block;
+    padding: 18px 46px;
+    border: 2px solid #fff;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 16px;
+}
+.learn-btn:hover, .download-btn:hover, .learn-btn:focus, .download-btn:focus {
+    border-color: #73d0da;
+    color: #73d0da;
+    text-decoration: none;
+}
+.read-more-btn {
+    display: inline-block;
+    color: #323a45;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.read-more-btn i, .download-btn i {
+    margin-left: 5px
+}
+.showcase .download-btn {
+    margin-top: 50px
+}
+.download .download-btn {
+    margin-top: 25px
+}
+
+/* ==========================================================================
+PAGE 2: Main
+========================================================================== */
+
+/* ==========================================================================
+MAIN - SEARCH SIDE BAR
+========================================================================== */
+
+/* Hide for mobile, show later */
+.sidebar {
+    display: block;
+    background-color: #EEE;
+    padding: 20px;
+}
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        background-color: #EEE;
+        border-right: 1px solid #eee;
+    }
+}
+.list-group-item {
+    margin-bottom: 10px;
+}
+
+#close {
+    float:right;
+    padding:3px 4px;
+    color: #ddd;
+}
+
+#close:hover {
+    float:right;
+    padding:3px 4px;
+    color: #000;
+
+}
+
+/* ==========================================================================
+MAIN - THREADS
+========================================================================== */
+
+.main {
+    padding: 20px;
+}
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+.main .page-header {
+    margin-top: 0;
+}
+
+/*.form-search {*/
+    /*margin-left: 80%;*/
+    /*padding: 10px;*/
+    /*max-width: 220px;*/
+/*}*/
+
+.select2-result-repository { padding-top: 4px; padding-bottom: 3px; }
+.select2-result-repository__avatar { float: left; width: 60px; margin-right: 10px; }
+.select2-result-repository__avatar img { width: 100%; height: auto; border-radius: 2px; }
+.select2-result-repository__meta { margin-left: 70px; }
+.select2-result-repository__title { color: black; font-weight: bold; word-wrap: break-word; line-height: 1.1; margin-bottom: 4px; }
+.select2-result-repository__forks, .select2-result-repository__stargazers { margin-right: 1em; }
+.select2-result-repository__forks, .select2-result-repository__stargazers, .select2-result-repository__watchers { color: #999; font-size: 11.5px; }
+.select2-result-repository__description { font-size: 13px; color: #777; margin-top: 4px; }
+.select2-results__option--highlighted .select2-result-repository__title { color: white; }
+.select2-results__option--highlighted .select2-result-repository__forks, .select2-results__option--highlighted .select2-result-repository__stargazers, .select2-results__option--highlighted .select2-result-repository__description, .select2-results__option--highlighted .select2-result-repository__watchers { color: #c6dcef; }

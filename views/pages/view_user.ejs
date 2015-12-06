@@ -1,0 +1,138 @@
+<% include ../partials/head %>
+
+<% include ../partials/nav_logged_in %>
+
+
+<body>
+
+<div class="container-fluid">
+	<div class="row">
+		<!-- USER PROFILE -->
+		<div class="col-sm-3 col-md-3 sidebar">
+			<h1>Profile<small><a id="edit-user" href="/user/<%= email %>/edit" style="cursor:pointer;">&nbsp Edit</a></small></h1>
+			<div class="thumbnail">
+				<img id="profile-img"
+						<%if (otherLocalImg == 1) { %>
+					 src="/img/<%=otherImgPath%>"
+						<% } %>
+
+						<%if (otherLocalImg == 0) { %>
+					 src="<%=otherImgPath%>"
+						<% } %>
+					 alt="avatar">
+				<div class="caption">
+					<h3 id="profile-name"><%= dispName %></h3>
+					<p id="profile-email"><%= email %></p>
+					<p id="profile-description"><%= descr %></p>
+					<p id="profile-classes"><%= courses %></p>
+
+					<!-- Admin & Super admin privelages -->
+                    <p id="profile-height"></p>
+                    <p id="profile-width"></p>
+                    <p id="profile-mostViewed"></p>
+                       <p id="profile-device"></p>
+                       <p id="profile-ip"></p>
+                       <p id="profile-os"></p>
+                       <p id="profile-location"></p>
+                    <p id="admin-privelages" class="btn-toolbar"></p>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+</div>
+
+<!-- RIGHT SIDE OF THE PAGE -->
+<div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" style="margin-top: 50px;">
+		<div>
+			<h1>Ratings:</h1>
+			<div class="col-lg-6">
+				<h2>Tutor Rating:</h2>
+				<input id="input-1" class="rating tutor-rating" data-readonly="true" data-size="sm" data-show-clear="false">
+			</div>
+
+			<div class="col-lg-6">
+				<h2>Tutee Rating:</h2>
+				<input id="input-2" class="rating tutee-rating" data-readonly="true" data-size="sm" data-show-clear="false">
+			</div>
+
+		</div>
+
+		<div class="col-lg-6 tutor-reviews">
+			<h2>Tutor Review(s):</h2>
+		</div>
+
+		<div class="col-lg-6 tutee-reviews">
+			<h2>Tutee Review(s):</h2>
+		</div>
+
+		<script>
+
+			// Get the tutor reviews and tutee reviews.
+			var	tutorReviews = <%- otherTutorReviews %>;
+			var	tuteeReviews = <%- otherTuteeReviews %>;
+
+		    for (var i = 0; i < tutorReviews.length; i++) {
+		        $('.tutor-reviews').append("<div class='panel panel-default' id='" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].reviewText + "</p></div></div>");
+		    }
+
+		    for (var i = 0; i < tuteeReviews.length; i++) {
+		        $('.tutee-reviews').append("<div class='panel panel-default' id='" + tuteeReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tuteeReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tuteeReviews[i].reviewText + "</p></div></div>");
+    		}
+		</script>
+
+		<div style="margin-top: 300px">
+			<h1>Messages: </h1>
+
+			<!-- All messages here -->
+			<div id="messages">
+			</div>
+
+		</div>
+</div>
+
+<script>
+	// Populate the messages
+    var messages = <%- messages %>;
+    for (var i = 0; i < messages.length; i++) {
+    	console.log(messages[i]);
+        $('#messages').prepend("<div class='panel panel-default' id='" + messages[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + messages[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + messages[i].creationTime + "</h3></div><div class='panel-body'><p>" + messages[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
+    }
+
+    // Splitting column for Tutor & Tuttee rating 
+    $( document ).ready(function() {
+    	$( ".star-rating" ).addClass( "col-lg-6" );
+	});
+
+	// Deleting a message
+    $('body').on('click', '.btn-msg', function() {
+
+        var message = $(this).parents(".panel");
+        var id = $(this).parents(".panel").attr('id');
+
+        $.ajax({
+            type: "DELETE",
+            url: "/message/" + id,
+            success: function(data) {
+                message.remove();
+            },
+            fail: function() {
+                $('.main').html("comment cannot be removed");
+            }
+        });
+    });
+
+	// Set the default star rating
+	tutorRating = <%- otherTutorRatingAvg %>
+	tuteeRating = <%- otherTuteeRatingAvg %>
+	
+	$(".tutor-rating").val(tutorRating);
+	$(".tutee-rating").val(tuteeRating); 
+    
+</script>
+
+
+</body>
+
