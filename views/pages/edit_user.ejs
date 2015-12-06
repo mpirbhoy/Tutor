@@ -95,6 +95,7 @@
         "imgPath" : "",
         "oldPassword" : "",
         "newPassword" : "",
+        "newPasswordConfirm": ""
       }
 
       var editData = $("#editForm").serializeArray();
@@ -116,6 +117,10 @@
         }
         if(editData[i].name == "password") {
           edit.newPassword = editData[i].value;
+        }
+
+        if(editData[i].name == "password-confirm") {
+            edit.newPasswordConfirm = editData[i].value;
         }
       }
 
