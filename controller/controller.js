@@ -285,14 +285,14 @@ module.exports.editProfile = function (req, res) {
         } else {
             if (user) { //TODO: Do we need a step to authenticate ?
                 if (user.password != userInfo.oldPassword) {
-                    res.json({
+                    res.status(401).json({
                         msg: "Cannot authenticate user with old password",
                         status: 401
                     });
                     return;
                 }
                 if (userInfo.password != userInfo.oldPassword) {
-                    res.json({
+                    res.status(401).json({
                         msg: "Cannot change password because passwords don't confirm",
                         status: 401
                     });
