@@ -3,7 +3,7 @@ var Course = require('../model/course');
 var Thread = require('../model/thread');
 var Comment = require('../model/comment');
 var Message = require('../model/message');
-var Review = require('../model/Review');
+var Review = require('../model/review');
 
 // Function for preventing outside Cross-Site-Scripting
 function escapeHtml(text) {
