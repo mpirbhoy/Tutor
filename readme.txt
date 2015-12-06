@@ -1,7 +1,11 @@
 Readme file containing instructions
+Github URL: https://github.com/mpirbhoy/Tutor
 
-1. Open Terminal or Command Line and enter mkdir mymongo %% cd mymongo
-2. Enter mkdir data
-3. Enter mongod --port 27017 --dbpath data/
-4. Open another Terminal or Command Line window and enter node server.js
-5. Open a browser and enter localhost:3000 as the URL
+1. Open Terminal or Command Line
+2. Enter npm install
+3. Enter mkdir mymongo && cd mymongo
+4. Enter mkdir data
+5. Enter mongod --port 27017 --dbpath data/
+6. Open another Terminal or Command Line window
+7 .Enter node server.js
+8. Open a browser and enter localhost:3000 as the URL
