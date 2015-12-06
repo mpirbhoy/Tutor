@@ -24,10 +24,7 @@
 
                     <div class="row">
                         <div class="col-xs-4">
-                            <input type="text" class="form-control" name="firstName" placeholder="First Name" required>
-                        </div>
-                        <div class="col-xs-4">
-                            <input type="text" class="form-control" name="lastName" placeholder="Last Name" required>
+                            <input value=<%=dispName%> type="text" class="form-control" name="dispName" placeholder="Display Name" required>
                         </div>
                     </div>
                 </div>
@@ -36,7 +33,7 @@
                     <label for="displayname" class="col-md-3 control-label">Image</label>
 
                     <div class="col-md-9">
-                        <input type="text" class="form-control" name="imgPath"
+                        <input value= <%=imgPath%> type="text" class="form-control" name="imgPath"
                                placeholder="Gravatar URL: http://www.gravatar.com/avatar/00000000000000000000000000000000">
                     </div>
                 </div>
@@ -103,10 +100,7 @@
 
       for (i = 0; i < editData.length; i++) {
 
-        if(editData[i].name == "firstName") {
-          edit.dispName = editData[i].value;
-        }
-        if(editData[i].name == "lastName") {
+        if(editData[i].name == "dispName") {
           edit.dispName += editData[i].value;
         }
         if(editData[i].name == "imgPath") {

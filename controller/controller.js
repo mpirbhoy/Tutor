@@ -291,18 +291,16 @@ module.exports.editProfile = function (req, res) {
                     });
                     return;
                 }
-                if (userInfo.password != userInfo.oldPassword) {
+                if (userInfo.newPasswordConfirm != userInfo.newPassword) {
                     res.status(401).json({
                         msg: "Cannot change password because passwords don't confirm",
                         status: 401
                     });
                     return;
                 }
-                for (var key in userInfo) { //TODO not done Muj needs to do the frontend
-                    if (user[key] && userInfo[key]) {
-                        user[key] = userInfo[key];
-                    }
-                }
+                user.dispName = userInfo.dispName;
+                user.imgPath = userInfo.imgPath;
+                user.password = userInfo.newPassword;
                 user.save();
                 res.json({
                     msg: "User's info changed",
