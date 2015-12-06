@@ -197,7 +197,7 @@
 		                dataType: 'json',
 		                data: {message: $(this).parent().prev('#response').val()},
 		                success: function(data) {
-
+							$('.alert').remove();
 		                	$('.main').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
 		                },
 		                fail: function() {
