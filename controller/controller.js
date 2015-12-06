@@ -623,7 +623,7 @@ module.exports.deleteComment = function (req, res) {
                         return;
                     } else {
                         if (comment) {
-                            // Check if the user who's made the request  //TODO Left here
+                            // Check if the user who's made the request
                             if (comment.author._id == req.session.passport.user) {
                                 Comment.remove({'_id': commentToDel}, function (err) {
                                     if (err) {
@@ -666,13 +666,15 @@ module.exports.deleteAMessage = function (req, res) {
 
                 });
             } else {
+
+                // Find the message to delete
                 Message.where({'_id': messageToDel}).findOne().populate('receiver').exec(function (err, message) {
                     if (err) {
                         res.status(400).send(err);
                         return;
                     } else {
                         if (message) {
-                            if (message.receiver._id.equals(req.session.passport.user)) { //TODO: Receiver not populated
+                            if (message.receiver._id.equals(req.session.passport.user)) {
                                 Message.remove({'_id': messageToDel}, function (err) {
                                     if (err) {
                                         res.status(400).send('blah');
@@ -722,6 +724,8 @@ module.exports.deleteThread = function (req, res) {
                         return;
                     } else {
                         if (thread) {
+
+                            // Check if thread to delete belongs to user who's made the request
                             if (thread.author._id.equals(req.session.passport.user)) {
                                 Thread.remove({'_id': threadToDel}, function (err) {
                                     if (err) {
@@ -796,10 +800,16 @@ module.exports.getAllThreads = function (req, res) {
     // Get threads specific to a class
     var getThreadsFrom = req.params.course;
     if (getThreadsFrom) {
+
+        // Populate threads
         Course.where({courseCode: getThreadsFrom}).findOne().populate('threads').lean().exec(function (err, myCourse) {
             if (myCourse) {
+
+                // Populate comments
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
                     var curUserId = req.session.passport.user;
+
+                    // Find current logged in User and put stubs to indicate comments and thread belong to the logged in user
                     User.findById(curUserId, function (err, user) {
                         if (err) {
                             console.log(err);
@@ -807,6 +817,8 @@ module.exports.getAllThreads = function (req, res) {
                         } else {
                             if (user) {
                                 for (var i = 0; i < data.length; i++) {
+
+                                    // putting stubs on threads
                                     if ((data[i]['author']['_id'].equals(curUserId)) || (user.auth == 'admin')) {
                                         data[i].byAuthor = true;
                                     } else {
@@ -814,6 +826,8 @@ module.exports.getAllThreads = function (req, res) {
                                     }
 
                                     for (var j = 0; j < data[i]['comments'].length; j++) {
+
+                                        // putting stubs on comments
                                         data[i]['comments'][j] = data[i]['comments'][j].toObject();
                                         if ((data[i]['comments'][j]['author']['_id'] == curUserId) || (user.auth2 == 'admin')) {
                                             console.log("user auth2: " + user.auth);
@@ -849,7 +863,7 @@ module.exports.getAllThreads = function (req, res) {
 module.exports.updateUserCourses = function (req, res) {
 
     var user = req.session.passport.user;
-    var courseCode = req.params.courseCode; //TODO: Need to get the correct identifier for course data
+    var courseCode = req.params.courseCode;
     if (user) {
 
         // Find the user to add course for
