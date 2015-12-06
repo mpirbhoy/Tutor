@@ -1,5 +1,0 @@
-/*Styling for dashboard view*/
-
-tbody tr td.email:hover,  tbody tr td.adminEditBT:hover{
-    text-decoration: underline;
-}

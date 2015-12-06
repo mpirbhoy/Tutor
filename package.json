@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": ""
+    "test": "mocha -r tests/testhelper.js -R spec tests/**/*.test.js"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -14,13 +14,11 @@
     "ejs": "^2.3.4",
     "express": "~4.13.1",
     "express-session": "^1.12.1",
+    "html-minifier": "^1.0.0",
     "mocha": "^2.3.4",
     "mongoose": "^4.2.6",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "serve-favicon": "~2.3.0"
-  },
-  "scripts": {
-    "test": "mocha -r tests/testhelper.js -R spec tests/**/*.test.js"
   }
 }
