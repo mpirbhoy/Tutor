@@ -17,12 +17,12 @@ var app = express();
 
 //Serving static files in public directory
 app.use(express.static('public'));
-
+var port = process.env.PORT || 3000;
 //Configuring passport authentication here
 require('./config/passport.js')(passport);
 
 //Setting EJS and other configurations
-app.set('port',3000);
+app.set('port',port);
 app.set('views', './views');
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
