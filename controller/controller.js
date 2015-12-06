@@ -444,7 +444,7 @@ module.exports.makeNewThread = function (req, res) {
                                 status: req.body.status,
                                 startTime: req.body.start_time,
                                 endTime: req.body.end_time
-                            }
+                            };
                             res.json({
                                 status: 200,
                                 msg: "New thread created",
