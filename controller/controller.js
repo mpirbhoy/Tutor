@@ -123,7 +123,7 @@ module.exports.getProfile = function (req, res) {
                                 otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
                                 otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
 
-                                messages: escapeHtml(viewSelf && JSON.stringify(foundUser.incomingMessages))
+                                messages: escapeHtml(JSON.stringify(foundUser.incomingMessages))
                             })
                     }
                 })
@@ -476,6 +476,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 response: req.body.response,
                                 creationTime: currDate
                             }
+                            console.log(JSON.parse(escapeHtml(JSON.stringify(returnComment))));
                             res.json({status: 200, msg: "New comment created", data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))});
 
                         } else {

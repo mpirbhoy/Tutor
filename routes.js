@@ -12,30 +12,36 @@ var Course = require('./model/course');
 
 module.exports = function(app, passport) {
 
+	//Get request for Home page (Landing Page before logging in)
 	app.get('/', middleware.isNotLoggedIn, function (req, res) {
 		res.render('./pages/home');
 	});
 
-	//Routes going through controller.js
+	//Get request for Main page (Landing Page after logging in)
 	app.get('/main', middleware.isLoggedIn, controller.getMain);
 
-	//Passport authentication routes
+	//Get request to Authenticate user login using Facebook
 	app.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }));
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/',
 	                                      failureRedirect: '/login' }));
-	//Request to perform login
+	
+	//Get request to authenticate user login using local account
 	app.post('/login', passport.authenticate('local-login', { successRedirect: '/main',
 														failureRedirect: '/login', failureFlash : true}));
+	
+	//Get request to Serve Login Page
 	app.get('/login', middleware.isNotLoggedIn, function (req, res) {
 		res.render('./pages/login', {'errorMsg' : req.flash('error')});
 	});
 
-	//Request to perform signup
+	//Request to perform signup for local account
 	app.post('/signup', passport.authenticate('local-signup', {
 			successRedirect : '/main', // redirect to the secure profile section
 			failureRedirect : '/signup'// redirect back to the signup page if there is an error
 	, failureFlash : true}));
+	
+	//Request to 
 	app.get('/signup', middleware.isNotLoggedIn, function (req, res) {
 		res.render('./pages/signup');
 	});
