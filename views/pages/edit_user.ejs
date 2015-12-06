@@ -10,7 +10,7 @@
         </div>
         <div class="panel-body">
 
-            <form id="editForm" class="form-horizontal" role="form">
+            <form id="editForm" class="form-horizontal">
 
                 <div class="form-group">
                     <label for="email" class="col-md-3 control-label">Email</label>
@@ -70,7 +70,7 @@
 
                     <!-- Button -->
                     <div class="col-md-offset-3 col-md-9">
-                        <button id="update" type="submit" class="btn btn-success"><i class="icon-hand-right"></i>Update
+                        <button id="update" class="btn btn-success"><i class="icon-hand-right"></i>Update
                         </button>
                         <button type="reset" class="btn btn-danger"><i class="icon-hand-right"></i>Cancel</button>
                     </div>
@@ -85,40 +85,55 @@
 </div>
 
 <script>
-    // For serializing form data
-    $.fn.serializeObject = function () {
-        var o = {};
-        var a = this.serializeArray();
-        $.each(a, function () {
-            if (o[this.name] !== undefined) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
-                }
-                o[this.name].push(this.value || '');
-            } else {
-                o[this.name] = this.value || '';
-            }
-        });
-        return o;
-    };
+
 
     $('#update').click(function (e) {
-        e.preventDefault();
-        var x = $("#editForm").serializeObject();
-        var y = {"y": "frak"};
-        console.log(x)
+      e.preventDefault();
+      var edit = {
+        "email": $('#editUsername').text(),
+        "dispName": "",
+        "imgPath" : "",
+        "oldPassword" : "",
+        "newPassword" : "",
+      }
+
+      var editData = $("#editForm").serializeArray();
+      console.log(editData);
+
+      for (i = 0; i < editData.length; i++) {
+
+        if(editData[i].name == "firstName") {
+          edit.dispName = editData[i].value;
+        }
+        if(editData[i].name == "lastName") {
+          edit.dispName += editData[i].value;
+        }
+        if(editData[i].name == "imgPath") {
+          edit.imgPath = editData[i].value;
+        }
+        if(editData[i].name == "oldPassword") {
+          edit.oldPassword = editData[i].value;
+        }
+        if(editData[i].name == "password") {
+          edit.newPassword = editData[i].value;
+        }
+      }
+
+        console.log(JSON.stringify(edit));
+
         $.ajax({
             url: '/user/' + $('#editUsername').text() + "/edit",
             type: 'POST',
             contentType: 'application/json',
             dataType: 'json',
-            data: y,
+            data: JSON.stringify(edit),
             success: function (data) {
                 $('.alert').remove();
-                $('body').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+                $('body').prepend("<div class='alert alert-success' role='alert'>Successfully updated!</div>");
             },
 
             fail: function () {
+                console.log("failed!");
                 $('.main').html("comment cannot be removed");
             }
         });
