@@ -756,27 +756,39 @@ module.exports.getAllThreads = function (req, res) {
             if (myCourse) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
                     var curUserId = req.session.passport.user;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i]['author']['_id'].equals(curUserId)) {
-                            data[i].byAuthor = true;
-                        } else {
-                            data[i].byAuthor = false;
-                        }
+                    User.findById(curUserId, function (err, user) {
+		                if (err) {
+		                    console.log(err);
+		                    return;
+		                } else {
+		                    if (user) {
+			                    for (var i = 0; i < data.length; i++) {
+			                        if ((data[i]['author']['_id'].equals(curUserId)) || (user.auth == 'admin')) {
+			                            data[i].byAuthor = true;
+			                        } else {
+			                            data[i].byAuthor = false;
+			                        }
 
+			                        for (var j = 0; j < data[i]['comments'].length; j++) {
+			                            data[i]['comments'][j] = data[i]['comments'][j].toObject();
+			                            if ((data[i]['comments'][j]['author']['_id'] == curUserId)  || (user.auth2 == 'admin')) {
+			                            	console.log("user auth2: " + user.auth);
+			                                data[i]['comments'][j].byAuthor = true;
+			                            } else {
+			                                data[i]['comments'][j].byAuthor = false;
+			                            }
+			                        }
+			                    }
 
-                        for (var j = 0; j < data[i]['comments'].length; j++) {
-                            data[i]['comments'][j] = data[i]['comments'][j].toObject();
-                            if (data[i]['comments'][j]['author']['_id'] == curUserId) {
-                                data[i]['comments'][j].byAuthor = true;
-                            } else {
-                                data[i]['comments'][j].byAuthor = false;
-                            }
-                        }
+			                    res.json({status: 200, allThreadsFromCourse: data});
 
-                    }
-                    // var data2 = [1];
-                    // console.log("data 2 " + data2); 
-                    res.json({status: 200, allThreadsFromCourse: data});
+	                        } else {
+	                        	//send response that user doesn't exist anymore and login required
+	                        }
+	                    }
+					});                    
+
+                    
                 });
             }
             else {
