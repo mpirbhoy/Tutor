@@ -53,19 +53,21 @@ Course.count({}, function (err, count) {
 module.exports.getProfile = function (req, res) {
     var email = req.session.passport.user;
     var userBeingQueriedEmail = req.params.email;
+
+    // If req.session.passport.user exists
     if (email) {
-        User.where({email: userBeingQueriedEmail}).findOne().populate('courses messages tutorReviews tuteeReviews').exec(function (err, foundOtherUser) {
+
+        // Find the user being queried
+        User.where({email: userBeingQueriedEmail}).findOne().populate('incomingMessages tutorReviews tuteeReviews').exec(function (err, foundOtherUser) {
             if (foundOtherUser) {
 
+                // Find the user who's made the request
                 User.where({_id: email}).findOne().populate('courses incomingMessages').exec(function (err, foundUser) {
-
-
                     if (foundUser) {
                         // Check if the user who made request is trying to see his/her own profile
                         var viewSelf;
                         (foundOtherUser._id == req.session.passport.user) ? viewSelf = true : viewSelf = false;
                         var correctImagePath, correctOtherImagePath;
-
 
                         var localImg = 1;
                         if (foundUser.facebookProfilePicture) {
@@ -92,19 +94,17 @@ module.exports.getProfile = function (req, res) {
 
 
                         var courseColl = [];
-                        for (i = 0; i < foundUser.courses.length; i++) {
+                        for (var i = 0; i < foundUser.courses.length; i++) {
                             courseColl.push(foundUser.courses[i].courseCode);
                             console.log(foundUser.courses[i].courseCode);
                         }
                         var otherCourseColl = [];
-                        for (i = 0; i < foundOtherUser.courses.length; i++) {
+                        for (var i = 0; i < foundOtherUser.courses.length; i++) {
                             otherCourseColl.push(foundOtherUser.courses[i].courseCode);
                             console.log(foundOtherUser.courses[i].courseCode);
                         }
-
-
-                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
-                            //res.send({
+                        Message.populate(foundOtherUser.incomingMessages, {path: 'sender'}, function(err, myData){
+                            res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                                 title: "View User",
                                 email: escapeHtml(foundUser.email),
                                 name: escapeHtml(dispName),
@@ -120,13 +120,16 @@ module.exports.getProfile = function (req, res) {
                                 otherName: escapeHtml(foundOtherUser.dispName),
                                 otherLocalImg: otherLocalImg,
                                 otherCourses: JSON.parse(escapeHtml(JSON.stringify(otherCourseColl))),
-                                otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
-                                otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
-                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
-                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
+                                otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0 : foundOtherUser.tutorRating / foundOtherUser.numTutorRating,
+                                otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0 : foundOtherUser.tuteeRating / foundOtherUser.numTuteeRating,
+                                otherTutorReviews: escapeHtml(JSON.stringify(foundOtherUser.tutorReviews)),
+                                otherTuteeReviews: escapeHtml(JSON.stringify(foundOtherUser.tuteeReviews)),
 
-                                messages: escapeHtml(JSON.stringify(foundUser.incomingMessages))
+                                messages: escapeHtml(JSON.stringify(foundOtherUser.incomingMessages))
                             })
+
+                        })
+
                     }
                 })
             } else {
@@ -141,31 +144,29 @@ module.exports.getProfile = function (req, res) {
 // For getting Suggestions for a particular user
 module.exports.getSuggestions = function (req, res) {
 
-    // Get all suggestions 
+    // Get all suggestions
     var userId = req.session.passport.user;
     if (userId) {
+
+        // Find user who's made the request
         User.where({_id: userId}).findOne().populate('courses').lean().exec(function (err, myUser) {
             if (myUser) {
                 Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
-
-                    allCourses = JSON.parse(escapeHtml(JSON.stringify(data)));
+                    var allCourses = JSON.parse(escapeHtml(JSON.stringify(data)));
                     var suggestedThreads = [];
                     for (i = 0; i < allCourses.length; i++) {
                         var maxPrice = 0;
                         var maxThread = null;
-
                         for (j = 0; j < allCourses[i].threads.length; j++) {
                             if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
                                 maxPrice = allCourses[i].threads[j].price;
                                 maxThread = allCourses[i].threads[j];
                             }
                         }
-
                         if (maxThread != null) {
                             suggestedThreads.push(maxThread);
                         }
                     }
-
                     res.json({status: 200, suggestedThreads: suggestedThreads});
                 });
 
@@ -179,13 +180,17 @@ module.exports.getSuggestions = function (req, res) {
 };
 
 
-// Leave a tutor OR tutee review to a user
-module.exports.leaveAReview = function (req, res) { //TODO: Needs testing ~!!
+// Leave a tutor or tutee review to a user
+module.exports.leaveAReview = function (req, res) {
     var receiverEmail = req.params.email;
-    var reviewText = req.body.reviewText; // TODO Needs testing from frontend
+    var reviewText = req.body.reviewText;
     var senderId = req.session.passport.user;
+
+    // Find the user's made the request
     User.where({_id: senderId}).findOne(function (err, sender) {
         if (sender) {
+
+            // Find the user who receives the review
             User.where({email: receiverEmail}).findOne(function (err, receiver) {
                 if (receiver) {
                     var reviewModel = new Review({
@@ -209,14 +214,19 @@ module.exports.leaveAReview = function (req, res) { //TODO: Needs testing ~!!
         }
     })
 };
-// Add a message to a user
 
+
+// Add a message to a user
 module.exports.sendAMessage = function (req, res) {
     var receiverEmail = req.params.email;
-    var messageText = req.body.message; // TODO Needs testing from frontend
+    var messageText = req.body.message;
     var senderId = req.session.passport.user;
+
+    // Find the user who's made the request
     User.where({_id: senderId}).findOne(function (err, sender) {
         if (sender) {
+
+            // Find the user who receives the message
             User.where({email: receiverEmail}).findOne(function (err, receiver) {
                 if (receiver) {
                     var messageModel = new Message({
@@ -238,13 +248,15 @@ module.exports.sendAMessage = function (req, res) {
             res.json({msg: "Can't find the sender", status: 404});
         }
     })
-
-
 };
+
+
 // For getting profile for a particular user
 module.exports.getEditProfile = function (req, res) {
     var email = req.params.email;
+
     if (email) {
+        // Find the user's who is being queried
         User.where({email: email}).findOne(function (err, foundUser) {
             if (foundUser) {
                 var correctImagePath;
@@ -275,21 +287,24 @@ module.exports.getEditProfile = function (req, res) {
             }
         })
     }
-
 };
+
+
 // For changing the user's information. It is invoked by the edit profile view
 module.exports.editProfile = function (req, res) {
-    console.log("hit");
+
     var userInfo = req.body;
 
+    // Find the user whose profile is about to be changed
     User.where({email: req.params.email}).findOne(function (err, user) {
+
         if (err) {
             res.json({
                 msg: "Error when finding user",
                 status: 400
             })
         } else {
-            if (user) { //TODO: Do we need a step to authenticate ?
+            if (user) {
                 if (user.password != userInfo.oldPassword) {
                     res.status(401).json({
                         msg: "Cannot authenticate user with old password",
@@ -320,14 +335,15 @@ module.exports.editProfile = function (req, res) {
             }
         }
     })
-
 };
 
 // For getting all courses that are belong to a particular user and necessary info about user for navbar
 module.exports.getMain = function (req, res) {
+
     var _id = req.session.passport.user;
-    console.log(_id);
     if (_id) {
+
+        // Find user who's made the request and get object information for the user's courses
         User.where({_id: _id}).findOne().populate('courses').exec(function (err, foundUser) {
             if (foundUser) {
                 var correctImagePath;
@@ -359,13 +375,10 @@ module.exports.getMain = function (req, res) {
             }
         })
     }
-
 };
 
-// Hardcode all courses and send all courses as JSON
+// Get all courses from database that match query given
 module.exports.getAllCourses = function (req, res) {
-
-
     var allCourses = [];
     var i = 1;
 
@@ -373,7 +386,6 @@ module.exports.getAllCourses = function (req, res) {
         if (courses) {
             courses.forEach(function (course) {
                 var tempCourse = {};
-
                 tempCourse.id = i;
                 tempCourse.courseCode = course.courseCode;
                 tempCourse.courseName = course.courseName;
@@ -388,10 +400,11 @@ module.exports.getAllCourses = function (req, res) {
 };
 
 // For creating a new thread for a particular course. It also inserts into the course's thread collections
-module.exports.makeNewThread = function (req, res) { //TODO: Untested
+module.exports.makeNewThread = function (req, res) {
     var courseToCreateIn = req.params.course;
     if (courseToCreateIn) {
-        console.log(req.params.course);
+
+        // Find the course where the new thread should be
         Course.where({courseCode: courseToCreateIn}).findOne(function (err, myCourse) {
 
             if (err) {
@@ -400,6 +413,8 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                     msg: "Error occurred with adding thread to course " + myCourse.courseCode + "\n"
                 });
             } else if (myCourse) {
+
+                // Find the user who's made the request
                 User.findById(req.session.passport.user, function (err, user) {
                     if (err) {
                         console.log(err);
@@ -447,11 +462,14 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
 };
 
 // For creating a new comment for a particular thread. It also inserts into the threads's comment collections
-module.exports.postComment = function (req, res) { //TODO: Untested
+module.exports.postComment = function (req, res) {
+
     var threadToCreateIn = req.params.threadId;
     if (threadToCreateIn) {
-        console.log(req.params.course);
+
+        // Find the thread to create comment in
         Thread.where({_id: threadToCreateIn}).findOne(function (err, myThread) {
+
 
             if (err) {
                 res.json({
@@ -459,19 +477,21 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                     msg: "Error occurred with adding comment to thread " + myThread.threadId + "\n"
                 });
             } else if (myThread) {
+
+                // Find the user who's made the request
                 User.findById(req.session.passport.user, function (err, user) {
                     if (err) {
-                        console.log(err);
                         return;
                     } else {
                         if (user) {
+
+                            // Create the comment document
                             var currDate = new Date().toString();
                             var newComment = new Comment({
                                 author: user,
                                 response: req.body.response,
                                 creationTime: currDate
                             });
-
                             newComment.save();
                             myThread.comments.push(newComment);
                             myThread.save();
@@ -481,9 +501,13 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 author: user,
                                 response: req.body.response,
                                 creationTime: currDate
-                            }
-                            console.log(JSON.parse(escapeHtml(JSON.stringify(returnComment))));
-                            res.json({status: 200, msg: "New comment created", data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))});
+                            };
+
+                            res.json({
+                                status: 200,
+                                msg: "New comment created",
+                                data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))
+                            });
 
                         } else {
                             res.json({status: 401, msg: "Login required", data: {}});
@@ -497,10 +521,12 @@ module.exports.postComment = function (req, res) { //TODO: Untested
 
 
 // For rating a tutor or tutee 
-module.exports.postRating = function (req, res) { //TODO: Untested
+module.exports.postRating = function (req, res) {
+
     var userToRate = req.params.email;
     if (userToRate) {
 
+        // Find the ratee
         User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
@@ -509,14 +535,17 @@ module.exports.postRating = function (req, res) { //TODO: Untested
                     msg: "Error occurred with rating user email: " + userToRate + "\n"
                 });
             } else if (rateUser) {
+
+                // Find the rater
                 User.findById(req.session.passport.user, function (err, user) {
                     if (err) {
-                        console.log(err);
                         return;
                     } else {
-                        if (!user.equals(rateUser)) {
-                            console.log(req.body.rateType);
 
+                        // Only allows rating people other than yourself
+                        if (!user.equals(rateUser)) {
+
+                            // Differentiate whether it is rating a tutor or tutee
                             if (req.body.rateType == "tutor") {
                                 rateUser.tutorRating = parseFloat(rateUser.tutorRating) + parseFloat(req.body.rating);
                                 rateUser.numTutorRating = parseInt(rateUser.numTutorRating) + 1;
@@ -524,7 +553,6 @@ module.exports.postRating = function (req, res) { //TODO: Untested
                                 rateUser.tuteeRating = parseFloat(rateUser.tuteeRating) + parseFloat(req.body.rating);
                                 rateUser.numTuteeRating = parseInt(rateUser.numTuteeRating) + 1;
                             }
-
                             rateUser.save();
 
                             res.json({status: 200, msg: "User Rated Successfully"});
@@ -539,11 +567,12 @@ module.exports.postRating = function (req, res) { //TODO: Untested
     }
 };
 
-// For rating a tutor or tutee 
-module.exports.getRating = function (req, res) { //TODO: Untested
+// For getting the rating for a tutor or tutee.
+module.exports.getRating = function (req, res) {
     var userToRate = req.params.email;
     if (userToRate) {
 
+        // For finding the user to get rating from
         User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
@@ -567,14 +596,16 @@ module.exports.getRating = function (req, res) { //TODO: Untested
     }
 };
 
-// For deleting a comment with a particular commentId. 
+// For deleting a comment for a particular commentId.
 module.exports.deleteComment = function (req, res) {
     User.findById(req.session.passport.user, function (err, user) {
         if (err) {
             res.status(400).send(err);
             return;
         } else {
+
             var commentToDel = req.params.commentId;
+
             if (user.auth == 'admin') {
                 Comment.remove({'_id': commentToDel}, function (err) {
                     if (err) {
@@ -592,7 +623,7 @@ module.exports.deleteComment = function (req, res) {
                         return;
                     } else {
                         if (comment) {
-
+                            // Check if the user who's made the request  //TODO Left here
                             if (comment.author._id == req.session.passport.user) {
                                 Comment.remove({'_id': commentToDel}, function (err) {
                                     if (err) {
