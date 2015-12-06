@@ -2,15 +2,15 @@ var Thread = require('../model/thread');
 //Middleware for passing through if person is logged in already
 module.exports.isLoggedIn = function isLoggedIn(req, res, next) {
 
-	// if user is authenticated in the session, carry on
+	// If user is already logged in the session, proceed
 	if (req.isAuthenticated())
 		return next();
 
-	// if they aren't redirect them to the login page
+	// If they aren't logged in, redirect user to the login page
 	res.redirect('/');
 }
 
-//debugging logs
+//Middleware to log activity
 module.exports.logger = function logger(req, res, next) {
 	//console.log(req.body.username);
 	//console.log(req.body.password);
@@ -20,11 +20,11 @@ module.exports.logger = function logger(req, res, next) {
 //Middleware for passing through if person is not logged in 
 module.exports.isNotLoggedIn = function isNotLoggedIn(req, res, next) {
 
-	// if user is not authenticated in the session, carry on
+	// if user is not authenticated in the session, proceed
 	if (!req.isAuthenticated())
 		return next();
 
-	// if they are redirect them to the profile page
+	// if they are logged in, redirect user to the profile page
 	res.redirect('/main');
 }
 

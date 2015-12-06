@@ -11,14 +11,16 @@ var dbPath = 'mongodb://localhost/tutor';
 var mongoose = require('mongoose');
 mongoose.connect(dbPath);
 
+//Creating the app
 var app = express();
 
-//serving static files in public directory
+//Serving static files in public directory
 app.use(express.static('public'));
 
 //Configuring passport authentication here
 require('./config/passport.js')(passport);
 
+//Setting EJS and other configurations
 app.set('port',3000);
 app.set('views', './views');
 app.set('view engine', 'ejs');

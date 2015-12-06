@@ -1,13 +1,15 @@
+//Facebook Configuration
 var FACEBOOK_APP_ID = "104977756536702";
 var FACEBOOK_APP_SECRET = "af3e54581686fcf0a7885252bf23339d";
 var request = require('request');
 module.exports = function (passport) {
 
+    //Strategies for PassportJS
     var LocalStrategy = require('passport-local').Strategy;
     var User = require('../model/user');
     var FacebookStrategy = require('passport-facebook').Strategy;
 
-    //This is for logging in
+    //Allows users to login using local account 
     passport.use('local-login', new LocalStrategy({
             usernameField: 'email',
             passwordField: 'password'
@@ -31,7 +33,7 @@ module.exports = function (passport) {
         }
     ));
 
-    //Used for signing up
+    //Allows users to sign up for a local account
     passport.use('local-signup', new LocalStrategy({
 
             usernameField: 'email',
@@ -41,12 +43,10 @@ module.exports = function (passport) {
         },
         function (req, username, password, done) {
 
-            // asynchronous
-            // User.findOne wont fire unless data is sent back
             process.nextTick(function () {
 
-                // find a user whose email is the same as the forms email
-                // we are checking to see if the user trying to login already exists
+                // Find a user whose email is the same as the forms email
+                // We are checking to see if the user trying to login already exists
                 User.findOne({'email': username}, function (err, user) {
                     // if there are any errors, return the error
                     if (err)
@@ -67,13 +67,13 @@ module.exports = function (passport) {
                             // create the user
                             var newUser = new User();
 
-                            // set the user's local credentials
+                            // Set the user's local credentials
                             newUser.email = username;
                             newUser.password = password;
                             newUser.pId = hashEmail(username);
-                            newUser.dispName = req.body.fname + " " + req.body.lname;//changess
+                            newUser.dispName = req.body.fname + " " + req.body.lname;
 
-                            //If no user exists in database, then this should be Admin
+                            //If no user exists in database, then this user should be Admin
                             if (adminUser == null) {
                                 newUser.auth = 'admin';
                             }
@@ -94,18 +94,20 @@ module.exports = function (passport) {
             });
 
         }));
-
+    
+    //Serialzing User
     passport.serializeUser(function (user, done) {
         done(null, user.id);
     });
 
+    //Deserializing USer
     passport.deserializeUser(function (id, done) {
         User.findById(id, function (err, user) {
             done(err, user);
         });
     });
 
-
+    //Allows user to log in using Facebook 
     passport.use(new FacebookStrategy({
             clientID: FACEBOOK_APP_ID,
             clientSecret: FACEBOOK_APP_SECRET,
@@ -118,14 +120,13 @@ module.exports = function (passport) {
                 // find the user in the database based on their facebook id
                 User.findOne({email: profile.emails[0].value}, function (err, user) {
 
-                    // if there is an error, stop everything and return that
-                    // ie an error connecting to the database
+                    // if there is an error, return error 
                     if (err)
                         return done(err);
 
-                    // if the user is found, then log them in
+                    // if the user is found, then log him in
                     if (user) {
-                        return done(null, user); // user found, return that user
+                        return done(null, user); 
                     } else {
 
                         // Get Facebook Profile picture
@@ -143,13 +144,13 @@ module.exports = function (passport) {
                                 // if there is no user found with that facebook id, create them
                                 var newUser = new User();
 
-                                // set all of the facebook information in our user model
-                                newUser.facebookId = profile.id; // set the users facebook id
+                                // Set all of the facebook information in our Database
+                                newUser.facebookId = profile.id; // Set the users facebook id
                                 newUser.email = profile.emails[0].value;
-                                newUser.facebookToken = token; // we will save the token that facebook provides to the user
-                                newUser.facebookName = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+                                newUser.facebookToken = token; // We will save the token that facebook provides to the user
+                                newUser.facebookName = profile.name.givenName + ' ' + profile.name.familyName; 
 
-                                //If no user exists in database, then this should be Admin
+                                //If no user exists in database, then this User should be Admin
                                 if (adminUser == null) {
                                     newUser.auth = 'admin';
                                 }

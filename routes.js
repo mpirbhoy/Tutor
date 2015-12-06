@@ -20,83 +20,90 @@ module.exports = function(app, passport) {
 	//Get request for Main page (Landing Page after logging in)
 	app.get('/main', middleware.isLoggedIn, controller.getMain);
 
-	//Get request to Authenticate user login using Facebook
+	//Get request to authenticate user login using Facebook
 	app.get('/auth/facebook', passport.authenticate('facebook', { scope : ['email'] }));
 	app.get('/auth/facebook/callback',
 	  passport.authenticate('facebook', { successRedirect: '/',
 	                                      failureRedirect: '/login' }));
 	
-	//Get request to authenticate user login using local account
+	//Post request to authenticate user login using local account
 	app.post('/login', passport.authenticate('local-login', { successRedirect: '/main',
 														failureRedirect: '/login', failureFlash : true}));
 	
-	//Get request to Serve Login Page
+	//Get request to serve Login Page
 	app.get('/login', middleware.isNotLoggedIn, function (req, res) {
 		res.render('./pages/login', {'errorMsg' : req.flash('error')});
 	});
 
-	//Request to perform signup for local account
+	//Post Request to perform signup for local account
 	app.post('/signup', passport.authenticate('local-signup', {
 			successRedirect : '/main', // redirect to the secure profile section
 			failureRedirect : '/signup'// redirect back to the signup page if there is an error
 	, failureFlash : true}));
 	
-	//Request to 
+	//Get Request to serve Sign Up Page
 	app.get('/signup', middleware.isNotLoggedIn, function (req, res) {
 		res.render('./pages/signup');
 	});
 
-	//Request to perform logout
+	//Post Request to perform logout
 	app.post('/logout', function (req, res) {
 		req.logout();
 		res.redirect('/');
 	});
-	// To send/add a message to user
+
+	//Post Request to send message to user with email :email
 	app.post('/user/:email/message', middleware.isLoggedIn, controller.sendAMessage);
 
-	//To leave a tutor OR tutee review to user
+	//Post Request to give a review for user with email :email
 	app.post('/user/:email/review', middleware.isLoggedIn, controller.leaveAReview);
 
+	//Get Request to serve profile for user with email :email
 	app.get('/user/:email', middleware.isLoggedIn, controller.getProfile);
+
+	//Get Request to serve Edit Profile page for user with email :email
 	app.get('/user/:email/edit', middleware.isLoggedIn, controller.getEditProfile);
+
+	//Post Request to update profile details for user with email :email
 	app.post('/user/:email/edit', middleware.isLoggedIn, controller.editProfile);
 
-	// POST request when enrolling in a course from search bar.
+	//Post Request to enroll in a course for User who is currently logged in for courseCode :courseCode
 	app.post('/course/:courseCode', middleware.isLoggedIn, controller.updateUserCourses);
 
+	//Get Request to serve all courses for searchbar
 	app.get('/injectcourses', middleware.isLoggedIn, controller.getAllCourses);
-	//app.post('/course/:selection', middleware.isLoggedIn, controller.getOneCourse);
 
-	//GET suggestions for user 
+	//Get Request to Serve JSON Suggestions for ads for User
 	 app.get('/thread/getSuggestions', middleware.isLoggedIn, controller.getSuggestions);
 
-	// Route for making thread for a particular course
+	//Post Request for creating a new thread for the course :course
 	app.post('/thread/:course', middleware.isLoggedIn, controller.makeNewThread);
-	// Route for getting threads for a particular course
+
+	//Get Request for getting all threads for a particular course :course
 	app.get('/thread/:course', middleware.isLoggedIn, controller.getAllThreads);
-	// Route for deleting a particular thread for a particular course
-	//app.delete('thread/:course', controller.deleteAThread);
+	
+	//Post Request for getting all courses for the user with email :email
 	app.post('/user/:email', middleware.isLoggedIn, controller.injectAllCoursesToUser);
 
-	//Route for posting a comment to a thread
+	//Post Request for posting a comment to a thread with ID :threadId
 	app.post('/comment/:threadId', middleware.isLoggedIn, controller.postComment);
 
-	//Route for getting User Rating
+	//Get Request for getting Ratings for User with email :email
 	app.get('/user/:email/rating', middleware.isLoggedIn, controller.getRating);
 
-	//Route for posting User Rating
+	//Post Request for posting Rating for User with email :email
 	app.post('/user/:email/rating', middleware.isLoggedIn, controller.postRating);
 
-	//Route for deleting a comment from a thread
+	//Delete Request for deleting comment with ID :commentId
 	app.delete('/comment/:commentId', middleware.isLoggedIn, controller.deleteComment);
 
-	//Route for deleting a thread from a course
+	//Delete Request for deleting thread with ID :threadID
 	app.delete('/thread/:threadId', middleware.isLoggedIn, controller.deleteThread);
 
-	//Route for deleting a comment from a thread
+	//Delete Request for deleting a course for User who is logged in for the course with courseCode :courseCode
 	app.delete('/course/:courseCode', middleware.isLoggedIn, controller.deleteCourse);
 
-	//Delete message from a user
+	//Delete Request for deleting message with ID :messageID
 	app.delete('/message/:messageId', middleware.isLoggedIn, controller.deleteAMessage);
 }
 

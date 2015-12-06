@@ -1,19 +1,13 @@
-/**
- *
- * Created by franklai on 15-11-20.
- */
 var mongoose = require('mongoose');
 var User = require('./user');
 var Thread  = require('./thread');
 var Comment = require('./comment');
+
+//Model for Comments on Threads
 module.exports = mongoose.model('Comment',{
-    author: User,
-    creationTime: Date,
-    response: String
-//creationTime: { type: Date, default: Date.now },
-//    threadHost: {type: mongoose.Schema.Types.ObjectId, ref: 'Thread' }
-//    commentID: {type: Number, unique: true},
-//    modificationTime: Date
+    author: User, //author for comment
+    creationTime: Date, //time comment was created
+    response: String //content of the comment
 
 });
 
