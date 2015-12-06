@@ -5,10 +5,12 @@ var Comment = require('../model/comment');
 var Message = require('../model/message');
 var Review = require('../model/Review');
 
+// Function for preventing outside Cross-Site-Scripting
 function escapeHtml(text) {
-  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+// Inject hard-coded courses only when running the server for the first time
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -47,7 +49,7 @@ Course.count({}, function (err, count) {
     }
 });
 
-// For getting profile for a particular user
+// For getting profile for a particular user and for /user/:email
 module.exports.getProfile = function (req, res) {
     var email = req.session.passport.user;
     var userBeingQueriedEmail = req.params.email;
@@ -96,35 +98,35 @@ module.exports.getProfile = function (req, res) {
                         }
                         var otherCourseColl = [];
                         for (i = 0; i < foundOtherUser.courses.length; i++) {
-                           otherCourseColl.push(foundOtherUser.courses[i].courseCode);
+                            otherCourseColl.push(foundOtherUser.courses[i].courseCode);
                             console.log(foundOtherUser.courses[i].courseCode);
                         }
 
 
-                            res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
+                        res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                             //res.send({
-                                title: "View User",
-                                email: escapeHtml(foundUser.email),
-                                name: escapeHtml(dispName),
-                                descr: escapeHtml(foundUser.descr),
-                                imgPath: correctImagePath,
-                                dispName: escapeHtml(foundUser.dispName),
-                                courses: JSON.parse(escapeHtml(JSON.stringify(courseColl))),
-                                localImg: localImg,
+                            title: "View User",
+                            email: escapeHtml(foundUser.email),
+                            name: escapeHtml(dispName),
+                            descr: escapeHtml(foundUser.descr),
+                            imgPath: correctImagePath,
+                            dispName: escapeHtml(foundUser.dispName),
+                            courses: JSON.parse(escapeHtml(JSON.stringify(courseColl))),
+                            localImg: localImg,
 
 
-                                otherImgPath: correctOtherImagePath,
-                                otherEmail: escapeHtml(foundOtherUser.email),
-                                otherName: escapeHtml(foundOtherUser.dispName),
-                                otherLocalImg: otherLocalImg,
-                                otherCourses: JSON.parse(escapeHtml(JSON.stringify(otherCourseColl))),
-                                otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
-                                otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
-                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
-                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
+                            otherImgPath: correctOtherImagePath,
+                            otherEmail: escapeHtml(foundOtherUser.email),
+                            otherName: escapeHtml(foundOtherUser.dispName),
+                            otherLocalImg: otherLocalImg,
+                            otherCourses: JSON.parse(escapeHtml(JSON.stringify(otherCourseColl))),
+                            otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0 : foundOtherUser.tutorRating / foundOtherUser.numTutorRating,
+                            otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0 : foundOtherUser.tuteeRating / foundOtherUser.numTuteeRating,
+                            otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
+                            otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
 
-                                messages: escapeHtml(viewSelf && JSON.stringify(foundUser.incomingMessages))
-                            })
+                            messages: escapeHtml(viewSelf && JSON.stringify(foundUser.incomingMessages))
+                        })
                     }
                 })
             } else {
@@ -138,35 +140,35 @@ module.exports.getProfile = function (req, res) {
 
 // For getting Suggestions for a particular user
 module.exports.getSuggestions = function (req, res) {
-    
+
     // Get all suggestions 
     var userId = req.session.passport.user;
     if (userId) {
         User.where({_id: userId}).findOne().populate('courses').lean().exec(function (err, myUser) {
             if (myUser) {
                 Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
-                    
-	                    allCourses = JSON.parse(escapeHtml(JSON.stringify(data)));
-	                    var suggestedThreads = [];
-	                    for (i = 0; i < allCourses.length; i++) {
-	                    	var maxPrice = 0;
-	                    	var maxThread = null;
 
-	                    	for (j = 0; j < allCourses[i].threads.length; j++) {
-	                    		if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
-	                    			maxPrice = allCourses[i].threads[j].price;
-	                    			maxThread = allCourses[i].threads[j];
-	                    		}
-	                    	}
+                    allCourses = JSON.parse(escapeHtml(JSON.stringify(data)));
+                    var suggestedThreads = [];
+                    for (i = 0; i < allCourses.length; i++) {
+                        var maxPrice = 0;
+                        var maxThread = null;
 
-	                    	if (maxThread != null) {
-	                    		suggestedThreads.push(maxThread);
-	                    	}
-	                    }
-	                    
+                        for (j = 0; j < allCourses[i].threads.length; j++) {
+                            if ((allCourses[i].threads[j].price > maxPrice) && (userId != allCourses[i].threads[j].author._id)) {
+                                maxPrice = allCourses[i].threads[j].price;
+                                maxThread = allCourses[i].threads[j];
+                            }
+                        }
+
+                        if (maxThread != null) {
+                            suggestedThreads.push(maxThread);
+                        }
+                    }
+
                     res.json({status: 200, suggestedThreads: suggestedThreads});
                 });
-                
+
             }
             else {
                 res.json({status: 409, msg: "Can't find anything"});
@@ -193,7 +195,7 @@ module.exports.leaveAReview = function (req, res) { //TODO: Needs testing ~!!
                         creationTime: new Date().toString()
                     });
 
-                    (req.body.isTutor == "true")? receiver.tutorReviews.push(reviewModel): receiver.tuteeReviews.push(reviewModel);
+                    (req.body.isTutor == "true") ? receiver.tutorReviews.push(reviewModel) : receiver.tuteeReviews.push(reviewModel);
                     receiver.save();
                     reviewModel.save();
                     res.json({msg: "Review added to receiver's reviews collection", status: 200});
@@ -428,7 +430,11 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                                 startTime: req.body.start_time,
                                 endTime: req.body.end_time
                             }
-                            res.json({status: 200, msg: "New thread created", data: JSON.parse(escapeHtml(JSON.stringify(returnThread)))});
+                            res.json({
+                                status: 200,
+                                msg: "New thread created",
+                                data: JSON.parse(escapeHtml(JSON.stringify(returnThread)))
+                            });
 
                         } else {
                             res.json({status: 401, msg: "Login required", data: {}});
@@ -476,7 +482,11 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 response: req.body.response,
                                 creationTime: currDate
                             }
-                            res.json({status: 200, msg: "New comment created", data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))});
+                            res.json({
+                                status: 200,
+                                msg: "New comment created",
+                                data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))
+                            });
 
                         } else {
                             res.json({status: 401, msg: "Login required", data: {}});
@@ -493,7 +503,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
 module.exports.postRating = function (req, res) { //TODO: Untested
     var userToRate = req.params.email;
     if (userToRate) {
-        
+
         User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
@@ -508,18 +518,18 @@ module.exports.postRating = function (req, res) { //TODO: Untested
                         return;
                     } else {
                         if (!user.equals(rateUser)) {
-                        	console.log(req.body.rateType);
-                        	
+                            console.log(req.body.rateType);
+
                             if (req.body.rateType == "tutor") {
                                 rateUser.tutorRating = parseFloat(rateUser.tutorRating) + parseFloat(req.body.rating);
                                 rateUser.numTutorRating = parseInt(rateUser.numTutorRating) + 1;
-                            } else if (req.body.rateType =="tutee") {
+                            } else if (req.body.rateType == "tutee") {
                                 rateUser.tuteeRating = parseFloat(rateUser.tuteeRating) + parseFloat(req.body.rating);
                                 rateUser.numTuteeRating = parseInt(rateUser.numTuteeRating) + 1;
                             }
-                            
+
                             rateUser.save();
-                            
+
                             res.json({status: 200, msg: "User Rated Successfully"});
 
                         } else {
@@ -536,7 +546,7 @@ module.exports.postRating = function (req, res) { //TODO: Untested
 module.exports.getRating = function (req, res) { //TODO: Untested
     var userToRate = req.params.email;
     if (userToRate) {
-        
+
         User.where({email: userToRate}).findOne(function (err, rateUser) {
 
             if (err) {
@@ -545,10 +555,14 @@ module.exports.getRating = function (req, res) { //TODO: Untested
                     msg: "Error occurred with rating user email: " + userToRate + "\n"
                 });
             } else if (rateUser) {
-                var tutorRating = rateUser.tutorRating/rateUser.numTutorRating;
-                var tuteeRating = rateUser.tuteeRating/rateUser.numTuteeRating;
-                
-                res.json({status: 200, msg: "User Rated Successfully", date: JSON.parse(escapeHtml(JSON.stringify({tutorRating: tutorRating, tuteeRating: tuteeRating})))});                   
+                var tutorRating = rateUser.tutorRating / rateUser.numTutorRating;
+                var tuteeRating = rateUser.tuteeRating / rateUser.numTuteeRating;
+
+                res.json({
+                    status: 200,
+                    msg: "User Rated Successfully",
+                    date: JSON.parse(escapeHtml(JSON.stringify({tutorRating: tutorRating, tuteeRating: tuteeRating})))
+                });
             } else {
                 res.json({status: 404, msg: "Resource not available.", data: {}});
             }
@@ -624,7 +638,7 @@ module.exports.deleteAMessage = function (req, res) {
 
                 });
             } else {
-                Message.where({'_id': messageToDel}).findOne().populate('receiver').exec( function (err, message) {
+                Message.where({'_id': messageToDel}).findOne().populate('receiver').exec(function (err, message) {
                     if (err) {
                         res.status(400).send(err);
                         return;
@@ -759,38 +773,41 @@ module.exports.getAllThreads = function (req, res) {
                 Thread.populate(myCourse['threads'], {path: 'comments'}, function (err, data) {
                     var curUserId = req.session.passport.user;
                     User.findById(curUserId, function (err, user) {
-		                if (err) {
-		                    console.log(err);
-		                    return;
-		                } else {
-		                    if (user) {
-			                    for (var i = 0; i < data.length; i++) {
-			                        if ((data[i]['author']['_id'].equals(curUserId)) || (user.auth == 'admin')) {
-			                            data[i].byAuthor = true;
-			                        } else {
-			                            data[i].byAuthor = false;
-			                        }
+                        if (err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            if (user) {
+                                for (var i = 0; i < data.length; i++) {
+                                    if ((data[i]['author']['_id'].equals(curUserId)) || (user.auth == 'admin')) {
+                                        data[i].byAuthor = true;
+                                    } else {
+                                        data[i].byAuthor = false;
+                                    }
 
-			                        for (var j = 0; j < data[i]['comments'].length; j++) {
-			                            data[i]['comments'][j] = data[i]['comments'][j].toObject();
-			                            if ((data[i]['comments'][j]['author']['_id'] == curUserId)  || (user.auth2 == 'admin')) {
-			                            	console.log("user auth2: " + user.auth);
-			                                data[i]['comments'][j].byAuthor = true;
-			                            } else {
-			                                data[i]['comments'][j].byAuthor = false;
-			                            }
-			                        }
-			                    }
+                                    for (var j = 0; j < data[i]['comments'].length; j++) {
+                                        data[i]['comments'][j] = data[i]['comments'][j].toObject();
+                                        if ((data[i]['comments'][j]['author']['_id'] == curUserId) || (user.auth2 == 'admin')) {
+                                            console.log("user auth2: " + user.auth);
+                                            data[i]['comments'][j].byAuthor = true;
+                                        } else {
+                                            data[i]['comments'][j].byAuthor = false;
+                                        }
+                                    }
+                                }
 
-			                    res.json({status: 200, allThreadsFromCourse: JSON.parse(escapeHtml(JSON.stringify(data)))});
+                                res.json({
+                                    status: 200,
+                                    allThreadsFromCourse: JSON.parse(escapeHtml(JSON.stringify(data)))
+                                });
 
-	                        } else {
-	                        	//send response that user doesn't exist anymore and login required
-	                        }
-	                    }
-					});                    
+                            } else {
+                                //send response that user doesn't exist anymore and login required
+                            }
+                        }
+                    });
 
-                    
+
                 });
             }
             else {
