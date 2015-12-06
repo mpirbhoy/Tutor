@@ -1,100 +1,129 @@
 <% include ../partials/head %>
-
 <% include ../partials/nav_logged_in %>
 
-    <body>   
-        <div id="signupbox" style="margin-top:100px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="panel-title">Edit Profile</div>
-                            <div style="float:right; font-size: 85%; position: relative; top:-10px; cursor:pointer"></div>
-                        </div>  
-                        <div class="panel-body" >
+<body>
+<div id="signupbox" style="margin-top:100px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Edit Profile</div>
+            <div style="float:right; font-size: 85%; position: relative; top:-10px; cursor:pointer"></div>
+        </div>
+        <div class="panel-body">
 
-                            <form id="editForm" class="form-horizontal" role="form">
-                                    
-                                <div class="form-group">
-                                    <label for="email" class="col-md-3 control-label">Email</label>
-                                    <div id="editUsername" class="col-md-9"><%= email %></div>
-                                </div>
+            <form id="editForm" class="form-horizontal" role="form">
 
-                                    
-                                <div class="form-group">
-                                    <label for="displayname" class="col-md-3 control-label">Name</label>
-                                    <div class="row">
-                                      <div class="col-xs-4">
-                                        <input type="text" class="form-control" name = "firstName" placeholder="First Name" required>
-                                      </div>
-                                      <div class="col-xs-4">
-                                        <input type="text" class="form-control" name="lastName" placeholder="Last Name" required>
-                                      </div>
-                                    </div>
-                                </div>
+                <div class="form-group">
+                    <label for="email" class="col-md-3 control-label">Email</label>
 
-                                <div class="form-group">
-                                    <label for="displayname" class="col-md-3 control-label">Image</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control" name="imgPath" placeholder="Gravatar URL: http://www.gravatar.com/avatar/00000000000000000000000000000000">
-                                    </div>
-                                </div>
+                    <div id="editUsername" class="col-md-9"><%= email %></div>
+                </div>
 
-                                <div class="form-group">
-                                    <label for="old-password" class="col-md-3 control-label">Password</label>
-                                    <div class="col-md-9">
-                                        <input type="password" class="form-control" name="oldPassword" placeholder="Current Password">
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="password" class="col-md-3 control-label">New Password</label>
-                                    <div class="col-md-9">
-                                        <input type="password" class="form-control" name="password" placeholder="Password">
-                                    </div>
-                                </div>
+                <div class="form-group">
+                    <label for="displayname" class="col-md-3 control-label">Name</label>
 
-                                <div class="form-group">
-                                    <label for="password-confirm" class="col-md-3 control-label"></label>
-                                    <div class="col-md-9">
-                                        <input type="password" class="form-control" name="password-confirm" placeholder="Confirm Password">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-
-                                    <!-- Button -->                                        
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <button id="update" type="submit" class="btn btn-success"><i class="icon-hand-right"></i>Update</button>
-                                        <button type="reset" class="btn btn-danger"><i class="icon-hand-right"></i>Cancel</button>
-                                    </div>
-
-                                </div>
-                                
-                            </form>
-
-                         </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <input type="text" class="form-control" name="firstName" placeholder="First Name" required>
+                        </div>
+                        <div class="col-xs-4">
+                            <input type="text" class="form-control" name="lastName" placeholder="Last Name" required>
+                        </div>
                     </div>
-                
-         </div>
+                </div>
 
-         <script>
-            $('#update').click(function(e) {
-                $.ajax({
-                  url: '/users/' + $('#editUsername').text(),
-                  type: 'PUT',
-                  dataType: 'json',
-                  data: $('#editForm').serialize(),
-                  contentType: "application/json; charset=utf-8",
-                  success: function(data) {
-                        $('.alert').remove();
-                        $('body').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
-                  },
+                <div class="form-group">
+                    <label for="displayname" class="col-md-3 control-label">Image</label>
 
-                  fail: function() {
-                    $('.main').html("comment cannot be removed");
-                  }
-                });
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" name="imgPath"
+                               placeholder="Gravatar URL: http://www.gravatar.com/avatar/00000000000000000000000000000000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="old-password" class="col-md-3 control-label">Password</label>
+
+                    <div class="col-md-9">
+                        <input type="password" class="form-control" name="oldPassword" placeholder="Current Password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="col-md-3 control-label">New Password</label>
+
+                    <div class="col-md-9">
+                        <input type="password" class="form-control" name="password" placeholder="Password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password-confirm" class="col-md-3 control-label"></label>
+
+                    <div class="col-md-9">
+                        <input type="password" class="form-control" name="password-confirm"
+                               placeholder="Confirm Password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <!-- Button -->
+                    <div class="col-md-offset-3 col-md-9">
+                        <button id="update" type="submit" class="btn btn-success"><i class="icon-hand-right"></i>Update
+                        </button>
+                        <button type="reset" class="btn btn-danger"><i class="icon-hand-right"></i>Cancel</button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // For serializing form data
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
             }
+        });
+        return o;
+    };
 
-         </script>
+    $('#update').click(function (e) {
+        e.preventDefault();
+        var x = $("#editForm").serializeObject();
+        var y = {"y": "frak"};
+        console.log(x)
+        $.ajax({
+            url: '/user/' + $('#editUsername').text() + "/edit",
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: y,
+            success: function (data) {
+                $('.alert').remove();
+                $('body').prepend("<div class='alert alert-success' role='alert'>Message Successfully Sent!</div>");
+            },
 
-    </body>
+            fail: function () {
+                $('.main').html("comment cannot be removed");
+            }
+        });
+    })
+
+</script>
+
+</body>

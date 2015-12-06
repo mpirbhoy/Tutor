@@ -274,6 +274,7 @@ module.exports.getEditProfile = function (req, res) {
 };
 // For changing the user's information. It is invoked by the edit profile view
 module.exports.editProfile = function (req, res) {
+    console.log("hit");
     var userInfo = req.body;
 
     User.where({email: req.params.email}).findOne(function (err, user) {
@@ -298,12 +299,11 @@ module.exports.editProfile = function (req, res) {
                     });
                     return;
                 }
-                //for (var key in userInfo) { //TODO not done Muj needs to do the frontend
-                //    if (user[key] && userInfo[key]) {
-                //        if ()
-                //        user[key] = userInfo[key];
-                //    }
-                //}
+                for (var key in userInfo) { //TODO not done Muj needs to do the frontend
+                    if (user[key] && userInfo[key]) {
+                        user[key] = userInfo[key];
+                    }
+                }
                 user.save();
                 res.json({
                     msg: "User's info changed",
