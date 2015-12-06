@@ -5,6 +5,10 @@ var Comment = require('../model/comment');
 var Message = require('../model/message');
 var Review = require('../model/Review');
 
+function escapeHtml(text) {
+  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 Course.count({}, function (err, count) {
     if (count == 0) {
         new Course({
@@ -100,26 +104,26 @@ module.exports.getProfile = function (req, res) {
                             res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                             //res.send({
                                 title: "View User",
-                                email: foundUser.email,
-                                name: dispName,
-                                descr: foundUser.descr,
+                                email: escapeHtml(foundUser.email),
+                                name: escapeHtml(dispName),
+                                descr: escapeHtml(foundUser.descr),
                                 imgPath: correctImagePath,
-                                dispName: foundUser.dispName,
-                                courses: courseColl,
+                                dispName: escapeHtml(foundUser.dispName),
+                                courses: JSON.parse(escapeHtml(JSON.stringify(courseColl))),
                                 localImg: localImg,
 
 
                                 otherImgPath: correctOtherImagePath,
-                                otherEmail: foundOtherUser.email,
-                                otherName: foundOtherUser.dispName,
+                                otherEmail: escapeHtml(foundOtherUser.email),
+                                otherName: escapeHtml(foundOtherUser.dispName),
                                 otherLocalImg: otherLocalImg,
-                                otherCourses: otherCourseColl,
+                                otherCourses: JSON.parse(escapeHtml(JSON.stringify(otherCourseColl))),
                                 otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
                                 otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
                                 otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
                                 otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
 
-                                messages: viewSelf && JSON.stringify(foundUser.incomingMessages)
+                                messages: escapeHtml(viewSelf && JSON.stringify(foundUser.incomingMessages))
                             })
                     }
                 })
@@ -142,7 +146,7 @@ module.exports.getSuggestions = function (req, res) {
             if (myUser) {
                 Course.populate(myUser['courses'], {path: 'threads'}, function (err, data) {
                     
-	                    allCourses = data;
+	                    allCourses = JSON.parse(escapeHtml(JSON.stringify(data)));
 	                    var suggestedThreads = [];
 	                    for (i = 0; i < allCourses.length; i++) {
 	                    	var maxPrice = 0;
@@ -258,12 +262,12 @@ module.exports.getEditProfile = function (req, res) {
                 }
                 res.render('./pages/edit_user', {
                     title: "Edit User",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    dispName: foundUser.dispName,
-                    courses: foundUser.courses,
+                    email: escapeHtml(foundUser.email),
+                    name: escapeHtml(dispName),
+                    descr: escapeHtml(foundUser.descr),
+                    imgPath: escapeHtml(correctImagePath),
+                    dispName: escapeHtml(foundUser.dispName),
+                    courses: JSON.parse(escapeHtml(JSON.stringify(foundUser.courses))),
                     localImg: localImg
                 })
             }
@@ -342,11 +346,11 @@ module.exports.getMain = function (req, res) {
 
                 res.render('./pages/main', {
                     title: "Main Page",
-                    email: foundUser.email,
-                    name: dispName,
-                    descr: foundUser.descr,
-                    imgPath: correctImagePath,
-                    courses: JSON.stringify(foundUser.courses),
+                    email: escapeHtml(foundUser.email),
+                    name: escapeHtml(dispName),
+                    descr: escapeHtml(foundUser.descr),
+                    imgPath: escapeHtml(correctImagePath),
+                    courses: escapeHtml(JSON.stringify(foundUser.courses)),
                     localImg: localImg
 
                 })
@@ -376,7 +380,7 @@ module.exports.getAllCourses = function (req, res) {
                 tempCourse.instructors = course.instructors;
                 allCourses.push(tempCourse);
             });
-            res.send(allCourses);
+            res.send(JSON.parse(escapeHtml(JSON.stringify(allCourses))));
         }
     })
 };
@@ -424,7 +428,7 @@ module.exports.makeNewThread = function (req, res) { //TODO: Untested
                                 startTime: req.body.start_time,
                                 endTime: req.body.end_time
                             }
-                            res.json({status: 200, msg: "New thread created", data: returnThread});
+                            res.json({status: 200, msg: "New thread created", data: JSON.parse(escapeHtml(JSON.stringify(returnThread)))});
 
                         } else {
                             res.json({status: 401, msg: "Login required", data: {}});
@@ -472,7 +476,7 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 response: req.body.response,
                                 creationTime: currDate
                             }
-                            res.json({status: 200, msg: "New comment created", data: returnComment});
+                            res.json({status: 200, msg: "New comment created", data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))});
 
                         } else {
                             res.json({status: 401, msg: "Login required", data: {}});
@@ -544,7 +548,7 @@ module.exports.getRating = function (req, res) { //TODO: Untested
                 var tutorRating = rateUser.tutorRating/rateUser.numTutorRating;
                 var tuteeRating = rateUser.tuteeRating/rateUser.numTuteeRating;
                 
-                res.json({status: 200, msg: "User Rated Successfully", date: {tutorRating: tutorRating, tuteeRating: tuteeRating}});                   
+                res.json({status: 200, msg: "User Rated Successfully", date: JSON.parse(escapeHtml(JSON.stringify({tutorRating: tutorRating, tuteeRating: tuteeRating})))});                   
             } else {
                 res.json({status: 404, msg: "Resource not available.", data: {}});
             }
@@ -778,7 +782,7 @@ module.exports.getAllThreads = function (req, res) {
 			                        }
 			                    }
 
-			                    res.json({status: 200, allThreadsFromCourse: data});
+			                    res.json({status: 200, allThreadsFromCourse: JSON.parse(escapeHtml(JSON.stringify(data)))});
 
 	                        } else {
 	                        	//send response that user doesn't exist anymore and login required
