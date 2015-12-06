@@ -1,6 +1,6 @@
 //Facebook Configuration
-var FACEBOOK_APP_ID = "104977756536702";
-var FACEBOOK_APP_SECRET = "af3e54581686fcf0a7885252bf23339d";
+var FACEBOOK_APP_ID = "391255507727428";
+var FACEBOOK_APP_SECRET = "85843651886934b1c33efea936acb376";
 var request = require('request');
 module.exports = function (passport) {
 
