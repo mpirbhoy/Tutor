@@ -9,7 +9,8 @@ var dbPath = 'mongodb://localhost/tutor';
 
 //Connecting to mongoose
 var mongoose = require('mongoose');
-mongoose.connect(dbPath);
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/tutors4you');
+
 
 //Creating the app
 var app = express();
