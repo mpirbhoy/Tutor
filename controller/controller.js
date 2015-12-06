@@ -299,7 +299,7 @@ module.exports.editProfile = function (req, res) {
                     return;
                 }
                 user.dispName = userInfo.dispName;
-                user.imgPath = userInfo.imgPath;
+                user.facebookProfilePicture = userInfo.imgPath;
                 user.password = userInfo.newPassword;
                 user.save();
                 res.json({
