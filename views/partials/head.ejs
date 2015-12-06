@@ -89,15 +89,8 @@
 
         function formatCourse (course) {
             if (course.loading) return course.text;
-
-//            var parsedCourse = JSON.parse(course);
-
             var markup = "<div class='select2-result-repository clearfix'>" +
-//                    "<div class='select2-result-repository__avatar'><img src='" + course.id + "' /></div>" +
-//                    "<div class='select2-result-repository__meta'>" +
                     "<div class='select2-result-repository__title'>" + course.courseCode + " " + course.courseName + "</div>";
-
-
 
             markup += "<div class='select2-result-repository__statistics'>" +
                     "<div class='select2-result-repository__forks'> INSTR: " + course.instructors + "</div>";
@@ -108,30 +101,22 @@
             if (course.exclusions) {
                 markup += "<div class='select2-result-repository__watchers'> EXC: " + course.exclusions + "</div>";
             }
-
             markup += "</div></div>";
-
             return markup;
         }
-
         function formatCourseSelection (status) {
             return status.courseCode || status.text;
         }
     </script>
 
     <!-- JQUERY DATE & TIME PICKER -->
-
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="/css/jquery-ui-timepicker-addon.css">
     <script src="/js/jquery-ui-timepicker-addon.js"></script>
 
-    <!-- Star Rating Plugin -->
-    <link href="/css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-    <script src="/js/star-rating.min.js" type="text/javascript"></script>
-
+    <!-- Time Picker for creating a new thread -->
     <script>
-
         $(function() {
             $( ".from" ).datetimepicker({
                 controlType: 'select',
@@ -154,38 +139,10 @@
             });
         });
 
-        /*
-         var startDateTextBox = $('#starting');
-         var endDateTextBox = $('#ending');
-
-         $.timepicker.datetimeRange(
-         startDateTextBox,
-         endDateTextBox,
-         {
-         minInterval: (1000*60*60), // 1hr
-         dateFormat: 'dd M yy',
-         timeFormat: 'HH:mm',
-         start: {}, // start picker options
-         end: {} // end picker options
-         }
-         );*/
-
-        // initialize input widgets first
-        /*
-         $('#basicExample .time').timepicker({
-         'showDuration': true,
-         'timeFormat': 'g:ia'
-         });
-
-         $('#basicExample .date').datepicker({
-         'format': 'm/d/yyyy',
-         'autoclose': true
-         });
-
-         // initialize datepair
-         var basicExampleEl = document.getElementById('basicExample');
-         var datepair = new Datepair(basicExampleEl);
-         */
     </script>
+
+    <!-- Star Rating Plugin -->
+    <link href="/css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
+    <script src="/js/star-rating.min.js" type="text/javascript"></script>
 
 </head>

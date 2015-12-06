@@ -28,8 +28,7 @@
           <%if (localImg == 0) { %>
             src="<%=imgPath%>" 
           <% } %>
-
-
+          
           style="cursor:pointer;"></a></li>
           <li><a href="/user/<%= email %>" id="user-nav" style="cursor:pointer;"><%= name %></a></li>
           <li id='logout-nav'><form action="/logout" method="post"><button class="btn btn-link glyphicon glyphicon-log-out" style="margin-top: 7px" aria-hidden="true"></button></form></li>

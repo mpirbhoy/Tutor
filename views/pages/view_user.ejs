@@ -9,13 +9,9 @@
 	<div class="row">
 		<!-- USER PROFILE -->
 		<div class="col-sm-3 col-md-3 sidebar">
-			<!--<div class="col-xs-6 col-sm-3 placeholder">-->
-			<!--<img data-src="" class="img-responsive" alt="Profile picture thumbnail">-->
-			<!--</div>-->
 			<h1>Profile<small><a id="edit-user" href="/user/<%= email %>/edit" style="cursor:pointer;">&nbsp Edit</a></small></h1>
 			<div class="thumbnail">
 				<img id="profile-img"
-
 						<%if (otherLocalImg == 1) { %>
 					 src="/img/<%=otherImgPath%>"
 						<% } %>
@@ -23,8 +19,6 @@
 						<%if (otherLocalImg == 0) { %>
 					 src="<%=otherImgPath%>"
 						<% } %>
-
-
 					 alt="avatar">
 				<div class="caption">
 					<h3 id="profile-name"><%= dispName %></h3>
@@ -76,11 +70,9 @@
 
 		<script>
 
+			// Get the tutor reviews and tutee reviews.
 			var	tutorReviews = <%- otherTutorReviews %>;
 			var	tuteeReviews = <%- otherTuteeReviews %>;
-
-			console.log(tutorReviews);
-			console.log(tuteeReviews);
 
 		    for (var i = 0; i < tutorReviews.length; i++) {
 		        $('.tutor-reviews').append("<div class='panel panel-default' id='" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].reviewText + "</p></div></div>");
@@ -89,9 +81,6 @@
 		    for (var i = 0; i < tuteeReviews.length; i++) {
 		        $('.tutee-reviews').append("<div class='panel panel-default' id='" + tuteeReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tuteeReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tuteeReviews[i].reviewText + "</p></div></div>");
     		}
-
-
-
 		</script>
 
 		<div style="margin-top: 300px">
@@ -105,6 +94,7 @@
 </div>
 
 <script>
+	// Populate the messages
     var messages = <%- messages %>;
     for (var i = 0; i < messages.length; i++) {
         $('#messages').prepend("<div class='panel panel-default' id='" + messages[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + messages[i].sender.email + "</h3><h3 class='panel-title' style='float: right'>" + messages[i].creationTime + "</h3></div><div class='panel-body'><p>" + messages[i].content + "</p><button type='button' class='btn btn-danger btn-msg'>Delete Message</button></div></div>");
@@ -133,7 +123,7 @@
         });
     });
 
-	// Set the default star rating -> Get data from DB
+	// Set the default star rating
 	tutorRating = <%- otherTutorRatingAvg %>
 	tuteeRating = <%- otherTuteeRatingAvg %>
 	

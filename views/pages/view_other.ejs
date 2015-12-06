@@ -9,15 +9,11 @@
 	<div class="row">
 		<!-- USER PROFILE -->
 		<div class="col-sm-3 col-md-3 sidebar">
-			<!--<div class="col-xs-6 col-sm-3 placeholder">-->
-			<!--<img data-src="" class="img-responsive" alt="Profile picture thumbnail">-->
-			<!--</div>-->
 			<h1>Profile</h1>
 			<div class="thumbnail">
 				<img id="profile-img"></img>
 				<div class="caption">
 				<img id="profile-img"
-
 						<%if (otherLocalImg == 1) { %>
 					 src="/img/<%=otherImgPath%>"
 						<% } %>
@@ -25,8 +21,6 @@
 						<%if (otherLocalImg == 0) { %>
 					 src="<%=otherImgPath%>"
 						<% } %>
-
-
 					 alt="avatar">
 				<div class="caption">
 					<h3 id="profile-name"><%= otherName %></h3>
@@ -76,13 +70,9 @@
 			</div>
 
 			<script>
-
+				// Populate the tutor and tutee reviews
 				var tutorReviews = <%- otherTutorReviews %>;
 				var tuteeReviews = <%- otherTuteeReviews %>;
-
-				console.log(tutorReviews);
-				console.log(tuteeReviews);
-
 			    for (var i = 0; i < tutorReviews.length; i++) {
 			        $('.tutor-reviews').append("<div class='panel panel-default'" + tutorReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tutorReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tutorReviews[i].reviewText + "</p></div></div>");
 			    }
@@ -90,13 +80,10 @@
 			    for (var i = 0; i < tuteeReviews.length; i++) {
 			        $('.tutee-reviews').append("<div class='panel panel-default'" + tuteeReviews[i]._id + "'>" + "<div class='panel-heading'>&nbsp;<h3 class='panel-title' style='float: left'>" + "</h3><h3 class='panel-title' style='float: right'>" + tuteeReviews[i].creationTime + "</h3></div><div class='panel-body'><p>" + tuteeReviews[i].reviewText + "</p></div></div>");
 	    		}
-
-
-
 			</script>
 
 			<script>
-				// Set the default star rating -> Get data from DB
+				// Set the default star rating for tutor rating and tutee rating
 				tutorRating = <%- otherTutorRatingAvg %>
 				tuteeRating = <%- otherTuteeRatingAvg %>
 	    		$(".tutor-rating").val(tutorRating);
@@ -105,7 +92,7 @@
 	    		console.log($("#profile-email").text());
 	    		var email = $("#profile-email").text();
 
-	    		// Trigger an event when rating is changed
+	    		// Change the rating when the user makes a rating
 	    		$('#input-1').on('rating.change', function(event, value, caption) {
 
 		        	$.ajax({
@@ -226,12 +213,10 @@
 </div>
 
 <script>
-
-    // Splitting column for Tutor & Tuttee rating 
+    // Splitting two columns for Tutor & Tuttee rating 
     $( document ).ready(function() {
     	$( ".star-rating" ).addClass( "col-lg-6" );
 	});
-    
 </script>
 
 
