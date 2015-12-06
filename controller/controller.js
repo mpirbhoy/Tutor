@@ -105,28 +105,28 @@ module.exports.getProfile = function (req, res) {
 
                         res.render(viewSelf ? './pages/view_user' : './pages/view_other', {
                             //res.send({
-                            title: "View User",
-                            email: escapeHtml(foundUser.email),
-                            name: escapeHtml(dispName),
-                            descr: escapeHtml(foundUser.descr),
-                            imgPath: correctImagePath,
-                            dispName: escapeHtml(foundUser.dispName),
-                            courses: JSON.parse(escapeHtml(JSON.stringify(courseColl))),
-                            localImg: localImg,
+                                title: "View User",
+                                email: escapeHtml(foundUser.email),
+                                name: escapeHtml(dispName),
+                                descr: escapeHtml(foundUser.descr),
+                                imgPath: correctImagePath,
+                                dispName: escapeHtml(foundUser.dispName),
+                                courses: JSON.parse(escapeHtml(JSON.stringify(courseColl))),
+                                localImg: localImg,
 
 
-                            otherImgPath: correctOtherImagePath,
-                            otherEmail: escapeHtml(foundOtherUser.email),
-                            otherName: escapeHtml(foundOtherUser.dispName),
-                            otherLocalImg: otherLocalImg,
-                            otherCourses: JSON.parse(escapeHtml(JSON.stringify(otherCourseColl))),
-                            otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0 : foundOtherUser.tutorRating / foundOtherUser.numTutorRating,
-                            otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0 : foundOtherUser.tuteeRating / foundOtherUser.numTuteeRating,
-                            otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
-                            otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
+                                otherImgPath: correctOtherImagePath,
+                                otherEmail: escapeHtml(foundOtherUser.email),
+                                otherName: escapeHtml(foundOtherUser.dispName),
+                                otherLocalImg: otherLocalImg,
+                                otherCourses: JSON.parse(escapeHtml(JSON.stringify(otherCourseColl))),
+                                otherTutorRatingAvg: (foundOtherUser.numTutorRating == 0) ? 0: foundOtherUser.tutorRating/foundOtherUser.numTutorRating,
+                                otherTuteeRatingAvg: (foundOtherUser.numTuteeRating == 0) ? 0: foundOtherUser.tuteeRating/foundOtherUser.numTuteeRating,
+                                otherTutorReviews: JSON.stringify(foundOtherUser.tutorReviews),
+                                otherTuteeReviews: JSON.stringify(foundOtherUser.tuteeReviews),
 
-                            messages: escapeHtml(viewSelf && JSON.stringify(foundUser.incomingMessages))
-                        })
+                                messages: escapeHtml(JSON.stringify(foundUser.incomingMessages))
+                            })
                     }
                 })
             } else {
@@ -482,11 +482,8 @@ module.exports.postComment = function (req, res) { //TODO: Untested
                                 response: req.body.response,
                                 creationTime: currDate
                             }
-                            res.json({
-                                status: 200,
-                                msg: "New comment created",
-                                data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))
-                            });
+                            console.log(JSON.parse(escapeHtml(JSON.stringify(returnComment))));
+                            res.json({status: 200, msg: "New comment created", data: JSON.parse(escapeHtml(JSON.stringify(returnComment)))});
 
                         } else {
                             res.json({status: 401, msg: "Login required", data: {}});
